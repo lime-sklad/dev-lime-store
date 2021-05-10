@@ -46,7 +46,7 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
 	]);
 	
 
-
+ 
 	// echo $twig->render('/component/container.twig', [
     //     'renderComponent' => [
 	// 		'/component/index/top_nav.twig' => [
