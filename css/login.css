@@ -1,0 +1,259 @@
+:root {
+  --template_color: #007bff; 
+  --error_color: rgba(255, 0, 0, 1);
+}
+
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+div{
+    display: block;
+}
+ul{
+    list-style: none;
+}
+
+a{
+    text-decoration: none;
+    /* word-break: break-word; */
+}
+
+span,
+p,
+label{
+    /* word-break: break-word; */
+    line-height: 1.460;
+}
+
+img{
+    width: 100%;
+    height: 100%;
+}
+
+html, body{
+    width: 100%;
+    height: 100%;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    box-shadow: 0 0 0px 5px rgba(0, 123, 255, 0.4);
+}
+
+
+body{
+    font-family: Arial,sans-serif;
+    background: #fff;
+}
+
+TABLE {
+   border-collapse: collapse; 
+   position: relative;
+   z-index: 10;
+}
+TH {
+   background: #eeeeee;
+   text-align: left;
+   padding: 10px;
+   font-size: 16px;
+   text-align: center;
+   color: #333;
+}
+TD {
+    /* text-align: center; */
+    /* width: 100%; */
+}
+TH, TD {
+   border: 1px solid #e5e5e5;
+   /* padding: 8px; */
+   font-size: 18px;
+   /* padding-left: 15px; */
+   padding: .75em;
+}
+
+td span {
+}
+tr {
+    background: #fff;
+}
+
+.red {
+    background: var(--error_color)!important;
+}
+
+.col-w60 {
+    max-width: 10%;
+    /* width: 10%; */
+    max-width: 60px;
+    width: 60px;
+}
+.col-w80 {
+    max-width: 80px;
+    width: 80px;
+}
+
+.col-w120 {
+    /* max-width: 15%; */
+    /* width: 15%; */
+    max-width: 120px;
+    width: calc(140px - .75em);
+}   
+
+.col-w180 {
+    height: auto;
+    max-width: 180px;
+    width: calc(180px - .75em);    
+}
+
+.col-w250 {
+    /* width: 25%; */
+    /* max-width: 25%; */
+    height: auto;
+    max-width: 250px;
+    width: calc(250px - .75em);
+}
+
+.col-w350 {
+    width: 350px;
+    max-width: 350px;
+    height: auto;
+    text-align: inherit;
+}
+.container {
+    max-width: 1060px;
+    width: 1060px;
+    margin: 0 auto;
+}
+
+.btn {
+    background: #007bff;
+    border-radius: 22px;
+}
+.hide {
+    display: none;
+}
+.mark--count {
+    margin-left: 5px;
+    font-family: monospace;
+}
+
+.flex-c100 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.flex-cntr {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.fidex_modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+.modal {
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: rgb(0, 0, 0, 0.5);
+}
+.success_notify,
+.fail_notify {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+    font-size: 40px;
+    color: #fff;
+    background: #45c863;
+    display: none;
+    width: 100%;
+    z-index: 10000;
+}
+
+.main_a {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    /* background-image: linear-gradient(108.9deg, rgb(21, 65, 168) 4.9%, rgb(120, 232, 173) 97%); */
+    background: linear-gradient(#65cce1, #6365ec);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.user_login_form {
+    padding: 40px;
+    background: #ffffff;
+    width: 360px;
+    height: 460px;
+    border-radius: 11px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.e_email {
+    width: 100%;
+    display: flex;
+    margin-bottom: 20px;
+}
+
+input.email_input {
+    width: 100%;
+    padding: 20px 15px;
+    margin: 5px 5px;
+    font-size: 17px;
+    border: 1px solid #d5d5d5;
+    border-radius: 22px;
+    outline: 0;
+    transition: .5s;
+}
+
+.u_password {
+    width: 100%;
+    display: flex;
+}
+
+.sbm_btn {
+    display: flex;
+    justify-content: flex-end;
+    padding: 9px;
+}
+
+.sbm_btn>button {
+    padding: 9px 31px;
+    border: 1px solid #007bff;
+    /* background: #03A9F4; */
+    color: #fff;
+    font-size: 19px;
+    cursor: pointer;
+    margin-top: 16px;
+}
+.form_title {
+    display: block;
+    font-size: 37px;
+    text-transform: uppercase;
+    color: #333;
+    opacity: 0.9;
+}

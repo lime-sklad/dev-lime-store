@@ -1,0 +1,11 @@
+ <footer>
+    {% for key, path in data.lib_list.css  %}
+        <link  rel="stylesheet" type="text/css" href="{{path}}?v={{data.v}}">
+    {% endfor %}
+
+    {% for key, path in data.lib_list.script  %}
+        <script  src="{{path}}?v={{data.v}}"></script>
+    {% endfor %}    
+
+ 
+ </footer>

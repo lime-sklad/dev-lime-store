@@ -1,0 +1,89 @@
+
+
+<div class="sidebar flex flex-column height-100">
+    <div class="sidebar-header flex-cntr">
+        <span class="logo-text-cap-letter">L</span>
+    </div>
+
+    <div class="sidebar-content ls-custom-scrollbar">
+        
+        <a href="javascript:void(0)" class="sidebar-profile flex flex-jc-cntr flex-ai-end" data-user-id={{sidebar.user_id}}>
+            <div class="profile-image">
+                <img src="/img/icon/profile.png" class="profile-img">
+            </div>
+            <div class="profile-info hover-sb-title flex flex-column">
+                <span class="profile-name text-ellipsis">{{sidebar.user_name}}</span>
+                <span class="profile-role text-ellipsis">{{sidebar.user_role}}</span>
+            </div>
+        </a>
+
+        <div class="sidebar-page-list">
+            {% for route_index, row in sidebar.menu_list.data %}
+                <a href="javascript:void(0)" class="sidebar-list get_page_action flex flex-jc-cntr flex-ai-end scroll_top   " 
+                    data-page-route="{{route_index}}"
+					data-tab="{{row.tab.active}}"
+                    title="{{row.title}}"
+                    >
+
+                    <div class="sidebar-list-icon">
+                        <span class="button-icon-i button-icon-left sidebar-icon">
+                            <i class="{{row.icon.modify_class}}"></i>
+                        </span>
+                    </div>
+                    <div class="sidebar-list-name hover-sb-title flex flex-column">
+                        <span class="page-list-name">
+                            {{row.title}}
+                        </span>
+                    </div>    
+                </a>
+            {% endfor %}
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+{# <div class="sidebar_menu_wrp">
+    <div class="sidebar_menu_block">
+        <div class="sider_bar_menu_header">
+            <span class="module_order_desrioption">Menu</span>
+        </div>
+            <div class="sider_bar_list_wrp ls-custom-scrollbar">
+                <ul class="sider_bar_list">
+                    <li class="menu_list menu_header_list">
+                        <a href="javascript:void(0)" class="user_profile_select select_page_main scroll_top" data-link="/page/admin/admin.php">
+                            <div class="user_profile_img" style="display: none;"><img src="/img/icon/profile.png"></div>
+                            <span><?= getUser('get_name'); ?></span>
+                        </a>
+                    </li>		
+
+                    <li class="menu_list">
+                        <a href="javascript:void(0)" class="sidebar_link select_page_main scroll_top" data-link="<?php echo $link ?>">
+                            <div class="sidebar_menu_image">
+                                <img src="<?php echo $img; ?>">
+                            </div>					
+                            <span class="sidebar_menu_link_nmae"><?php echo $title; ?></span>
+                        </a>
+                    </li>
+
+
+                    <li class="menu_list_bottom">
+                        <a href="/core/action/logout?logout" class="sidebar_link">
+                            <div class="sidebar_menu_image">
+                                <img src="/img/icon/sidebar/logout_white.png">
+                            </div>					
+                            <span class="sidebar_menu_link_nmae">Çıxış</span>
+                        </a>
+                    </li>																
+                </ul>
+            </div>
+    </div>
+  </div>   #}

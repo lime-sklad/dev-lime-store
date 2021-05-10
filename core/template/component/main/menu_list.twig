@@ -1,0 +1,20 @@
+<div class="menu menu--active vh-100 flex-jc-cntr">
+	<div class="menu-content content_container flex">
+		<div class="menu-list inline-flex flex-wrap flex-jc-space-around">
+		{% for route_index, row in data.menu %}
+			<div class="menu-card">
+				<a href="javascript:void(0)" class="menu-card-wrp flex width-100 height-100 flex-column flex-ai-cntr flex-jc-space-around get_page_action scroll_top"
+					data-page-route="{{route_index}}"
+					data-tab="{{row.tab.active}}">
+
+					<span class="button-icon-i menu-icon">
+                        <i class="{{row.icon.modify_class}}"></i>
+                    </span>
+
+					<span class="menu-card-title"> {{row.title}}</span>
+				</a>
+			</div>
+		{% endfor %}
+		</div>
+	</div>
+</div>

@@ -1,0 +1,23 @@
+{% block include_block %}
+    {% for key, block_name in res %}
+        {% if block(block_name.include_block, "/component/modal/modal_fields.twig")  is defined %}
+            {{ block(block_name.include_block, "/component/modal/modal_fields.twig") }}
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+
+{% block include_spoiler %}
+    <li class="gorup-list-product-info width-100 ">
+		<a href="javascript:void(0)" class="text-color-primary width-100 display-flex align-center mrgn-bottom-3 open_gorup_list">
+			<span class="mark mark--title">Daha çox göstər</span> 
+			<span class="mark mark--img mrgn-left-5"> 
+				<img src="/img/icon/down-arrow.png" class="width-auto icon-img-width-22-height-auto">
+			</span>
+		</a>        
+        <ul class="group-list">
+            {% for  key, block_name  in block_name.value %}
+                {{ block(block_name.include_block, "/component/modal/modal_fields.twig") }}
+            {% endfor %}
+        </ul>
+    </li>   
+{% endblock %}
