@@ -1,0 +1,40 @@
+{# <div class="stock_view_wrapper">
+     <div class="stock_view_list ls-custom-scrollbar">
+		<table class="stock_table">
+			<thead>
+				<tr>
+					{% for key, row in data.table.th %}
+						<th class="{{row.modify_class}}">{{row.title}}</th>
+					{% endfor %}
+				</tr>
+			</thead>
+			<tbody class="stock_list_tbody" data-stock-page="{{data.table_tab}}" data-stock-type="{{data.table_type}}">
+					{% include '/component/table/table_row.twig' %}
+					{% if table_total %} 
+						{% include '/component/table/table_footer_row.twig' %}
+					{% endif %}
+			</tbody>
+		</table>
+	</div>		
+</div>		
+ #}
+
+<div class="table-wrapper">
+	<div class="table-content ls-custom-scrollbar">
+		<table class="table">
+			<thead>
+				<tr>
+					{% for key, row in data.table.th %}
+						<th class="{{row.modify_class}}">{{row.title}}</th>
+					{% endfor %}
+				</tr>
+			</thead>
+			<tbody class="table-list" data-stock-page="{{data.table_tab}}" data-stock-type="{{data.table_type}}">
+					{% include '/component/table/table_row.twig' %}
+					{% if table_total %} 
+						{% include '/component/table/table_footer_row.twig' %}
+					{% endif %}			
+			</tbody>
+		</table>
+	</div>
+</div>

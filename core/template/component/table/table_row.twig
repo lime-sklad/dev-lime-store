@@ -1,0 +1,59 @@
+{# {% if data.table.td %}
+	{% for array in data.table.td %}
+		{% for id, arr in array  %}
+			<tr class="stock-list" id="{{id}}">
+				{% for row in arr %}	
+					<td class="{{row.td_class}}">
+						<a href="javascript:void(0)" class="{{row.link_class}}" data-sort="{{row.data_sort}}" data-sort-value="{{row.data}}" title="{{ row.mark.mark_title }}"> 
+								<span class="stock-info-text">{{ row.data }} </span>
+							{% if row.data is not empty %}
+							
+								{% if row.mark.mark_text %} 
+									<span class="mark mark--text" title="{{ row.mark.mark_title }}">{{ row.mark.mark_text }}</span> 
+								{% endif %}
+								{% if row.mark.mark_icon.path %} 
+									<span class="mark mark--icon" > 
+										<img src="{{ row.mark.mark_icon.path}}" class="{{ row.mark.mark_icon.icon_class }}"> 
+									</span>
+								{% endif %}	
+								
+							{% endif %}
+						</a>								
+					</td>
+				{% endfor %}
+			</tr>
+		{% endfor %}	
+	{% endfor %}
+{% endif %} #}
+
+
+
+{% if data.table.td %}
+	{% for array in data.table.td %}
+		{% for id, arr in array  %}
+			<tr class="stock-list" id="{{id}}">
+				{% for row in arr %}	
+					<td class="{{row.td_class}}">
+						<a href="javascript:void(0)" class="{{row.link_class}}" data-sort="{{row.data_sort}}" data-sort-value="{{row.data}}" title="{{ row.mark.mark_title }}"> 
+								<span class="stock-list-title">
+									{{row.data}} 
+								</span>
+
+							{% if row.data is not empty %}
+								{% if row.mark.mark_text %} 
+									<span class="button-icon-left mark stock-list-mark" title="{{ row.mark.mark_title }}">{{ row.mark.mark_text }}</span> 
+								{% endif %}
+
+								{% if row.mark.mark_icon.path %} 
+									<span class="mark stock-list-icon button-icon-right" > 
+										<img src="{{ row.mark.mark_icon.path}}" class="{{ row.mark.mark_icon.icon_class }}"> 
+									</span>
+								{% endif %}	
+							{% endif %}
+						</a>								
+					</td>
+				{% endfor %}
+			</tr>
+		{% endfor %}	
+	{% endfor %}
+{% endif %}

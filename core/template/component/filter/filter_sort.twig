@@ -1,0 +1,113 @@
+{% if data1.filter_list %}
+<div class="filter_buttons_wrapper">
+
+	<div class="filter_block_open_wrp">
+		<a href="javascript:void(0)" class="filter_wodjet_button_style open_filter_widjet">
+			{# 
+			<span class="mark mark--img">
+				<img src="/img/icon/filter-icon.png">
+				<img src="/img/svg-icon/options-outline.svg">
+			</span> 
+			#}
+			<span class="button-icon-i button-icon-left filter-sort-wrapper-btn">
+				<i class="las la-sort-amount-down"></i>
+			</span>
+			<span class="mark mark--name filter_widjet_btn_title">Filter</span>
+			<span class="mark filter-count"></span>
+		</a>
+	</div>
+
+	<div class="filter_content">
+		<ul class="filter_button_dropdown_serch_list">
+			<div class="row">
+				{% for key, parent in data.filter_list %}
+					<li class="filter_return_list ls-select-list">
+						<div class="filter_check_count"></div>
+						<div class="select-drop-down">
+							<input type="button"  class="drop_down_btn filter_input_height_modify" value="{{parent.title}}" default-value="{{parent.title}}">
+							<div class="reset_option">
+								<div role="button" class="ls-reset-option ls-reset-option-style">
+									<i class="reset-filter-icon button-icon-i las la-angle-down"></i>
+								</div>
+							</div>
+						</div>
+						<div class="ls-select-option-list">
+							<ul class="ls-select-list-option ls-custom-scrollbar">
+								{% for key, row in parent.compelte  %}
+									<li class="filter-check-list-style">
+										<a href="javascript:void(0)" class="filter-check-style filter-check" id="{{row.id}}" filter-type="{{row.filter_type}}" filter-val="{{row.value}}">
+											<span class="mark mark-filter-checked-icon">
+												<img src="/img/icon/check-white.png">
+											</span>
+											<span class="mark filter-name">{{row.value}}</span>
+											<span class="mark filter-mark-text">{{parent.short_name}}</span>
+										</a>	
+									</li>
+								{% endfor %}									
+							</ul>
+						</div>
+					</li>
+                {% endfor %}
+			</div>	
+		</ul>		
+	</div>
+
+</div>
+{% endif %}
+
+
+{% if data.filter_list %}
+	<div class="filter-container area-container">
+		<a href="javascript:void(0)" class="widget__button widget__button-action flex-cntr area-button" role="button">
+			<span class="widget__button-icon button-icon-i button-icon-left">
+				<i class="las la-sort-amount-down"></i>
+			</span>
+			<span class="widget__button-text">
+				Filter
+			</span>
+			<span class="widget__mark filter-count widget__mark-rigt"></span>
+		</a> 
+		<div class="widget__content area-content">
+
+			<ul class="select-list checker-list width-100 ls-custom-scrollbar">
+				{% for key, parent in data.filter_list %}
+				<li class="select-items area-container">
+
+					<a href="javascript:void(0)" class=" area-button sub-area select-item">
+						<span class="widget__mark selected-items-count">
+						</span>				
+						<span class="widget__button-text">
+							{{parent.title}}
+						</span>
+						<span class="widget__button-icon widget__icon-arrow button-icon-i button-icon-right">
+							<i class="las la-angle-down"></i>
+						</span>						
+					</a> 
+
+					<div class="sub--select-list area-content" style="display: none;">
+						<ul class="select-sub-items select-list ls-custom-scrollbar width-100">
+
+							{% for key, row in parent.compelte  %}
+							<li class="select-items">
+								<a href="javascript:void(0)" class="select-item select-sub-item filter-check" id="{{row.id}}" filter-type="{{row.filter_type}}" filter-val="{{row.value}}">
+									<span class="widget__check-icon">
+										<i class="las la-check"></i>
+									</span>
+									<span class="widget__button-text">{{row.value}}</span>
+									<span class="widget__mark">{{parent.short_name}}</span>
+								</a>
+							</li>	
+							{% endfor %}
+
+						</ul>
+					</div>
+
+				</li>
+				{% endfor %}				
+			</ul>
+			
+		</div>
+
+		<div class="checked-filter-list ls-custom-scrollbar animate__animated animate__lsFadeIn25 animate__fast"></div>
+	</div>
+{% endif %}

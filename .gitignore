@@ -1,15 +1,8 @@
 /.vscode
 /bin
-/img
 /test
 /update
+/get_printer.php
+/test.php
+/test2.php
 /test — копия.bat
-/test.2.php
-/core
-/css
-/db
-/fonts
-/include
-/vendor
-/page
-/css/style.css

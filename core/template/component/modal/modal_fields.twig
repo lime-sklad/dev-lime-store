@@ -1,0 +1,253 @@
+{% block data_id %}
+    <li class="order_modal_list">
+        <span class="module_order_desrioption">№: </span>
+        <span class="modal_data_id" data-id="{{block_name.value}}">{{block_name.value}}</span>
+    </li>
+{% endblock %}
+
+
+{# start edit #}
+{% block edit_name %}
+<li class="order_modal_list auto-cmplt-parent">
+    <span class="module_order_desrioption">Ad: </span>
+    <input data-name="name" type="text" class="stock_auto_compelete edit_stock_input edit_sotck_name_input auto-cmplt-input" value="{{block_name.value}}" >
+</li>
+{% endblock %}
+
+ {% block edit_imei %}
+	<li class="order_modal_list">
+		<span class="module_order_desrioption">IMEI: </span>
+		<input type="text" class="edit_stock_input edit_stock_imei_input" value="{{block_name.value}}" >
+	</li>
+{% endblock %}
+
+{% block edit_provider %}
+	<li class="order_modal_list ">
+		<span class="add_stock_description">Təchizatçı</span>
+		<div class="width-100">
+			<ul class="ls-select-list">
+				<li>
+					<div class="select-drop-down">
+						<input type="button" id="" class="edit_stock_input edit_stock_provider_input drop_down_btn"  default-value="" value="{{block_name.value}}">
+						<div class="reset_option">
+							<input type="button" class="ls-reset-option ls-reset-option-style">
+						</div>
+					</div>
+					<div class="ls-select-option-list">
+						<ul class="ls-select-list-option ls-custom-scrollbar">
+							{% for key, get in block_name.list_item %}
+									<li class="ls-select-li">
+										<a href="javascript:void(0)" class="choice-option choice-style choice-color " id="" value="{{get}} ">
+											<span class="mark filter-name">{{get}}</span>
+											<span class="mark filter-mark-text"></span>
+										</a>
+									</li>	
+							{% endfor %}									
+						</ul>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</li>
+{% endblock %}
+
+{% block edit_category %}
+    <li class="order_modal_list">
+    	<span class="module_order_desrioption">Kategoriya</span>
+    	<input type="text" class="edit_stock_input edit_stock_provider_input" value="{{block_name.value}}" >
+    </li>
+{% endblock %}
+
+{% block edit_first_price  %}
+    <li class="order_modal_list">
+    	<span class="module_order_desrioption">Alış qiyməti( <img src="/img/icon/manat.png" class="manat_con_class">): </span>
+    	<input type="text" class="order_input order_price_action edit_stock_input edit_sotck_fprice_input" value="{{block_name.value}}" >
+    </li>
+{% endblock %}
+
+{% block edit_second_price %}
+    <li class="order_modal_list">
+    	<span class="module_order_desrioption">Satış qiyməti(<img src="/img/icon/manat.png" class="manat_con_class">): </span>
+    	<input type="text" class="edit_stock_input edit_stock_sprice_input" value="{{block_name.value}}" >
+    </li>
+{% endblock %}
+
+{% block edit_hidden_count %}
+	<input type="hidden" class="upd_product_count" value="{{block_name.value}}">
+{% endblock %}
+
+{% block edit_count %}
+	<li class="order_modal_list">
+		<span class="module_order_desrioption">Say: </span>
+		<input type="text" class="edit_stock_input edit_stock_count_style upd_product_count" value="{{block_name.value}}">
+	</li>
+{% endblock %}
+
+{% block edit_add_count %}
+    <li class="order_modal_list edit_stock_count_add" style="opacity: 0.5">
+    	<a href="javascript:void(0)" title="Əlavə etmək" class="edit_custom_count edit_stock_add_count_ebable">
+    		<img src="img/icon/plus.png">
+    	</a>
+    	<span class="module_order_desrioption">Əlavə etmək(ədəd): </span>
+    	<span class="stock_add_mark_plus">+</span>
+    	<input type="text" disabled="" class="edited_custom_stock_count edit_stock_input edit_count_plus" placeholder="0">
+    </li>	
+{% endblock %}
+
+{% block edit_subtract_count %}
+    <li class="order_modal_list edit_stock_count_minus" style="opacity: 0.5">
+    	<a href="javascript:void(0)" title="Azaltmaq" class="edit_custom_count edit_stock_remove_count_ebable">
+    		<img src="img/icon/plus.png">
+    	</a>		
+    	<span class="module_order_desrioption">Azaltmaq</span>				
+    	<span class="minus_stock_count_mark">-</span>
+    	<input type="text" disabled="" class="edited_custom_stock_count edit_stock_input edit_count_minus">
+    </li>
+{% endblock %}
+
+{% block edit_ls_filter %}
+	{{ block("edit_filter", "/component/filter/filter_list.twig") }}
+{% endblock %} 
+
+{% block save_modal %}
+    <li class="edit_btn_wrp">
+    	<a href="javascript:void(0)" class="delete_btn_link btn">Sil</a>
+    	<a href="javascript:void(0)" class="edit_upd_btn_link btn edit_stock_action">Saxla</a>
+    </li>
+{% endblock %}
+{# end edit #}
+
+{# start terminal #}
+{% block order_name %}
+    <li class="order_modal_list">
+	    <span class="module_order_desrioption">Malın adı: </span>
+	    <span class="modal_stock_info module_stock_span_name"> {{block_name.value}} </span>
+    </li>
+{% endblock %}
+
+{% block order_imei %}
+    <li class="order_modal_list">
+    	<span class="module_order_desrioption">IMEI: </span>
+    	<span class="modal_stock_info module_stock_span_imei">{{block_name.value}}</span>
+    </li>
+{% endblock %}
+
+{% block first_price %}
+    <li class="order_modal_list">
+    	<span class="module_order_desrioption">Alış qiyməti: </span>
+    	<span class="modal_stock_info module_stock_span_imei">
+    		{{block_name.value}}
+    		<i class="mark mark--icon"><img src="/img/icon/manat.png" class="manat_con_class"></i>	
+    	</span>
+    </li>
+{% endblock %}	
+
+{% block order_provider %}
+	<li class="order_modal_list">
+		<span class="module_order_desrioption">Təchizatçı</span>
+		<span class="modal_stock_info module_stock_span_name"> {{block_name.value}} </span>
+	</li>
+{% endblock %}	
+
+{% block order_category %}
+	<li class="order_modal_list">
+		<span class="module_order_desrioption">Kategoriya</span>
+		<span class="modal_stock_info module_stock_span_name"> {{block_name.value}} </span>
+	</li>
+{% endblock %}	
+
+{# тут выводим фильтры товара #}
+{% block order_ls_filter %}
+	{{ block("terminal_filter", "/component/filter/filter_list.twig") }}
+{% endblock %}
+
+{% block order_note %}
+    <li class="order_modal_list">
+    	<span class="module_order_desrioption">Qeyd: </span>
+    	<input type="text" value="{{block_name.value}}" class="module_stock_input_whobuy order_input order_note_action" placeholder="...">
+    </li>	
+{% endblock %}
+
+{% block order_count %}
+    <li class="order_modal_list">
+    		<span class="module_order_desrioption">Malin sayi: </span>
+    	<div class="group">
+    		<input type="text" autocomplete="off" class="order_input order_stock_count_style order_count_action" value="{{block_name.value}}">
+    		<span class="mark-count-checkout"> ədəd</span>
+    	</div>	
+    </li>	
+{% endblock %}
+
+{% block order_hidden_count %}
+	<input type="hidden" autocomplete="off" class="order_count_action" value="{{block_name.value}}">	
+{% endblock %}
+
+{% block order_second_price %}
+    <li class="order_modal_list price-icon-after">
+    	<span class="module_order_desrioption">Malın qiyməti: </span>
+    	<input type="num" autocomplete="off" class="order_price_stock order_input order_price_action" value="{{block_name.value}}">
+    </li>
+{% endblock %}
+
+{% block order_total_amount %}
+    <li class="total_amount_order_list">
+    	<span class="total_chekcout_title">Cəmi</span>
+    	<div class="total_checkout_parent">
+    		<span class="show_total_sum_order_action order_total_sum_style">0.00</span>
+    		<span class="mark"><img src="/img/icon/manat.png" class="manat_con_class" ></span>
+    	</div>		
+    </li>			
+{% endblock %}
+
+{% block submit_order %}
+    <li class="order_modal_list">
+    	<div class="order_total_wrp">
+    		<a href="javascript:void(0)" class="order_total_btn_style btn get_order_action">Satış</a>
+    	</div>
+    </li>
+{% endblock %}
+{# end terminal #}
+
+{% block spoiler_group %}
+	{{ block("include_spoiler", "/component/modal/include_modal_fields.twig") }}
+{% endblock %}
+
+
+{# start report #}
+{% block report_order_id %}
+    <li class="order_modal_list">
+        <span class="module_order_desrioption">№: </span>
+        <span class="report_order_id" data-id="{{block_name.value}}">{{block_name.value}}</span>
+    </li>
+{% endblock %}
+
+
+{% block report_count %}
+    <li class="order_modal_list">
+    		<span class="module_order_desrioption">Malin sayi: </span>
+    	<div class="group">
+    		<input type="text" class="order_input order_stock_count_style order_count_action" value="">
+    		<span class="mark-count-checkout"> ədəd</span>
+    	</div>	
+    </li>	
+{% endblock %}
+
+{% block save_report %}
+    <li class="order_modal_list">
+		<div class="modal_fields_buttton_list group">
+			<div class="modal_button_fields">
+				<a href="javascript:void(0)" class="btn save_report_style save_report_action">Saxla</a>	
+			</div>
+			<div class="group">
+				<div class="modal_button_fields">
+					<a href="javascript:void(0)" class="btn open_modal_dialog report_return_stock_style return_order_action">Qaytarmaq</a>	
+				</div>
+				<div class="modal_button_fields">
+					<a href="javascript:void(0)" class="btn open_modal_dialog delete_report_style delete_report">Sil</a>
+				</div>						
+			<div>
+		</div>
+    </li>
+{% endblock %}
+
+{# end report #}

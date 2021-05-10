@@ -1,0 +1,107 @@
+{# Фильры для формы редкатирования товара #}
+{%  block edit_filter %}
+	{% for row in block_name.ls_filter %}
+
+			<li class="order_modal_list">
+				<span class="module_order_desrioption">{{ row.title }}</span>
+				<div class="add_stock_filter_redit">
+					<div class="ls-custom-select-wrapper">
+						<ul class="ls-select-list">
+							<div class="select-drop-down">
+
+								{% if row.active %}
+									{% for key, value in row.active %}
+										<input type="button"  id="{{value.filter_id}}" class="drop_down_btn filter_btn active-dropdown" value="{{value.filter_val}} {{row.short_name}} " default-value="Seçin" data-prefix="{{row.prefix}}">
+									{% endfor %}	
+									{# если фильтер активный меняем икноку  #}
+									{% set filter_icon_modify_class = 'la-times' %}
+								
+								{% else %}
+									{# если фильтер НЕ активный, то меняем иконку на дефолтную #}
+									{% set filter_icon_modify_class = 'la-angle-down' %}
+									
+										<input type="button"  id="" class="drop_down_btn filter_btn" value="Seçin" default-value="Seçin" data-prefix="{{row.prefix}}">
+								{% endif %}		
+								<div class="reset_option">
+									<div role="button" class="ls-reset-option ls-reset-option-style">
+										<i class="las reset-filter-icon button-icon-i {{filter_icon_modify_class}}"></i>
+									</div>
+								</div>
+							</div>
+							<div class="ls-select-option-list">
+								<ul class="ls-select-list-option ls-custom-scrollbar">
+
+									{% for key, get in row.compelte %}
+									<li class="ls-select-li">
+										<a href="javascript:void(0)" class="choice-option choice-style choice-color" id="{{get.id}}" value="{{get.value}} {{row.short_name}}">
+											<span class="mark filter-name">{{get.value}}</span>
+											<span class="mark filter-mark-text">{{row.short_name}}</span>
+										</a>
+									</li>
+									{% endfor %}										
+								</ul>
+							</div>
+						</ul>
+					</div>				
+				</div>
+			</li>
+	{% endfor %}
+{% endblock %}	
+
+{# показывать инфу фильров товара в терминале #}
+{% block terminal_filter %}
+	{% for row in block_name.ls_filter %}
+		<li class="order_modal_list">
+			<span class="module_order_desrioption">{{row.title}}</span>
+				{% if row.active %}
+					{% for key, value in row.active %}
+						<span class="modal_stock_info" id="{{value.filter_id}}">{{value.filter_val}} {{row.short_name}}</span>
+					{% endfor %}
+				{% else %}	
+					<span class="modal_stock_info" id=""> - </span>
+				{% endif %}	
+		</li>
+	{% endfor %}
+
+{% endblock %}
+ 
+ {# Форма добавлять товар в базу и фильтры для товара #}
+{% block form_filter_add %}
+	{% for row in data.ls_filter.val %}
+		<li class="add_stock_form_list row-list">
+			<span class="add_stock_description">{{row.title}}</span>
+			<div class="ls-custom-select-wrapper">
+				<ul class="ls-select-list">
+					<li>
+						<div class="select-drop-down">
+							<input type="button" id="" class="filter_btn drop_down_btn" value="seçin" default-value="seçin" data-prefix="{{row.prefix}}">
+							{# <div class="reset_option">
+								<input type="button" class="ls-reset-option ls-reset-option-style">
+							</div> #}
+
+							<div class="reset_option">
+								<div class="ls-reset-option ls-reset-option-style">
+									<i class="las button-icon-i reset-filter-icon la-angle-down"></i>
+								</div>
+							</div>							
+						</div>
+						<div class="ls-select-option-list">
+							
+							<ul class="ls-select-list-option ls-custom-scrollbar">
+								{% for key, get in row.compelte %}
+									<li class="ls-select-li">
+										<a href="javascript:void(0)" class="choice-option choice-style choice-color " id="{{get.id}}" value="{{get.value}} {{row.short_name}}">
+											<span class="mark filter-name">{{get.value}}</span>
+											<span class="mark filter-mark-text">{{row.short_name}}</span>
+										</a>
+									</li>	
+								{% endfor %}	
+							</ul>
+
+						</div>
+					</li>
+				</ul>
+			</div>
+		</li>
+	{% endfor %}
+{% endblock %}
