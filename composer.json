@@ -1,6 +1,0 @@
-{
-    "require": {
-        "twig/twig": "^3.0",
-        "picqer/php-barcode-generator": "^2.0"
-    }
-}

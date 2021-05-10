@@ -1,1 +1,0 @@
-Səhifə müvəqqəti olaraq əlçatmazdır
