@@ -90,3 +90,5 @@ exit();
 
 
 <!-- <script defer src="/js/check_update.js?v=<?php echo time(); ?>"></script> -->
+
+<!-- here upd -->
