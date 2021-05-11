@@ -1,4 +1,3 @@
-
 $.ajaxSetup({
     beforeSend: function( ){
 		// console.log('before send ajax');
@@ -151,15 +150,10 @@ function send_autocomplete($this) {
 	var search_data = $this.val().trim();
 	var data_name = $this.attr('data-name');
 	var autocmplt_type = $append_to.attr('data-auto-cmplt-type');
-	var $table = $('.stock_list_tbody');
+	var $table = $('.table-list');
 	var page = $table.attr('data-stock-page');
 	var type = $table.attr('data-stock-type'); 
 
-	if( $('.auto-cmplt-parent').hasClass('search_filter') ) {
-		search_filter = 'show';
-	} else {
-		search_filter = '';
-	}
 	console.log(search_data);
 	if(search_data.length > 1) {
 		$preloader.addClass('flex-cntr').removeClass('hide');
@@ -171,7 +165,6 @@ function send_autocomplete($this) {
 				data: {
 					value: search_data,
 					action: data_name,
-					search_filter: search_filter,
 					page: page,
 					type: type,
 					autocmplt_type: autocmplt_type

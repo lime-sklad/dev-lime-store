@@ -2,8 +2,6 @@
 
 //меню на главной странице
 $(document).ready(function(){
-
-	
 	// $('body').on('click', '.get_page_action', function(){
 	// 	//смотри в option.php
 	// 	//получаем ссылку на страницу
