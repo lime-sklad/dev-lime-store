@@ -189,6 +189,7 @@ if(isset($_POST['product_id'], $_POST['type'], $_POST['page'])) {
 	]);	
 	//если тип товара амбар или транкзакци 
 	if($page == 'terminal') {
+		echo 'ds';
 		//делаем запрос в базу с id  и знаносим результат в переменную
 		$stock = render_data_template([
 			'type' => $type,

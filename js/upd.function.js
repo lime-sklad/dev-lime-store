@@ -1,9 +1,58 @@
 /** GLOBAL START */
 //показать индинтификатор страницы
-function get_page_param(attr) {
-	var data_page = $('.stock_list_tbody').attr(attr);
-	return data_page;
-}
+$(document).ready(function(){
+  pageData = {
+    page: function() {
+      // получаем страницу
+      return $('.table').find('.table-list').data('stock-page');    
+    },
+    type: function() {
+      // получаем тип данных
+      return $('.table').find('.table-list').data('stock-type');
+    },
+    innerTable: function(data) {
+      // заполняем таблицу данными 
+      $('.table-list').html(data);
+    },
+    innerTableFooter: function(data) {
+      //заполняем футор таблицы данными
+      $('.tfoot_body').html(data);
+    },
+    preloaderShow: function() {
+      $('.body_prelodaer').find('.preloader').removeClass('hide').addClass('flex-cntr'); 
+    },
+    preloaderHide: function() {
+      setTimeout(function(){
+        $('.body_prelodaer').find('.preloader').removeClass('flex-cntr').addClass('hide');
+      }, 300);
+    },
+    rightSideModal: function(data) {
+      var $modal_wrp = $('.module_fix_right_side');
+      
+      $modal_content = $modal_wrp.find('.modal_view_stock_order');
+      $modal_wrp.removeClass('hide').addClass([
+        'animate__animated',
+        'animate__faster',
+        'animate__slideInRight'
+      ]);
+      $modal_content.html(data);
+    },
+    rightSideModalHide: function() {
+      $modal_wrp = $('.module_fix_right_side');
+      
+      $modal_wrp.removeClass([
+        'animate__animated',
+        'animate__slideInRight',
+      ]).addClass('hide').find('.modal_view_stock_order').empty();
+    },
+    overlayShow: function() {
+      $('.overlay').show();
+    },  
+    overlayHide: function() {
+      $('.overlay').hide();
+    }
+  };
+});
 
 /** GLOBAL END  */
 
@@ -32,13 +81,13 @@ $('body').on('click', '.get_main_page', function(){
   visible_menu('show');
 });
 
-//открываем меню
+/** открываем меню */ 
 function visible_menu(param) {
   var class_list = [
     'menu--active',
     'animate__animated',
-    'animate__fast', 
-    'animate__slideInDown'
+    'animate__faster', 
+    'animate__slideInRight'
   ];
 
   if(param == 'show') {
@@ -74,17 +123,6 @@ function ui_selected_tab() {
 }
 
 /** menu start */
-
-function preloader_state(state, $append_to) {
-  var $preloder = $('.body_prelodaer').find('.preloader');
-  if(state == 'show') {
-    $preloder.removeClass('hide').addClass('flex-cntr');
-  }
-  if(state == 'hide') {
-    $preloder.addClass('hide').removeClass('flex-cntr');
-  }
-}
-
 function notice_modal() {
 }
 
@@ -107,8 +145,8 @@ $(document).on('click', '.area-button', function(){
 
   var content_modify_class = [
     'animate__animated',
-    // 'animate__lsFadeIn25',
-    // 'animate__faster'
+    'animate__lsFadeIn25',
+    'animate__faster'
   ];
 
   var area_active = 'area-active';
@@ -395,3 +433,7 @@ function reset_all_filter() {
 
 /** widget end */
 
+$('body').on('click', '.close_modal_btn, .overlay', function(){
+  pageData.rightSideModalHide();
+  pageData.overlayHide();
+});

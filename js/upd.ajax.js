@@ -1,11 +1,9 @@
 $.ajaxSetup({
     beforeSend: function( ){
-		// console.log('before send ajax');
-        preloader_state('show');
+		pageData.preloaderShow();
     },
     complete: function() {
-		// console.log('complete ajax');
-        preloader_state('hide');
+		pageData.preloaderHide();
     } 
 });
 
@@ -113,30 +111,24 @@ $('body').on('click', '.tab-button', function(){
 
 //фильтрация товара
 function send_filter(filter_list) {
-
-   
-    var $table_body = $('.stock_list_tbody');
-    
 	//переключаем состяние на активный
-	var data_page = get_page_param('data-stock-page');
-	var data_type = get_page_param('data-stock-type');    
 	$.ajax({
 		type: 'POST',
 		url:  '/core/action/get_filter_stock.php',
 		data: {
 			id: filter_list,
-			page: data_page,
-			type: data_type
+			page: pageData.page(),
+			type: pageData.type()
 		},
         dataType: 'JSON',
 		success: (data) => { 
 
 			//выводим в талицу данные
 			if(data.table) {
-				$table_body.html(data.table);	
+				pageData.innerTable(data.table);	
 			}
 			if(data.total) {
-				// update_tfoot_reuslt(data.total);
+				pageData.innerTableFooter(data.total);
             }
 		}				
 	});
@@ -151,10 +143,9 @@ function send_autocomplete($this) {
 	var data_name = $this.attr('data-name');
 	var autocmplt_type = $append_to.attr('data-auto-cmplt-type');
 	var $table = $('.table-list');
-	var page = $table.attr('data-stock-page');
-	var type = $table.attr('data-stock-type'); 
 
 	console.log(search_data);
+	console.log(pageData.type());
 	if(search_data.length > 1) {
 		$preloader.addClass('flex-cntr').removeClass('hide');
 		clearTimeout($this.data('timer'));
@@ -165,8 +156,8 @@ function send_autocomplete($this) {
 				data: {
 					value: search_data,
 					action: data_name,
-					page: page,
-					type: type,
+					page: pageData.page(),
+					type: pageData.type(),
 					autocmplt_type: autocmplt_type
 				},
 				beforeSend: () => {
@@ -197,28 +188,26 @@ $(document).on('click', '.search-item', function(){
 	//for report sort data 
     var sort_data = $(this).data('sort');
     
-    let $search_main_table = $('.stock_list_tbody');
+    var $search_main_table = $('.stock_list_tbody');
 	//тут мы получаем тип таблицы (terminal, stock, report и тд)
-	let search_from 		= $search_main_table.attr("data-stock-page");	
-	let search_product_cat  = $search_main_table.attr("data-stock-type");
 
 	$.ajax({
 		type: 'POST',
 		url: '/core/action/search.php',
 		data: {
 			search_item_value	: search_item_value, 
-			page				: search_from, 
-			type			    : search_product_cat,
+			page				: pageData.page(), 
+			type			    : pageData.type(),
 			sort_data 			: sort_data
 		},
 		dataType: 'json',
 		success: (data) => {
 			//выводим в талицу данные
 			if(data.table) {
-				$search_main_table.html(data.table);	
+				pageData.innerTable(data.table);	
 			}
 			if(data.total) {
-				// update_tfoot_reuslt(data.total);
+				pageData.innerTableFooter(data.total);
 			}
 			console.log('hello world');
 
@@ -227,3 +216,37 @@ $(document).on('click', '.search-item', function(){
 });
 
 /** end send filter */
+
+
+
+/** order start*/
+$('body').on('click', '.stock-list', function(){
+	$modal = $('.modal_view_stock_order');
+
+	pageData.preloaderShow();
+	pageData.overlayShow();
+	$('.get_order_action').removeClass('click');
+
+	//получаем id проддукта от родительсокого эелемента
+	var product_id = $(this).attr("id");		
+	//report_order_id
+	var order_id = $(this).find('.get_report_order_id').attr('data-sort-value');
+
+	$.ajax({
+		type: 'POST',
+		url: '/core/modal_action/order.php',
+		data:{
+			product_id : product_id,
+			order_id: order_id, 
+			type  : pageData.type(), 
+			page  : pageData.page()
+		},
+		success: (data) => {
+			pageData.rightSideModal(data);
+		}			
+
+	});
+
+});
+
+/** end order */

@@ -13,7 +13,13 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
 			'/component/index/head.twig' => [
 				'lib_list' => lib_include_list(),
 				'v' => time() 
-			]
+			],
+			'/component/related_component/body_preloader.twig' => [
+				//data
+			],
+			'/component/related_component/overlay.twig' => [
+				//data
+			]				
 		]
 	]); 
 	
@@ -30,10 +36,7 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
 			],
 			'/component/modal/modal_wrapper.twig' => [
 				//data
-			],
-			'/component/related_component/body_preloader.twig' => [
-				//data
-			]			
+			],		
 		],
 		'sidebar' => [
 			'user_id' => getUser('get_id'),
@@ -46,49 +49,3 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
 	]);
 	
 
- 
-	// echo $twig->render('/component/container.twig', [
-    //     'renderComponent' => [
-	// 		'/component/index/top_nav.twig' => [
-	// 			//code
-	// 		],
-    //         '/component/main_menu/menu_list.twig' => [
-    //             'menu' =>  get_tab_main_page_test()
-	// 		],
-	// 		'/component/modal/modal_wrapper.twig' => [
-	// 			//code
-	// 		],
-    //     ] 
-    // ]);
-
-	exit();
-
-
-
-	if($update_check_day == $weak_now) {
-		check_connections(require_once GET_ROOT_DIRS.'/core/main/update_check.php');
-		//опросник
-		check_connections(require_once  GET_ROOT_DIRS.'/core/modal_action/show_quiz.php');
-	}	
-
-exit();
-?>
-
-
-<div class="container" id="container">
-	<div class="sidebar_menu_wrp">
-		<?php require_once 'core/main/menu_sidebar.php'; ?>
-	</div>
-
-	<div class="main" id="main">
-		<div class="main-wrapper" id="main_wrapper">
-			<?php require_once 'core/main/options.php'; ?>
-		</div>
-	</div>
-
-</div>
-
-
-<!-- <script defer src="/js/check_update.js?v=<?php echo time(); ?>"></script> -->
-
-<!-- here upd -->

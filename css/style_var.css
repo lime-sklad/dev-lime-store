@@ -47,6 +47,7 @@
     --black_900: #0d0d0d;
     --black_1000: #070707;
 
+    --blue_25: #eaedf5;
     --blue_50: rgb(131 192 253 / 50%);
     --blue_100: #ebeeff;
     --blue_150: #e6e9ff;
@@ -87,6 +88,34 @@
     --indigo_blue_980: #151838;
     --indigo_blue_990: #0e1025;
     
+    --green_success: #4BB543;
+    --green_light: #5bd052;
+    --green_alpha_10:  rgb(75 181 67 / .1);
+    --green_alpha_20:  rgb(75 181 67 / .2);
+    --green_alpha_30:  rgb(75 181 67 / .3);
+    --green_alpha_40:  rgb(75 181 67 / .4);
+    --green_alpha_50:  rgb(75 181 67 / .5);
+    --green_alpha_60:  rgb(75 181 67 / .6);
+    --green_alpha_70:  rgb(75 181 67 / .7);
+    --green_alpha_80:  rgb(75 181 67 / .8);
+    --green_alpha_90:  rgb(75 181 67 / .9);
+    --green_alpha_100:  rgb(75 181 67 / 1);
+
+
+    --red_danger: #e51c20;
+    --red_danger_light: #e14045;
+    --red_alpha_10: rgb(229 28 32 / .1);
+    --red_alpha_20: rgb(229 28 32 / .2);
+    --red_alpha_30: rgb(229 28 32 / .3);
+    --red_alpha_40: rgb(229 28 32 / .4);
+    --red_alpha_50: rgb(229 28 32 / .5);
+    --red_alpha_60: rgb(229 28 32 / .6);
+    --red_alpha_70: rgb(229 28 32 / .7);
+    --red_alpha_80: rgb(229 28 32 / .8);
+    --red_alpha_90: rgb(229 28 32 / .9);
+    --red_alpha_100: rgb(229 28 32 / 1);
+    
+
     --shadow_top: 0px -5px 3px -3px;
     --shadow_bottom: 0px 5px 3px -3px;
     --shadow_right: 2px 0px 4px;

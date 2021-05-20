@@ -2680,7 +2680,7 @@ global $manat_image,
 				'is_title' 			=> check_th_return_name('th_category'),
 				'modify_class' 		=> 'th_w200',
 				'td_class' 			=> '',
-				'link_class' 		=> 'stock-link-text-filter get_item_by_filter res_provider',
+				'link_class' 		=> 'stock-link-text-both res_provider',
 				'data_sort' 		=> 'provider',				
 				'mark'				=> array(
 					'mark_text' 		=> '',
@@ -2695,7 +2695,7 @@ global $manat_image,
 				'is_title' 			=> check_th_return_name('th_buy_day'),
 				'modify_class' 		=> 'th_w120',
 				'td_class' 			=> '',
-				'link_class' 		=> 'stock-link-text-filter get_item_by_filter res_buy_date',
+				'link_class' 		=> 'stock-link-text-both res_buy_date',
 				'data_sort' 		=> 'buy_date',				
 				'mark'				=> array(
 					'mark_text' 		=> '',
@@ -2710,7 +2710,7 @@ global $manat_image,
 				'is_title' 			=> check_th_return_name('th_day_sale'),
 				'modify_class' 		=> 'th_w120',
 				'td_class' 			=> '',
-				'link_class' 		=> 'stock-link-text-filter get_item_by_filter res_buy_date',
+				'link_class' 		=> 'stock-link-text-both res_buy_date',
 				'data_sort' 		=> 'buy_date',				
 				'mark'				=> array(
 					'mark_text' 		=> '',
@@ -3386,7 +3386,7 @@ function get_stock_first_price_sum($stock_list) {
 		'title' => 'Malların ümumi dəyəri',
 		'value' => array_sum($total_sum),
 		'mark' 	=> '',
-		'mark_icon' => '/img/icon/manat.png'
+		'mark_icon' => '/img/icon/manat.svg'
 	];	
 }
 
