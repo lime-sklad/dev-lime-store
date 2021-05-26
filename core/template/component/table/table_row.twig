@@ -41,7 +41,7 @@
 
 							{% if row.data is not empty %}
 								{% if row.mark.mark_text %} 
-									<span class="button-icon-left mark stock-list-mark" title="{{ row.mark.mark_title }}">{{ row.mark.mark_text }}</span> 
+									<span class="button-icon-left mark stock-list-mark {{row.mark.mark_modify_class}}" title="{{ row.mark.mark_title }}">{{ row.mark.mark_text }}</span> 
 								{% endif %}
 
 								{% if row.mark.mark_icon.path %} 
@@ -56,4 +56,6 @@
 			</tr>
 		{% endfor %}	
 	{% endfor %}
+{% elseif data.table.td is empty %}
+	{% include '/component/table/empty_row.twig' %}
 {% endif %}

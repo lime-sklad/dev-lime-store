@@ -8,7 +8,7 @@ $user_list_row = $user_list->fetch(PDO::FETCH_BOTH);
 $user_name_val = 'value="'.$user_list_row['user_name'].'" ';
 
 if(isset($_POST['btn-login']))
-{
+{ 
  
 	if (isset($_POST['email'])) {
 

@@ -36,7 +36,6 @@
 			'/component/table/table_footer_wrapper.twig' => [
 				'table_total'    	=> get_table_total(['total_list' => $page_config['table_total_list'],  'data' => $table_result['base_result']]) 
 			]
-			
 		]
 	]);
 		

@@ -1,17 +1,15 @@
 {% for row in data.table_total  %}
-	{% if row.value %}
-		<tr class="tfoot_row">
-			<th class="tfoot_header">
-				<span class="mark mark--total-price total_value_title">{{row.title}} - </span>
-			</th>
-			<td class="tfoot_data">
-				<span class="s_result_sprice"> {{ row.value }}</span>
-				{% if row.mark %}
-				<span class=""> {{row.mark}} </span>
-				{% elseif row.mark_icon %}
-				<span class="mark mrgn-left-5"> <img src="{{row.mark_icon}}" class="mark-icon-manat"> </span>
-				{% endif %}
-			</td>
-		</tr>
-	{% endif %}
+	<tr class="tfoot_row">
+		<th class="tfoot_header">
+			<span class="total_value_title">{{row.title}} - </span>
+		</th>
+		<td class="tfoot_data">
+			<span class="s_result_sprice mark mark-text"> {{ row.value }}</span>
+			{% if row.mark %}
+				<span class="mark mark-text mark-right"> {{row.mark}} </span>
+			{% elseif row.mark_icon %}
+				<span class="mark mark-icon mark-right"> <img src="{{row.mark_icon}}" class="mark-icon-manat"> </span>
+			{% endif %}
+		</td>
+	</tr>
 {% endfor %}

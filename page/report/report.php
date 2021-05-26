@@ -7,18 +7,13 @@
 
 	//параметры поиска
 	$search_arr = array(
-		'input_class' 	 => 'auto-cmplt-input stock_auto_compelete', //классы поля ввода поиска
-		'parent_class'	 => 'auto-cmplt-parent search_filter', //класс для родителя инпута
-		'label'			 => 'Axtar', //заполнить/оставить пустым или 
-		'label_title' 	 => '',
-		'clear_button' 	 => array(
-			'value' 			=> get_my_dateyear(),
-			'data_sort_value' 	=> get_my_dateyear(),
-			'data_sort_type'	=> 'date_year',
-			'modify_class' 		=> ''
-		),
-		'autocomplete' 	 => array(
-			'type' => 'search'
+		'input_class' 	 => 'search-auto', //классы поля ввода поиска
+		'parent_class'	 => '', //класс для родителя инпута
+		'label'			 => '', //заполнить/оставить пустым или 
+		'input_placeholder' 	 => 'Axtar',
+		'reset' => true,
+		'autocomplete' => array(
+			'type' 	=> 'search' 
 		)
 	);
 	$page_config = page_data_list(['type' => $type, 'page' => $page ]);
@@ -39,7 +34,7 @@
 	
 	echo $twig->render('/component/inner_container.twig', [
 		'renderComponent' => [
-			'/component/related_component/include_tooltip.twig' => [
+			'/component/related_component/include_widget.twig' => [
 				'/component/widget/report_date_picker.twig' => [
 					'res' => get_report_date_list($type)
 				],

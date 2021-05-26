@@ -52,15 +52,17 @@ $render_tpl = render_data_template([
 	]       
 ]);  
 
+
 $table = $twig->render('/component/include_component.twig', [
-    'renderComponent' => [
-        '/component/table/table_row.twig' => [		
+	'renderComponent' => [
+		'/component/table/table_row.twig' => [		
 			'table' => $render_tpl['result'],
 			'table_tab' => $page,
 			'table_type' => $type
-        ]  
-    ]
-]);
+		]  
+	]
+]);	
+
 
 $total = $twig->render('/component/include_component.twig', [
 	'renderComponent' => [

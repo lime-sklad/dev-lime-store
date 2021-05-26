@@ -146,7 +146,7 @@ function send_autocomplete($this) {
 
 	console.log(search_data);
 	console.log(pageData.type());
-	if(search_data.length > 1) {
+	if(search_data.length > 0) {
 		$preloader.addClass('flex-cntr').removeClass('hide');
 		clearTimeout($this.data('timer'));
 		$this.data('timer', setTimeout(function(){

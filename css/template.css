@@ -444,3 +444,52 @@
 /* end thead widtrh */
 
 
+.mark {
+    display: inline-block;
+}
+.mark-text {
+    font-family: var(--font_work_sans);
+    font-weight: 500;
+    font-size: 17px;
+}
+.mark-icon {
+    width: 16px;
+    height: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.mark-right {
+    margin-left: 3px;
+}
+.mark-danger {
+    background: var(--red_alpha_10);
+    color: var(--red_danger_light);
+}
+.mark-primary {
+    background: var(--blue_150);
+    color: var(--primary_color);
+}
+.mark-success {
+    background: var(--green_alpha_10);
+    color: var(--green_success);
+}   
+.mark-warning {
+    background: orange;
+}
+.mark-default {
+    background: var(--gray_100);
+    color: var(--gray_900);
+}
+
+
+
+.mark-chips {
+    text-align: center;
+    border-radius: 16px;
+    font-size: 12px;
+    padding: 4px 10px;
+    text-transform: uppercase;
+    font-weight: 600; 
+    margin-right: 0;       
+}
