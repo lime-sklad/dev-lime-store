@@ -19,7 +19,7 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
 			],
 			'/component/related_component/overlay.twig' => [
 				//data
-			]				
+			],								
 		]
 	]); 
 	
@@ -36,7 +36,7 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
 			],
 			'/component/modal/modal_wrapper.twig' => [
 				//data
-			],		
+			]				
 		],
 		'sidebar' => [
 			'user_id' => getUser('get_id'),

@@ -1,4 +1,4 @@
-<?php
+<?php 
 require __DIR__.'/db/config.php';
 //upd 
 require __DIR__.'/private.function.php';
@@ -51,6 +51,7 @@ function get_my_dateyear() {
 function get_my_datetoday() {
 	return  date("d.m.Y");
 }
+
 function check_connections($var) {
 	$ch = curl_init('https://www.google.com/');
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -59,7 +60,6 @@ function check_connections($var) {
 
 	$info = curl_getinfo($ch);
 	curl_close($ch);
-
 
 	if($info['http_code'] == '200') {
 		return $var;
@@ -306,11 +306,11 @@ function get_tab_main_page_test() {
 			'background_color'  => 'rgba(0, 150, 136, 0.1)',
 			'tab' => array(
 				'list' => [
-					'tab_test',
 					'tab_terminal_phone',
-					'tab_terminal_akss'	 					
+					'tab_terminal_akss',
+					'tab_cart'
 				],
-				'active' => 'tab_test'
+				'active' => 'tab_terminal_phone'
 			)
 		],	
 		'stock' =>	[
@@ -448,8 +448,19 @@ function get_tab_data($key = null, $active = null) {
 			'tab_title' => 'Admin panel',
 			'tab_link' => '/page/terminal/terminal.php',
 			'tab_icon' => false,
-			'tab_mofify_class' => false
-		)		 
+			'tab_modify_class' => false
+		),
+		'tab_cart' => array(
+			'type' => false,
+			'tab_title' => 'Корзина',
+			'tab_link' => '/page/terminal/cart.php',
+			'tab_icon' => false,
+			'tab_modify_class' => 'pos-relative',
+			'mark' => [
+				'modify_class' => 'widget__mark-rigt in-cart-count',
+				'text' => ''
+			]
+		),	 
 	);
 
 	if(!empty($key)) {
@@ -480,10 +491,9 @@ function collect_product_data($stock_list, $data_name) {
 
 	$th 		= get_th_list();		
 
-	// ls_var_dump($stock_list);
+	// ls_var_dump($stock_list	);
 
 	foreach ($data_name as $td_list => $td_row) {
-
 		$th_this		 	= $th[$td_list];
 		$th_title 			= $th_this['is_title'];
 		$th_modify_class 	= $th_this['modify_class'];
@@ -493,28 +503,25 @@ function collect_product_data($stock_list, $data_name) {
 		$mark 				= $th_this['mark'];
 
 		if($th_title) {
-			
+
 			$th_list[] = [
 				'title' => $th_title,
 				'modify_class' => $th_modify_class
 			];
-		
-		
+
 			$mass = [];
 			foreach ($stock_list as $key => $row) {
 				//fix return	
 				($row['stock_return_status'] == 1) ? $row['stock_return_status'] = ' ' : $row['stock_return_status'] = false;
-				
-				// $result[$row['stock_id']][] = [
-				// 	'data' 			=> $row[$td_row],
-				// 	'td_class' 		=> $td_class,
-				// 	'link_class' 	=> $link_class,
-				// 	'data_sort' 	=> $data_sort,
-				// 	'mark'			=> $mark
-				// ];
+
+				if(array_key_exists($td_row, $row)) {
+					$data = $row[$td_row];
+				} else {
+					$data = null;
+				}
 
 				$result[$key][$row['stock_id']][] = [
-					'data' 			=> $row[$td_row],
+					'data' 			=> $data,
 					'td_class' 		=> $td_class,
 					'link_class' 	=> $link_class,
 					'data_sort' 	=> $data_sort,
@@ -541,7 +548,7 @@ function get_th_list() {
 			'id' => array(
 				'is_title' 			=> check_th_return_name('th_serial'),
 				'modify_class'	 	=> 'th_w40',
-				'td_class' 			=> 'table_stock',
+				'td_class' 			=> '',
 				'link_class' 		=> 'stock-link-text-both',
 				'data_sort' 		=> '',
 				'mark'				=> array(
@@ -556,7 +563,7 @@ function get_th_list() {
 			'name' => array(
 				'is_title'  		=> check_th_return_name('th_prod_name'),
 				'modify_class' 		=> 'th_w250',
-				'td_class' 			=> 'table_stock',
+				'td_class' 			=> '',
 				'link_class' 		=> 'stock-link-text-both res_name filter-hotkey-sort',
 				'data_sort' 		=> 'name',
 				'mark'				=> array(
@@ -571,7 +578,7 @@ function get_th_list() {
 			'imei'  => array( 
 				'is_title' 			=> check_th_return_name('th_imei'),
 				'modify_class' 		=> 'th_w250',
-				'td_class' 			=> 'table_stock',
+				'td_class' 			=> '',
 				'link_class' 		=> 'stock-link-text-both res_imei',
 				'data_sort' 		=> 'imei',
 				'mark'				=> array(
@@ -586,7 +593,7 @@ function get_th_list() {
 			'first_price' => array(
 				'is_title'  		=> check_th_return_name('th_buy_price'),
 				'modify_class'		=> 'th_w80',
-				'td_class' 			=> 'table_stock',
+				'td_class' 			=> '',
 				'link_class' 		=> 'stock-link-text-both res_fprice',
 				'data_sort' 		=> '',
 				'mark_text' 		=> '',
@@ -601,7 +608,7 @@ function get_th_list() {
 			'second_price' => array(
 				'is_title'  		=> check_th_return_name('th_sale_price'),
 				'modify_class'		=> 'th_w80',
-				'td_class' 			=> 'table_stock',
+				'td_class' 			=> '',
 				'link_class' 		=> 'stock-link-text-both res_sprice',
 				'data_sort' 		=> '',
 				'mark'				=> array(
@@ -629,7 +636,7 @@ function get_th_list() {
 				)	
 			),
 			'return_status' => array(
-				'is_title'  		=>  check_th_return_name('th_return') . ' ?',
+				'is_title'  		=>  check_th_return_name('th_return'),
 				'modify_class'		=> 'th_w40',
 				'td_class' 			=> '',
 				'link_class' 		=> 'stock-link-text-both',
@@ -647,7 +654,7 @@ function get_th_list() {
 			'count' => array(
 				'is_title' 			=> check_th_return_name('th_count'),
 				'modify_class' 		=> 'th_w80',
-				'td_class' 			=> 'table_stock',
+				'td_class' 			=> '',
 				'link_class' 		=> 'stock-link-text-both',
 				'data_sort' 		=> '',
 				'mark'				=> array(
@@ -707,7 +714,7 @@ function get_th_list() {
 			'report_note' => array(
 				'is_title' 			=> check_th_return_name('th_report_note'),
 				'modify_class' 		=> 'th_w120',
-				'td_class' 			=> 'table_stock',
+				'td_class' 			=> '',
 				'link_class' 		=> ' stock-link-text-both res_note',
 				'data_sort' 		=> '',				
 				'mark'				=> array(
@@ -722,7 +729,7 @@ function get_th_list() {
 			'report_profit' => array(
 				'is_title' 			=> check_th_return_name('th_profit'),
 				'modify_class' 		=> 'th_w80',
-				'td_class' 			=> 'table_stock',
+				'td_class' 			=> '',
 				'link_class' 		=> 'stock-link-text-both',
 				'data_sort' 		=> '',				
 				'mark'				=> array(
@@ -737,7 +744,7 @@ function get_th_list() {
 			'report_date_year' => array(
 				'is_title' 			=> false,
 				'modify_class' 		=> 'th_w80',
-				'td_class' 			=> 'table_stock',
+				'td_class' 			=> '',
 				'link_class' 		=> 'stock-link-text-both',
 				'data_sort' 		=> 'date_year',				
 				'mark'				=> array(
@@ -752,7 +759,7 @@ function get_th_list() {
 			'report_order_id' => array(
 				'is_title' 			=> check_th_return_name('th_report_serial'),
 				'modify_class' 		=> 'th_w80',
-				'td_class' 			=> 'table_stock',
+				'td_class' 			=> '',
 				'link_class' 		=> 'stock-link-text-both get_report_order_id',
 				'data_sort' 		=> '',				
 				'mark'				=> array(
@@ -763,7 +770,39 @@ function get_th_list() {
 						'icon_title' => false
 					)
 				)					
-			),					 			  					
+			),
+			'terminal_add_basket' => array(
+				'is_title' 			=> ' ',
+				'modify_class' 		=> 'th_w60',
+				'td_class' 			=> 'table-ui-reset',
+				'link_class' 		=> 'las la-cart-plus btn btn-secondary add-basket-btn-icon add-basket-button width-100 add-to-cart',
+				'data_sort' 		=> '',				
+				'mark'				=> array(
+					'mark_text' 		=> '',
+					'mark_modify_class' => '',
+					'mark_icon'			=> array(
+						'path' 		 => false,
+						'icon_class' => false,
+						'icon_title' => false
+					)
+				)					
+			),
+			'terminal_basket_count_plus' => array(
+				'is_title' 			=> ' ',
+				'modify_class' 		=> 'th_w60',
+				'td_class' 			=> 'table-ui-reset',
+				'link_class' 		=> 'las la-plus btn btn-primary add-basket-btn-icon width-100 card-plus-count',
+				'data_sort' 		=> '',				
+				'mark'				=> array(
+					'mark_text' 		=> '',
+					'mark_modify_class' => '',
+					'mark_icon'			=> array(
+						'path' 		 => false,
+						'icon_class' => false,
+						'icon_title' => false
+					)
+				)					
+			),											 			  					
 		];
 	
 	return $th_list;
@@ -1023,7 +1062,8 @@ function page_data_list($arr) {
 					'first_price'		=> 'stock_first_price',
 					'second_price' 		=> 'stock_second_price',
 					'provider' 			=> 'stock_provider',
-					'return_status' 	=> 'stock_return_status'
+					'return_status' 	=> 'stock_return_status',
+					'terminal_add_basket' => null
 				],
 				'table_total_list' => [
 					'total_count',
@@ -1054,7 +1094,6 @@ function page_data_list($arr) {
 				]
 			];	
 		}
-	
 		if($type == 'akss') {		
 			$res = [
 				'get_data' => [
@@ -1063,7 +1102,9 @@ function page_data_list($arr) {
 					'first_price'		=> 'stock_first_price',
 					'second_price' 		=> 'stock_second_price',
 					'count'				=> 'stock_count',
-					'category' 			=> 'stock_provider'	
+					'category' 			=> 'stock_provider',
+					'terminal_add_basket' => null,
+
 				],
 				'table_total_list' => [
 					'total_count'

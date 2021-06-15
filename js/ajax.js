@@ -1,4 +1,4 @@
-
+ 
 
 //меню на главной странице
 $(document).ready(function(){
@@ -1227,8 +1227,6 @@ $('body').on('click', '.load_barcode_modal', function(){
 		}
 
 		totla_product.push(myData);
-
-
 	}
 
     $(document).on('scan.pos.barcode', function(event){

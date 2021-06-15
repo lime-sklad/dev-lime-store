@@ -19,7 +19,6 @@
 		'page' => $page
 	]);
 
-
 	echo $twig->render('/component/inner_container.twig', [
 		'renderComponent' => [
 			'/component/related_component/include_widget.twig' => [

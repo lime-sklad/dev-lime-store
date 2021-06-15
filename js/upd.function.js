@@ -50,6 +50,9 @@ $(document).ready(function(){
     },  
     overlayHide: function() {
       $('.overlay').hide();
+    },
+    overlayToggle: function() {
+      $('.overlay').toggle();
     }
   };
 });
@@ -389,7 +392,7 @@ function ui_display_filter_chips(list) {
       }
     });
  
-    if($parent.find(`.checked-mark-item[data-rel-filter-id="${el.filter_type}"]`).length <= 0){
+    if($parent.find(`.checked-mark-item[data-rel-filter-id="${el.filter_type}"]`).length === 0){
       $parent.append(`
         <div  class="checked-mark-item " data-rel-filter-id="${el.filter_type}" > 
           <div class="checked-mark-title">${el.filter_name}</div> 
@@ -402,7 +405,7 @@ function ui_display_filter_chips(list) {
 
 
     $this = $parent.find(`.checked-mark-item[data-rel-filter-id="${el.filter_type}"]`);
-    if($this.find('.chips-list').find(`.checked-chips[data-filter-chip-id="${el.filter_id}"]`).length <= 0) {
+    if($this.find('.chips-list').find(`.checked-chips[data-filter-chip-id="${el.filter_id}"]`).length === 0) {
       $this.find('.chips-list').append(`
        <a class="checked-chips remove_checked_filter" data-filter-chip-id="${el.filter_id}" href="javascript:void(0)">
           <span class="checked-mark-value">${el.value} ${el.mark}</span>
@@ -416,8 +419,8 @@ function ui_display_filter_chips(list) {
   });
 
 
-  if($('.checked-filter-list').children().length <= 0 || list.length <= 0) {
-    // alert('array is empty');
+  if(!$('.checked-filter-list').children() || list.length == 0) {
+    // alert('array is empty');  
     $('.checked-filter-list').empty();
   } 
 
@@ -443,3 +446,382 @@ $('body').on('click', '.close_modal_btn, .overlay', function(){
   pageData.rightSideModalHide();
   pageData.overlayHide();
 });
+
+
+
+/** EXPERIMENTAL */
+$(document).ready(function(){
+
+
+  $('body').on('focusout input', '.input-validate-length', function(){
+    var val = $(this).val();
+    input_validate_lenght(val, $(this));
+  });
+
+  $('body').on('focusout input', '.input-validate-price', function(){
+    var val = $(this).val();
+    var preg_val = input_validate_price(val);
+    $(this).val(preg_val);
+  });
+
+  $('body').on('focusout keyup input', '.input-validate-count', function(){
+    var $this = $(this);
+    var val = $this.val();
+    var preg_val = input_validate_count(val);
+    // var preg_val = preg_val.trim();
+    const cart_id = $this.closest('.cart-item').data('cart-id');
+    
+    const carts = cart.get_cart_list();
+    carts.forEach(el => {
+      if(el.id == cart_id) {
+        if(preg_val <= 0 || preg_val > el.maxCount) {
+          alert_notice('Минимальное количество 1', $this);
+        } else {
+          hide_notice($this);
+        }
+
+        $this.val(preg_val);
+      }
+    });
+  });
+
+  function input_validate_lenght(val, $this) {
+    val.trim().length == 0 ? alert_notice('Поле не может быть пустым!', $this) : hide_notice($this);
+  }
+
+  function input_validate_price(price) {
+    var price = price.replace(',', '.' );
+    var price = price.replace(/[^.\d]+/g,"");
+    var price = price.replace( /^([^\.]*\.)|\./g, '$1');
+    return price; 
+  }
+
+  function input_validate_count(count) {
+    var count = count.replace(/[^.\d]+/g,"").replace(/[^,\d]+/g,"");
+    var count = count.replace(/^0/,'');
+    return count;
+  }
+
+  function alert_notice(text, el) {
+    hide_notice(el);
+    el.addClass('input-validate-error');
+  }
+
+  function hide_notice(el) {
+    el.removeClass('input-validate-error');
+    el.parent().find('.warning-notice').remove();
+  }
+
+
+  var cart_list = [];
+
+  cart = {
+    draw: function() {
+      var $wrp = $('.cart').find('.cart-item-list');
+      $('.cart-item').removeClass('in-cart');
+
+      cart_list.forEach(item => {
+        $(`.cart-item[data-cart-id="${item.id}"]`).addClass('in-cart');
+
+        if($(`.cart-item[data-cart-id="${item.id}"]`).length == 0) {
+          $('.cart').find('.cart-item-list').append(`
+            <tr class="cart-item in-cart" data-cart-id="${item.id}">
+                <td>
+                    <span class="stock-list-title">${item.id}</span>
+                </td>
+
+                <td>
+                    <span class="stock-list-title">${item.name}</span>
+                </td>
+
+                <td>
+                    <div class="cart-input-container flex flex-ai-cntr">
+                        <div class="cart-input-icon cart-input-price-icon opacity-06">
+                            <img src="../../img/icon/manat.svg">
+                        </div>                                        
+                        <input type="text" class="cart-order-price input cart-input input-validate-length input-validate-price input-required" value="">
+                    </div>
+                </td>
+
+                <td>
+                    <div class="flex flex-ai-cntr cart-input-container">
+                        <button class="las la-minus btn btn-default add-basket-btn-icon cart-counter cart-minus-count"></button>
+                          <div class="counter-input">
+                            <input type="text" class="cart-order-count cart-order-input input cart-input input-validate-length input-validate-count input-required"  value="${item.count}">
+                          </div>
+                        <button class="las la-plus btn btn-default add-basket-btn-icon cart-counter cart-plus-count"></button>
+                    </div>                                  
+                </td>
+
+                <td>
+                    <button class="btn btn-danger add-basket-btn-icon las la-trash remove-at-cart"></button>                                
+                </td>
+            </tr>             
+          `);
+        }
+
+      });
+   
+      $('.cart-item').each(function(){
+        if(!$(this).hasClass('in-cart')) {
+          $(this).remove();
+        }
+      });
+    },
+    prepare_data: function(data) {
+      var row = data['param'];
+      var stock_id = row['stock_id'];
+      var stock_name = row['stock_name'];
+      var stock_count = row['stock_count'];
+  
+      myData = {
+        id: stock_id,
+        name: stock_name,
+        price: '',
+        count: 1,
+        maxCount: stock_count
+      }
+      return myData;
+    },
+    push_cart: function(data) {
+      let isPush = true;
+      var this_data = cart.prepare_data(data);
+      
+      cart_list.forEach(el => {
+        if(el.id == this_data.id) {
+          isPush = false;
+          cart.add_count(this_data);
+        }
+      });
+
+      if(isPush) {
+        cart_list.push(this_data);    
+      }
+    },
+    add_count: function(stock, count) {
+      cart_list.forEach(el => {
+        if(el.id == stock.id) {
+          var index = cart_list.indexOf(el);
+          if(count) {
+            cart_list[index].count = count;
+          } else {
+            cart_list[index].count++;
+          }
+        }
+      });
+    },
+    update_carts: function(id, param, data) {
+      cart_list.forEach(el => {
+        if(el.id == id) {
+          var index = cart_list.indexOf(el);
+          cart_list[index][param] = data;
+        }
+      });
+    },
+    get_id: function($this) {
+      return $this.closest('.stock-list').attr('id');
+    },
+    remove_at_cart: function(ids) {
+      cart_list.forEach(el => {
+        if(el.id == ids) {
+          var index = cart_list.indexOf(el);
+          cart_list.splice(index, 1);
+        }
+      });
+    },
+    reset_cart: function() {
+      cart_list = [];
+    },
+    active_basket_btn: function($this) {
+      var class_list = [
+        'la-cart-plus',
+        'la-check',
+        'btn-secondary',
+        'btn-success',
+        'add-to-cart',
+        'added-to-cart',
+      ];
+    
+      $this.toggleClass(class_list).closest('.stock-list').toggleClass('stock-added-in-cart');
+    },
+    active_all_btn: function() {
+      if(cart_list.length == 0) {
+        if($('.added-to-cart')) {
+          cart.active_basket_btn($('.added-to-cart'));
+          return;
+        }
+      }
+
+      cart_list.forEach(el => {
+        var $stock = $(`.stock-list#${el.id}`);
+
+        if($stock) {
+          var $button = $stock.find('.add-to-cart');
+          if(!$button.hasClass('.added-to-cart')) {
+            cart.active_basket_btn($button);
+          }
+        }      
+      });
+    },
+    get_cart_list: () => {
+      return cart_list;
+    },
+    show_in_cart_count: () => {
+      var $cart_mark = $('.in-cart-count');
+      var cart_count = cart_list.length;
+      var this_count = $cart_mark.text().trim();
+
+      if(cart_count != this_count) {
+        $('.in-cart-count').html(cart_count);
+        return;
+      }
+    },
+    send_cart() {
+      let carts = cart.get_cart_list();
+
+      $('.cart').find('.cart-item-list').find('.cart-item').each(function(){
+        const id = $(this).data('cart-id');
+        const get_price = $(this).find('.cart-order-price').val();
+        const get_count = $(this).find('.cart-order-count').val();
+        cart.update_carts(id, 'price', get_price);
+        cart.update_carts(id, 'count', get_count);
+      });
+
+      console.log(cart_list);
+    }, 
+    is_cart_prepared: function() {
+      if($('.cart-item').length > 0) {
+
+        $('.cart-input').trigger('input');
+
+        $('.cart-input').each(function(){
+          console.log($(this).calssList);
+        });
+
+        // $('.cart-input').each(function(){
+        //   if($(this).hasClass('input-validate-error').length) {
+        //     console.log('Ошибка! провертье правильность запполненых данных \n ')
+        //   } else {
+        //     console.log('Успех! Можно отправить на бэк \n ');
+        //   }
+        // });
+      }
+    },
+    modal_cart_show: function() {
+      $('.cart').toggleClass('hide');
+    }
+  };
+
+
+$('body').on('click', '.add-basket-button', function() {
+  cart.active_basket_btn($(this));
+});
+
+$('body').on('click', '.added-to-cart', function(){
+  var id = cart.get_id($(this));
+  cart.remove_at_cart(id);
+});
+
+$('body').on('click', '.send-cart', function(){
+  if(cart.is_cart_prepared()) {
+    cart.send_cart();
+    console.log('ajax..');
+  } else {
+    alert_notice('заполните все поля', $(this));
+  }
+});
+
+$('body').on('click', '.reset-cart', function(){
+  cart.reset_cart();
+  cart.active_all_btn();
+  cart.draw(); 
+});
+
+$('body').on('click', '.remove-at-cart', function(){
+  var id = $(this).closest('.cart-item').data('cart-id');
+  
+  var $stock = $(`.stock-list#${id}`).find('.added-to-cart');
+  cart.active_basket_btn($stock);
+  cart.remove_at_cart(id);
+  cart.draw();  
+});
+
+
+$('body').on('click', '.cart-counter', function(){
+  var $input = $(this).parent().find('.cart-order-count');
+  let count = $input.val();
+  if($(this).hasClass('cart-plus-count')) {
+    count++;
+  } 
+  if($(this).hasClass('cart-minus-count')) {
+    count--;
+  }
+
+  $input.val(count);
+  $input.trigger('input');
+});
+
+
+  $('body').on('click', '.add-to-cart', function(){
+    var barcode = $(this).closest('.stock-list').attr('id');
+    $.ajax({
+      url: '/core/action/get_barcode_product.php',
+      type: 'POST',
+      dataType: 'json',
+      data: {
+        id: barcode
+      },
+      success: (data) => {
+        cart.push_cart(data);
+        console.log(cart.get_cart_list());
+      }
+    });   
+  });
+
+  function observe_body(params) {
+    // Выбираем целевой элемент
+    var target = document.getElementById('app');
+
+    // Конфигурация observer (за какими изменениями наблюдать)
+    const config = {
+      attributes: true,
+      childList: true,
+      subtree: true
+    };
+
+    // Колбэк-функция при срабатывании мутации
+    const callback = function(mutationsList, observer) {
+      if($('.table-list').length) {
+        cart.active_all_btn();
+      }
+      
+      cart.show_in_cart_count();
+
+      mutationsList.forEach( (mutation) => {
+        switch(mutation.type) {
+          case 'childList':
+              if($('.cart').length) {
+                cart.draw();
+                cart.is_cart_prepared();
+              }
+            break; 
+        }
+      });
+
+      console.log(observer);
+    };
+
+    // Создаём экземпляр наблюдателя с указанной функцией колбэка
+    const observer = new MutationObserver(callback);
+
+    // Начинаем наблюдение за настроенными изменениями целевого элемента
+    observer.observe(target, config);   
+  }
+
+  observe_body();
+
+
+});
+
+
+/** END EXPERIMENTAL */

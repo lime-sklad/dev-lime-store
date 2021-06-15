@@ -69,6 +69,8 @@
     --blue_900: #000f66;
     --blue_950: #000b4d;
     --blue_1000: #000833;    
+    --blue_ui: #2e71ff;
+
 
     --indigo_blue_100: #ecedf8;
     --indigo_blue_200: #dadcf1;
@@ -131,11 +133,9 @@
     --font_work_sans: 'Work Sans', sans-serif;
     --font_montserrat: 'Montserrat', sans-serif;
 
-
     --header_height: 60px;
 
     --input_focus_shadow:  0px 0px 0px 4px;
-
 
 
     --smoohe_transiton: all 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0s;

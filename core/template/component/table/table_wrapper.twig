@@ -20,7 +20,7 @@
  #}
 
 <div class="table-wrapper">
-	<div class="table-content ls-custom-scrollbar">
+	<div class="table-content ls-custom-scrollbar" id="tableContent">
 		<table class="table">
 			<thead>
 				<tr>
@@ -29,7 +29,7 @@
 					{% endfor %}
 				</tr>
 			</thead>
-			<tbody class="table-list" data-stock-page="{{data.table_tab}}" data-stock-type="{{data.table_type}}">
+			<tbody class="table-list" id="tableList" data-stock-page="{{data.table_tab}}" data-stock-type="{{data.table_type}}">
 					{% include '/component/table/table_row.twig' %}
 					{% if table_total %} 
 						{% include '/component/table/table_footer_row.twig' %}

@@ -141,12 +141,21 @@
 .flex-wrap {
     flex-wrap: wrap;
 }
+.flex-1 {
+    flex: 1;
+}
+.flex-unset {
+    flex: unset;
+}
 /* flex end */
 
 
 /* margin start*/
 .mrgn-left-5 {
     margin-left: 5%;
+}
+.mrgn-right-5 {
+    margin-right: 5%;
 }
 .mrgn-bottom-3 {
     margin-bottom: 3%;
@@ -222,10 +231,10 @@
 }
 
 .button-icon-right {
-    margin-left: 3%;
+    margin-left: 4px;
 }
 .button-icon-left {
-    margin-right: 3%;
+    margin-right: 4px;
 }
 .button-text {
     color: #fff;
@@ -251,6 +260,9 @@
 }
 .hide {
     display: none!important;
+}
+.show {
+    display: block ! important;
 }
 /* animation start */
 @keyframes lsFadeIn25 {
@@ -295,6 +307,9 @@
     position: absolute;
     top: 0;
     right: 0;
+}
+.pos-relative {
+    position: relative;
 }
 /* button start */
 .btn {
@@ -361,19 +376,44 @@
 /* button end */
 
 
+.table-ui-reset {
+    padding: 0 10px;
+    margin:  0;
+    font-size: 0;
+    text-align: center;
+}
+
 /* thead width */
 
 .th_w40 {
     width: 40px;
 }
+.th_w50 {
+    width: 50px;
+}
 .th_w60 {
     width: 60px;
+}
+.th_w70 {
+    width: 70px;
 }
 .th_w80 {
     width: 80px;
 }
+.th_w90 {
+    width: 90px;
+}
+.th_w100 {
+    width: 100px;
+}
+.th_w110 {
+    width: 110px;   
+}
 .th_w120 {
     width: 120px;
+}
+.th_w130 {
+    width: 130px;   
 }
 .th_w140 {
     width: 140px;
@@ -482,8 +522,6 @@
     color: var(--gray_900);
 }
 
-
-
 .mark-chips {
     text-align: center;
     border-radius: 16px;
@@ -492,4 +530,62 @@
     text-transform: uppercase;
     font-weight: 600; 
     margin-right: 0;       
+}
+.add-basket-btn-icon {
+    font-size: 22px;
+    display: flex ! important;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 5px;
+    margin: 0px;
+}
+
+.opacity-01 {
+    opacity: .1;
+}
+.opacity-02 {
+    opacity: .2;
+}
+.opacity-03 {
+    opacity: .3;
+}
+.opacity-04 {
+    opacity: .4;
+}
+.opacity-05 {
+    opacity: .5;
+}
+.opacity-06 {
+    opacity: .6;
+}
+.opacity-07 {
+    opacity: .7;
+}
+.opacity-08 {
+    opacity: .8;
+}
+.opacity-09 {
+    opacity: .9;
+}
+.opacity-100 {
+    opacity: 1;
+}
+
+.disabled {
+    opacity: .4;
+}
+.modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 713;
+}
+
+.input-validate-error {
+    border-color: var(--red_alpha_90) ! important;
+}
+.input-validate-error:focus {
+    box-shadow: var(--input_focus_shadow) var(--red_alpha_20);
 }

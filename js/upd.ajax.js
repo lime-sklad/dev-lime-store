@@ -136,6 +136,8 @@ function send_filter(filter_list) {
 
 function send_autocomplete($this) {
     var $delay = 450;
+	var min_value_length = 1;   
+
 	var $search_container = $this.closest('.search-container');
 	var $append_to = $this.closest($search_container).find('.search-list-content');
     var $preloader = $this.closest($search_container).find('.preloader');
@@ -146,7 +148,7 @@ function send_autocomplete($this) {
 
 	console.log(search_data);
 	console.log(pageData.type());
-	if(search_data.length > 0) {
+	if(search_data.length > min_value_length) {
 		$preloader.addClass('flex-cntr').removeClass('hide');
 		clearTimeout($this.data('timer'));
 		$this.data('timer', setTimeout(function(){
@@ -220,7 +222,7 @@ $(document).on('click', '.search-item', function(){
 
 
 /** order start*/
-$('body').on('click', '.stock-list', function(){
+$('body').on('click', '.info-stock', function(){
 	$modal = $('.modal_view_stock_order');
 
 	pageData.preloaderShow();
@@ -228,7 +230,7 @@ $('body').on('click', '.stock-list', function(){
 	$('.get_order_action').removeClass('click');
 
 	//получаем id проддукта от родительсокого эелемента
-	var product_id = $(this).attr("id");		
+	var product_id = $(this).closest('.stock-list').attr("id");		
 	//report_order_id
 	var order_id = $(this).find('.get_report_order_id').attr('data-sort-value');
 
