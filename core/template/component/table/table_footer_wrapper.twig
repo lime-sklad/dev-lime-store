@@ -1,0 +1,34 @@
+{# <tr class="tfoot" style="">
+	<th class="tfoot_header">Nəticə</th>
+	<td class="tfoot_data">
+	{% for row in table_total  %}
+		{% if row.value %}
+			<div class="tfoot_total_result_wrapper">
+				<div class="total_value_header">
+					<span class="mark mark--total-price total_value_title">{{row.title}} - </span>
+				</div>
+				<div class="flex table_total_price-mark">
+					<span class="stock_info_text s_result_sprice total_value_content"> {{ row.value }}</span>
+					{% if row.mark %}
+					<span class="mark total_value_mark"> {{row.mark}} </span>
+					{% elseif row.mark_icon %}
+					<span class="mark mrgn-left-5"> <img src="{{row.mark_icon}}" class="mark-icon-manat"> </span>
+					{% endif %}
+				</div>
+			</div>	
+		{% endif %}
+	{% endfor %}
+	</td>
+</tr> #}
+
+
+
+
+
+<div class="table_footer">
+	<table class="tfoot">
+		<tbody class="tfoot_body">
+			{% include '/component/table/table_footer_row.twig' %}
+		</tbody>
+	</table>	
+</div>

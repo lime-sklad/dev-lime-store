@@ -1,0 +1,28 @@
+<tr class="cart-item in-cart" data-cart-id="{{id}}">
+    <td>
+        <span class="stock-list-title">{{id}}</span>
+    </td>
+    <td>
+        <span class="stock-list-title">{{name}}</span>
+    </td>
+    <td>
+        <div class="cart-input-container flex flex-ai-cntr">
+            <div class="cart-input-icon cart-input-price-icon opacity-06">
+                <img src="../../img/icon/manat.svg">
+            </div>                                        
+            <input type="text" class="cart-order-price input cart-input input-validate-length input-validate-price input-required" value="{{price}}">
+        </div>
+    </td>
+    <td>
+        <div class="flex flex-ai-cntr cart-input-container">
+            <button class="las la-minus btn btn-default add-basket-btn-icon cart-counter cart-minus-count"></button>
+              <div class="counter-input">
+                <input type="text" class="cart-order-count cart-order-input input cart-input input-validate-length input-validate-count input-required"  value="{{count}}">
+              </div>
+            <button class="las la-plus btn btn-default add-basket-btn-icon cart-counter cart-plus-count"></button>
+        </div>                                  
+    </td>
+    <td>
+        <button class="btn btn-danger add-basket-btn-icon las la-trash remove-at-cart"></button>                                
+    </td>
+</tr>  

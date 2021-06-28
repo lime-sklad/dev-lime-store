@@ -1,0 +1,13 @@
+{% for row in data.table_total  %}
+	<tr class="tfoot_row">
+		<th class="tfoot_header">
+			<span class="total_value_title">{{row.title}} - </span>
+		</th>
+		<td class="tfoot_data">
+			<span class="s_result_sprice mark mark-text"> {{ row.value }}</span>
+			{% if row.mark %}
+				<span class="mark mark-text mark-right {{row.mark.mark_modify_class}}"> {{row.mark.mark_text}} </span>
+			{% endif %}
+		</td>
+	</tr>
+{% endfor %}

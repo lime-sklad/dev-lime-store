@@ -1,0 +1,58 @@
+/*ÃƒÆ’Ã¢â‚¬ËœÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾ÃƒÆ’Ã‚ÂÃƒâ€šÃ‚Â°ÃƒÆ’Ã‚ÂÃƒâ€šÃ‚Â¹ÃƒÆ’Ã‚ÂÃƒâ€šÃ‚Â» ÃƒÆ’Ã¢â‚¬ËœÃƒâ€šÃ‚ÂÃƒÆ’Ã‚ÂÃƒâ€šÃ‚Â¾ÃƒÆ’Ã‚ÂÃƒâ€šÃ‚Â·ÃƒÆ’Ã‚ÂÃƒâ€šÃ‚Â´ÃƒÆ’Ã‚ÂÃƒâ€šÃ‚Â°ÃƒÆ’Ã‚ÂÃƒâ€šÃ‚Â½ 2020.09.29*/
+
+@keyframes modalShowLeft {
+    0% {
+        transform: translate(500px, 0);
+    }
+    50% {
+         transform: translate(-25px, 0);
+    }
+    100% {
+        transform: translate(0px, 0);
+    }    
+}
+
+@keyframes modalHideLeft {
+    0% {
+        transform: translate(0px, 0);
+    }
+    50% {
+         transform: translate(-25px, 0);
+    }
+    100% {
+        transform: translate(650px, 0);
+    }    
+}
+@keyframes showShakeUp {
+    0%, 100% {
+        transform: translate(0px, 0px);
+    }
+    50% {
+        transform: translate(0px, 15px);
+    }
+}
+
+@keyframes showAuto {
+    0% {
+        transform: translate(2px, -7px);
+    }
+    50% {
+        transform: translate(2px, 20px);
+    }
+    100% {
+        transform: translate(2px, 7px);
+    }
+}
+
+@keyframes lsAppend {
+    0% {
+        background: #fff;
+    }
+
+    50% { 
+         background: rgb(255 217 59 / .7);
+    }
+    100% {
+        background: #fff;
+    }
+}

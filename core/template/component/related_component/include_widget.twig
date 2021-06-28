@@ -1,0 +1,7 @@
+ <div class="widget width-100 flex">
+    <div class="widget__container inline-flex width-100 flex-jc-start flex-ai-end">
+        {% for path_to_tpl, data in data %}
+            {% include path_to_tpl %}
+        {% endfor %}
+    </div>
+ </div>

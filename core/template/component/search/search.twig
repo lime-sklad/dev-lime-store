@@ -1,0 +1,35 @@
+<div class="widget__search">
+	<div class="widget__search-container flex-cntr">
+		<div class="area-container search-container {{data.parent_calss}}">
+			<div class="search-input-wrp">
+				{% if data.label %}	
+					<span class="widget__input-label">{{data.label}}</span>
+				{% endif %}
+
+				<div class="widget__search-icon button-icon-i search-icon">
+					<i class="las la-search"></i>
+				</div>
+								
+				<input type="text" 
+				 	   autocomplete="off"
+					   class="search-input area-input search-action {{data.input_class}}" 
+					   data-stock-page=""
+					   data-stock-type=""
+					   placeholder="{{data.input_placeholder}}"
+					   required >
+				{% if data.reset %}
+						<div class="reset-search-value">
+							<a href="javascript:void(0)" class="reset-search reset-search-button">
+								<span class="reset-button-icon button-icon-i">
+									<i class="las la-times"></i>
+								</span>
+							</a>
+						</div>
+				{% endif %}	   
+			</div>
+			{% if data.autocomplete %}
+				{{ include ('/component/search/search_list_wrapper.twig', {auto_attr: data.autocomplete.type }) }}					
+			{% endif %}	
+		</div>
+	</div>
+</div>

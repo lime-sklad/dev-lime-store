@@ -1,0 +1,13 @@
+<div class="report_date_select_wrp">
+	<div class="report_date_select_box">
+		<div class="report_date_fotm">
+			<label for="report_options_list">Tarix: </label>
+			<select class="report_options_list select_option_data" id="report_options_list" data-sort="date_year">
+
+                    {% for key, value in data.res %}
+                        <option value="{{value}}">{{value}}</option>
+                    {% endfor %}
+            </select>
+        </div>
+    </div>
+</div>            
