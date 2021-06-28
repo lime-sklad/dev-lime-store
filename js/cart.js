@@ -1,4 +1,4 @@
-/** EXPERIMENTAL 4444444444444444444444*/
+/** EXPERIMENTAL 4444444444444444444444m*/
 
 $(document).ready(function(){
   $('body').on('focusout input', '.input-validate-length', function(){
