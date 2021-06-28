@@ -1,6 +1,6 @@
 <?php 
 require_once $_SERVER['DOCUMENT_ROOT'].'/function.php';
-ls_include_tpl();
+
 header('Content-type: application/json');
 
 //обновить данные пользоватея
