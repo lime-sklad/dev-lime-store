@@ -59,80 +59,49 @@ $(document).ready(function(){
     el.parent().find('.warning-notice').remove();
   }
   
-  var cart_list = [];
-  
-  cart = {
-    draw: function() {
-      console.log('draw')
 
+  cart = {
+    //** settings */
+    cart_list: [],
+    is_draw_possible: true,
+    /** end settings */
+
+    draw: function() {
       $('.cart-item').removeClass('in-cart');
 
-      let isDone = false;
+      let item_list = [];
 
-        cart_list.forEach(item => {
-          $(`.cart-item[data-cart-id="${item.id}"]`).addClass('in-cart');
+      cart.cart_list.map(item => {
+        $(`.cart-item[data-cart-id="${item.id}"]`).addClass('in-cart');
 
-          if($(`.cart-item[data-cart-id="${item.id}"]`).length == 0) {
-            isDone = false;
-            if(isDone == false) {
-              $.ajax({
-                url: '/core/action/cart/cart_item_row.php',
-                type: 'POST',
-                data: {
-                    items: item
-                },
-                success: function(data) {
-                  cart.render(data);
+        if(!$(`.cart-item[data-cart-id="${item.id}"]`).length > 0) {
+          cart.is_draw_possible = false;
+          item_list.push(item);
+        }           
+      });
 
-                }
-              });
-            }
-            isDone = true;
+      if(item_list.length > 0) {
+        $.ajax({
+          url: '/core/action/cart/cart_item_row.php',
+          type: 'POST',
+          data: {
+            items: item_list
+          },
+          success: function(data) {
+            cart.render(data);
+          }
+        });    
+      }
 
-          } 
-          isDone = true;
-
-        });
-
-
-        if(isDone) {
-          console.log('delete', isDone);
-          $('.cart-item').each(function(){
-            if(!$(this).hasClass('in-cart')) {
-              $(this).remove();
-            }
-          });
+      $('.cart-item').each(function() {
+        if(!$(this).hasClass('in-cart')) {
+          $(this).remove();
         }
-
-
-    // });          
- 
-    //   $('.cart-item').each(function(){
-    //     if(!$(this).hasClass('in-cart')) {
-    //       // $(this).remove();
-    //     }
-      // });
-
-      // if(!$('.cart-item').hasClass('in-cart')) {
-      //  $('.cart-item').addClass('no-in-cart');
-      // }
-
-      // if(myArray.length > 0) {
-      //   $.ajax({
-      //     url: '/core/action/cart/cart_item_row.php',
-      //     type: 'POST',
-      //     data: {
-      //         items: myArray
-      //     },
-      //     success: function(data) {
-      //       myArray = [];
-      //       cart.render(data);
-      //     }
-      //   });
-      // }
+      });
     },
     render: function(data) {
       $('.cart').find('.cart-item-list').append(data);
+      cart.is_draw_possible = true;
     },
     prepare_data: function(data) {
       var row = data['param'];
@@ -153,7 +122,7 @@ $(document).ready(function(){
       let isPush = true;
       var this_data = cart.prepare_data(data);
       
-      cart_list.forEach(el => {
+      cart.cart_list.forEach(el => {
         if(el.id == this_data.id) {
           isPush = false;
           cart.add_count(this_data);
@@ -161,26 +130,26 @@ $(document).ready(function(){
       });
 
       if(isPush) {
-        cart_list.push(this_data);    
+        cart.cart_list.push(this_data);    
       }
     },
     add_count: function(stock, count) {
-      cart_list.forEach(el => {
+      cart.cart_list.forEach(el => {
         if(el.id == stock.id) {
-          var index = cart_list.indexOf(el);
+          var index = cart.cart_list.indexOf(el);
           if(count) {
-            cart_list[index].count = count;
+            cart.cart_list[index].count = count;
           } else {
-            cart_list[index].count++;
+            cart.cart_list[index].count++;
           }
         }
       });
     },
     update_carts: function(id, param, data) {
-      cart_list.forEach(el => {
+      cart.cart_list.forEach(el => {
         if(el.id == id) {
-          var index = cart_list.indexOf(el);
-          cart_list[index][param] = data;
+          var index = cart.cart_list.indexOf(el);
+          cart.cart_list[index][param] = data;
         }
       });
     },
@@ -191,15 +160,15 @@ $(document).ready(function(){
       return $this.closest('.cart-item').data('cart-id');
     },
     remove_at_cart: function(ids) {
-      cart_list.forEach(el => {
+      cart.cart_list.forEach(el => {
         if(el.id == ids) {
-          var index = cart_list.indexOf(el);
-          cart_list.splice(index, 1);
+          var index = cart.cart_list.indexOf(el);
+          cart.cart_list.splice(index, 1);
         }
       });
     },
     reset_cart: function() {
-      cart_list = [];
+      cart.cart_list = [];
     },
     active_basket_btn: function($this) {
       var class_list = [
@@ -214,14 +183,14 @@ $(document).ready(function(){
       $this.toggleClass(class_list).closest('.stock-list').toggleClass('stock-added-in-cart');
     },
     active_all_btn: function() {
-      if(cart_list.length == 0) {
+      if(cart.cart_list.length == 0) {
         if($('.added-to-cart')) {
           cart.active_basket_btn($('.added-to-cart'));
           return;
         }
       }
 
-      cart_list.forEach(el => {
+      cart.cart_list.forEach(el => {
         var $stock = $(`.stock-list#${el.id}`);
 
         if($stock) {
@@ -233,11 +202,11 @@ $(document).ready(function(){
       });
     },
     get_cart_list: () => {
-      return cart_list;
+      return cart.cart_list;
     },
     show_in_cart_count: function() {
       var $cart_mark = $('.in-cart-count');
-      var cart_count = cart_list.length;
+      var cart_count = cart.cart_list.length;
       var this_count = $cart_mark.text().trim();
 
       if(cart_count != this_count) {
@@ -251,7 +220,7 @@ $(document).ready(function(){
           type: 'POST',
           dataType: 'json',
           data: {
-            cart: cart_list
+            cart: cart.cart_list
           },
           success: (data) => {
             if(data.notice.type == 'success') {
@@ -265,23 +234,22 @@ $(document).ready(function(){
     },
     display_total: () => {
       var $el = $('.cart-res-sum');
-      // let inner_val = $el.text().trim();
+      let inner_val = $el.text().trim();
     
-      // inner_val = parseFloat(inner_val);
+      inner_val = parseFloat(inner_val);
 
-      // let res = 0;
-      // cart_list.forEach(el => {
-      //   res += el.price * el.count; 
-      // });
+      let res = 0;
+      cart.cart_list.forEach(el => {
+        res += el.price * el.count; 
+      });
 
-      // if(inner_val != res) {
-      //   console.log({inner_val, res});
-      //   $el.text(res);
-      //   return true;
-      // } 
+      if(inner_val != res) {
+        console.log({inner_val, res});
+        $el.text(res);
+        return true;
+      } 
 
-      $el.text('333');
-      // return false;
+      return false;
     },
     is_cart_prepared: function() {
       $('.cart-input').trigger('input', 'keyup');
@@ -316,7 +284,7 @@ $(document).ready(function(){
   $('body').on('click', '.reset-cart', function(){
     cart.reset_cart();
     cart.active_all_btn();
-    console.log('dds');
+    cart.show_in_cart_count();
   });
   
   $('body').on('click', '.remove-at-cart', function(){
@@ -325,7 +293,7 @@ $(document).ready(function(){
     var $stock = $(`.stock-list#${id}`).find('.added-to-cart');
     cart.active_basket_btn($stock);
     cart.remove_at_cart(id);
-    cart.draw();  
+    cart.show_in_cart_count();
   });
   
   
@@ -371,49 +339,45 @@ $(document).ready(function(){
         id: barcode
       },
       success: (data) => {
+        console.log(data);
         cart.push_cart(data);
       }
     });   
   });
   
   function init_obs() {
+    console.log('obs was init');
     var target = document.getElementById('app');
   
     const config = {
       childList: true,
       subtree: true,
+      attributes: true,
       characterData: true,
     };
   
     const callback = function(mutationList, observer) {
-
-      if($('.cart').length) {
-        cart.draw();
-        cart.display_total();
-        console.log('2 raza')
-      }       
-
-
       mutationList.forEach(el => {
 
+        if($('.cart').length) {
+          if(el.type == 'childList') {
+              if(cart.is_draw_possible) {
+                cart.draw();
+              }
+            
+            cart.display_total();
+          }
+        } 
 
+        console.log(cart.is_draw_possible);
 
-          const config = {
-            childList: true,
-            subtree: true,
-            // attributes: true,
-            // attributeFilter: ['class']
-          };          
-  
-          // console.log('new mut' + mutationList);
-
-  
-        // if(el.type == 'attributes') {
-        //   if($('.table-list').length) {
-        //     cart.active_all_btn();
-        //   }
-        //   // cart.show_in_cart_count();
-        // }
+        // console.log('new mut' + mutationList);
+        if(el.type == 'attributes') {
+          if($('.table-list').length) {
+            cart.active_all_btn();
+          }
+          cart.show_in_cart_count();
+        }
       });
     };
     const observer = new MutationObserver(callback);

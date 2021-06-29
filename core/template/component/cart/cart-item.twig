@@ -1,9 +1,10 @@
-<tr class="cart-item in-cart" data-cart-id="{{id}}">
+{% for key, row in items %}
+<tr class="cart-item in-cart" data-cart-id="{{row.id}}">
     <td>
-        <span class="stock-list-title">{{id}}</span>
+        <span class="stock-list-title">{{row.id}}</span>
     </td>
     <td>
-        <span class="stock-list-title">{{name}}</span>
+        <span class="stock-list-title">{{row.name}}</span>
     </td>
     <td>
         <div class="cart-input-container flex flex-ai-cntr">
@@ -26,3 +27,4 @@
         <button class="btn btn-danger add-basket-btn-icon las la-trash remove-at-cart"></button>                                
     </td>
 </tr>  
+{% endfor %}
