@@ -1,12 +1,7 @@
 <?php 
-	$page_config = page_data_list(['type' => $type, 'page' => $page]);
+	$data_page = page_data($page);
 
-	//filter_list
-	if(array_key_exists('filter_fields', $page_config)) {
-		$page_filter_list =  filter_category($page_config['filter_fields'], NULL);
-	} else {
-		$page_filter_list = false;
-	}
+	$page_config = $data_page['page_data_list'];
 	
 	if(array_key_exists('form_fields_list', $page_config)) {
 		$form_fields = $page_config['form_fields_list'];
@@ -16,48 +11,39 @@
 
 	//параметры поиска
 	$search_arr = array(
-		'input_class' 	 => '', 	//классы поля ввода поиска
-		'parent_class'	 => '', 			//класс для родителя инпута
-		'label'			 => 'Axtar', 									//заполнить/оставить пустым или 
-		'label_title' 	 => '',
-		// 'clear_button' 	 => array(
-		// 	'modify_class' 		 => '',
-		// 	'value'		  		 => '',
-		// 	'data_sort_value' 	 => '',
-		// 	'data_sort_type' 	 => 'name'
-		// ),
+		'input_class' 	 => 'search-auto area-input', 	//классы поля ввода поиска
+		'parent_class'	 => 'search-container-width', 			//класс для родителя инпута
+		'input_placeholder' => 'Axtar', //заполнить/оставить пустым или
+		'reset' => true, 
+		'input_icon' => [
+			'icon' => 'la-search',
+		],
+		'widget_class_list' => '',
+		'widget_container_class_list' => 'flex-cntr',
 		'autocomplete' 	 => array(
-			'type' => 'search'
+			'type' => 'search',
+			'parent_modify_class' => '',
+			'autocomlete_class_list' => 'get_item_by_filter search-item area-closeable selectable-search-item'
 		)
 	);
 	
-
-	$table_data = render_data_template([
-		'type' => $type,
-		'page' => $page
-	]);
-
+	$table_result = render_data_template($data_page['sql'], $data_page['page_data_list']);
 
 	echo $twig->render('/component/inner_container.twig', [
 		'renderComponent' => [
-			// '/component/form/stock_form/add_stock.twig' => [
-			// 	'title' 		=> $tab_this['tab_title'],
-			// 	'fields' 		=> $form_fields,
-			// 	'ls_filter'		=> array('show' => true, 'val' => $page_filter_list)
-			// ],			
 			'/component/related_component/include_widget.twig' => [
 				'/component/filter/filter_sort.twig' => [
-					'filter_list' => $page_filter_list
+					'filter_list' => filter_category($page_config['filter_fields'], NULL)
 				],
-				'/component/search/search.twig' => $search_arr,
+				'/component/search/search.twig' => $search_arr
 			],
 			'/component/table/table_wrapper.twig' => [
-				'table' => $table_data['result'],
+				'table' => $table_result['result'],
 				'table_tab' => $page,
 				'table_type' => $type,
 			],
 			'/component/table/table_footer_wrapper.twig' => [
-				'table_total' => table_footer_result($page_config['table_total_list'], $table_data['base_result'])
+				'table_total' => table_footer_result($page_config['table_total_list'], $table_result['base_result'])
 			]
 		]
 	]);

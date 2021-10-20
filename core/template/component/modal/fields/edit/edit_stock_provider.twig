@@ -1,0 +1,44 @@
+<div class="fields">
+    <span class="fields-label">Təchizatçı</span>
+    {# <input type="text" class="input edit edit-stock-name-input" placeholder="..." value="{{row.value}}" data-fields-name="product_provider"> #}
+
+    {% set custom_arr = [{
+        'custom_value': 'Yoxdur',
+        'custom_data_id': ''
+    }] %}
+
+    {% for row, val in row.custom_data %}
+
+        {% set custom_arr = custom_arr|merge({(loop.index0) : {'custom_value': val.provider_name, 'custom_data_id': val.provider_id}}) %}
+
+            
+    
+    {% endfor %}
+
+   {% set searh_param = {
+		input_class: 'scroll-auto edit area-button', 
+		parent_class: 'width-100', 		
+		input_placeholder: 'Выберите ', 
+        input_type: 'button',
+        input_value: row.value,
+        fields_name: 'provider_name_text',
+		reset: false, 
+        input_icon: {
+            icon: 'la-address-card'
+        },
+        widget_class_list: 'widget-fields',
+        widget_container_class_list: 'widget-fields-container',
+		autocomplete:  {
+			type: 'check_provider',
+            parent_modify_class: "fields-autocomplete",
+            autocomplete_list: custom_arr,
+            autocomlete_class_list: "selectable-search-item area-closeable select-hidden-fields-input",
+        },
+   }
+   %}
+
+    {% include '/component/search/search.twig'  with { 'data': searh_param }  %}
+
+
+    <input type="hidden" class="edit hidden_input hidden-fields-input" data-fields-name="provider_id">
+</div>

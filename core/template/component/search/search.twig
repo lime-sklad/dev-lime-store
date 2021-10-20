@@ -1,21 +1,27 @@
-<div class="widget__search">
-	<div class="widget__search-container flex-cntr">
-		<div class="area-container search-container {{data.parent_calss}}">
+<div class="widget__search {{data.widget_class_list}}">
+	<div class="widget__search-container {{data.widget_container_class_list}}">
+		<div class="area-container search-container {{data.parent_class}}">
 			<div class="search-input-wrp">
 				{% if data.label %}	
 					<span class="widget__input-label">{{data.label}}</span>
 				{% endif %}
 
+				{% if data.input_icon %}
 				<div class="widget__search-icon button-icon-i search-icon">
-					<i class="las la-search"></i>
+					<i class="las {{data.input_icon.icon}}"></i>
 				</div>
+				{% endif %}
 								
-				<input type="text" 
+				<input type="{% if data.input_type %}{{data.input_type|trim}}{% else %}text{% endif %}" 
 				 	   autocomplete="off"
-					   class="search-input area-input search-action {{data.input_class}}" 
-					   data-stock-page=""
-					   data-stock-type=""
-					   placeholder="{{data.input_placeholder}}"
+					   class="search-input search-action {{data.input_class}}" 
+					   
+					   {% if data.fields_name %}data-fields-name="{{data.fields_name}}"{% endif %}
+					   {% if data.stock_page %}data-stock-page="{{data.stock_page}}"{% endif %}
+					   {% if data.stock_type %}data-stock-type="{{data.stock_type}}"{% endif %}
+					   {% if data.input_value %}value="{{data.input_value}}"{% endif %}
+					   {% if data.input_placeholder %}placeholder="{{data.input_placeholder}}"{% endif %}
+
 					   required >
 				{% if data.reset %}
 						<div class="reset-search-value">
@@ -28,7 +34,7 @@
 				{% endif %}	   
 			</div>
 			{% if data.autocomplete %}
-				{{ include ('/component/search/search_list_wrapper.twig', {auto_attr: data.autocomplete.type }) }}					
+				{{ include ('/component/search/search_list_wrapper.twig', {auto_attr: data.autocomplete.type, auto_list: data.autocomplete }) }}					
 			{% endif %}	
 		</div>
 	</div>

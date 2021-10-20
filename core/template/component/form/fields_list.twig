@@ -1,0 +1,26 @@
+{%  set fields_path = '/component/form/fields/' %}
+
+{% if row.block_name == 'add_stock_name' %}
+    {% include fields_path ~ 'stock_add_fields/add_stock_name_fields.twig' %}
+{% endif %}
+
+{% if row.block_name == 'add_stock_description' %}
+    {% include fields_path ~ 'stock_add_fields/add_stock_description_fields.twig' %}
+{% endif %}
+
+{% if row.block_name == 'add_stock_provider' %}
+    {% include fields_path ~ 'stock_add_fields/add_stock_provider_fields.twig' %}
+{% endif %}
+
+{% if row.block_name == 'add_stock_category' %}
+    {% include fields_path ~ 'stock_add_fields/add_stock_category_fields.twig' %}
+{% endif %}
+
+
+
+
+
+
+{% if row.block_name == 'add_save_form' %}
+    {% include fields_path ~ 'stock_add_fields/add_Stock_save_btn.twig' %}
+{% endif %}

@@ -134,9 +134,14 @@ $stock_list_barcode_db_name = 'stock_list';
 $stock_list_barcode_colum_arr = array(
 	array("stock_type", "varchar(255) NOT NULL DEFAULT 'phone'"),
 	array("barcode_article", "VARCHAR(255) NOT NULL"),
-	array("product_added", " INT NOT NULL DEFAULT 1")
+	array("product_added", " INT NOT NULL DEFAULT 1"),
+	array("product_provider", "INT NOT NULL"),
+	array("product_category", "INT NOT NULL"),
+	array("min_quantity_stock", "INT NOT NULL DEFAULT '1' ")
 );
 check_table_column_exists($stock_list_barcode_db_name, $stock_list_barcode_colum_arr);
+
+
 /**конец*/
 
 // user_control
@@ -166,7 +171,7 @@ $th_list_sql = "CREATE TABLE `th_list` (
 				 `th_description` varchar(255) COLLATE utf8_bin NOT NULL,
 				 `th_name` varchar(255) COLLATE utf8_bin NOT NULL,
 				 PRIMARY KEY (`th_id`)
-				) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_bin";
+				) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin";
 
 $th_list_data = array(
 					array("th_serial",		 		"№"),
@@ -185,7 +190,8 @@ $th_list_data = array(
 					array("th_total_circ_money", 	"Ümumi dövriyyə"),
 					array("th_rasxod", 			  	"Xarc"),
 					array("th_report_serial", "№"),
-					array("th_serial", "№")
+					array("th_serial", "№"),
+					array("th_description", "Təsvir")
 				);
 //создаем таблицу и заполняем ее 30.08
 check_table_exists($th_list, $th_list_sql, $th_list_data);
@@ -198,7 +204,7 @@ $data_td_accesss_sql = 'CREATE TABLE `data_td_accsess` (
 						 `td_tags_id` int(11) NOT NULL,
 						 `accsess_status` tinyint(4) NOT NULL DEFAULT 0,
 						 PRIMARY KEY (`td_id`)
-						) ENGINE=InnoDB AUTO_INCREMENT=223 DEFAULT CHARSET=utf8 COLLATE=utf8_bin';
+						) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin';
 $data_td_acess_list_data = '';
 //создаем таблицу и заполняем ее 30.08
 check_table_exists($data_td_accsess, $data_td_accesss_sql, $data_td_acess_list_data);						
@@ -211,9 +217,39 @@ $user_accesss_page_sql = 'CREATE TABLE `user_access_pages` (
 							 `access_page_name` varchar(255) COLLATE utf8_bin NOT NULL,
 							 `access_page_base_link` varchar(255) COLLATE utf8_bin NOT NULL,
 							 PRIMARY KEY (`access_id`)
-							) ENGINE=InnoDB AUTO_INCREMENT=190 DEFAULT CHARSET=utf8 COLLATE=utf8_bin';
+							) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin';
 $user_accesss_page_data_list = '';
 check_table_exists($user_accesss_page, $user_accesss_page_sql, $user_accesss_page_data_list);							
+
+/** provider */
+$provider_table_name = 'stock_provider';
+$provider_sql = "CREATE TABLE `stock_provider` ( 
+					`provider_id` INT NULL AUTO_INCREMENT , 
+					`provider_name` VARCHAR(255) NOT NULL , 
+					`visible` VARCHAR(255) NOT NULL DEFAULT 'visible' , 
+					 PRIMARY KEY (`provider_id`)
+				) ENGINE = InnoDB;";
+
+$get_stock_provider_list = $dbpdo->prepare("SELECT DISTINCT stock_provider FROM stock_list WHERE stock_visible = 0 AND stock_type = 'phone' ");
+$get_stock_provider_list->execute();
+$provider_list = $get_stock_provider_list->fetchAll(PDO::FETCH_COLUMN);
+check_table_exists($provider_table_name, $provider_sql, $provider_list);
+
+
+$stock_category_name = 'stock_category';
+$stock_category_sql = "CREATE TABLE `stock_category` ( 
+	`category_id` INT NULL AUTO_INCREMENT , 
+	`category_name` VARCHAR(255) NOT NULL , 
+	`visible` VARCHAR(255) NOT NULL DEFAULT 'visible' , 
+	 PRIMARY KEY (`category_id`)
+) ENGINE = InnoDB;";
+
+$get_stock_category_list = $dbpdo->prepare("SELECT DISTINCT stock_provider FROM stock_list WHERE stock_visible = 0 AND stock_type = 'akss' ");
+$get_stock_category_list->execute();
+$stock_category_list = $get_stock_category_list->fetchAll(PDO::FETCH_COLUMN);
+check_table_exists($stock_category_name, $stock_category_sql, $stock_category_list);
+
+// check_table_exists()
 
 //проверяю на наличие таблицы в базе данных
 function check_table_exists($table_name, $sql, $data) {
@@ -240,7 +276,8 @@ function creat_table($table_name, $sql, $data) {
 	    check_db_data($table_name, $data);
 	} 
 	catch(PDOException $e) {
-	    header('Location: /');
+	    // header('Location: /');
+		// exit();
 	}
 }
 
@@ -348,7 +385,6 @@ function check_db_data($table_name, $array) {
 			$filter_prefix = $value[1];
 			$filter_title = $value[2];
 			$filter_short_name = $value[3];
-			echo $prefix_id;
 			try {
 				$check_filter_list = $dbpdo->prepare('SELECT * FROM filter_list
 				WHERE filter_list_prefix = :prefix');
@@ -373,7 +409,76 @@ function check_db_data($table_name, $array) {
 			}
 		}
 	}
-	//end filter	
+	//end filter
+	
+	//provider_name
+	if($table_name == 'stock_provider') {
+		foreach ($array as $data) {
+			try {
+				$check_provider = $dbpdo->prepare('SELECT * FROM `stock_provider`
+				WHERE provider_name = :provider_name');
+				$check_provider->bindParam('provider_name', $data);
+				$check_provider->execute();
+
+				if($check_provider->rowCount()>0) {
+					echo " данные есть";
+				} else {
+					$data_arr = array(
+						'provider_name' => $data
+					);
+
+					install_data( $table_name, $data_arr );
+					echo 'stock_providerstock_providerstock_provider';
+					$update_stock_provider = $dbpdo->prepare("UPDATE stock_list INNER JOIN stock_provider ON stock_list.stock_provider = stock_provider.provider_name SET stock_list.product_provider = stock_provider.provider_id WHERE stock_list.stock_type = 'phone' ");
+					$update_stock_provider->execute();
+			
+					// $unset_stock_provider = $dbpdo->prepare("UPDATE stock_list SET stock_provider = NULL WHERE stock_type = 'phone' ");
+					// $unset_stock_provider->execute();	
+					// $unset_stock_provider = $dbpdo->prepare("UPDATE stock_list SET stock_provider = NULL WHERE stock_provider = :datas ");
+					// $unset_stock_provider->bindValue('datas', $data);
+					// $unset_stock_provider->execute();										
+				} 
+
+			} catch(PDOException $e) {
+				echo $e."\n";
+				echo " таблицы ".$table_name." не существует 11111 </pre>";
+			}
+		}
+	}
+
+	if($table_name == 'stock_category') {
+		foreach ($array as $data) {
+			try {
+				$check_category = $dbpdo->prepare('SELECT * FROM `stock_category`
+				WHERE category_name = :cat_name');
+				$check_category->bindParam('cat_name', $data);
+				$check_category->execute();
+
+				if($check_category->rowCount()>0) {
+					echo " ";
+				} else {
+					$data_arr = array(
+						'category_name' => $data
+					);
+
+					echo 'stock_categorystock_categorystock_category';
+
+					install_data( $table_name, $data_arr );
+
+					$update_stock_category = $dbpdo->prepare("UPDATE stock_list INNER JOIN stock_category ON stock_list.stock_provider = stock_category.category_name SET stock_list.product_category = stock_category.category_id WHERE stock_list.stock_type = 'akss' ");
+					$update_stock_category->execute();
+			
+					// $unset_stock_category = $dbpdo->prepare("UPDATE stock_list SET stock_provider = NULL WHERE stock_provider = :datas ");
+					// $unset_stock_category->bindValue('datas', $data);
+					// $unset_stock_category->execute();					
+				} 
+
+			} catch(PDOException $e) {
+				echo $e."\n";
+				echo " таблицы ".$table_name." не существует 11111 </pre>";
+			}
+		}
+	}	
 }
 
 
@@ -414,6 +519,20 @@ function install_data($table_name, $data_arr) {
 		$add_filter_list = $dbpdo->prepare('INSERT INTO filter_list (filter_list_id, filter_list_prefix, filter_list_title, filter_short_name) VALUES (?, ?, ?, ?) ');
 		$add_filter_list->execute([$prefix_id, $prefix, $title, $short_name]);
 	}
+
+	if($table_name == 'stock_provider') {
+		$provider_name = $data_arr['provider_name'];
+
+		$add_provider = $dbpdo->prepare('INSERT INTO stock_provider (provider_id, provider_name) VALUES (NULL, ?) ');
+		$add_provider->execute([$provider_name]);		
+	}
+
+	if($table_name == 'stock_category') {
+		$category_name = $data_arr['category_name'];
+
+		$add_category = $dbpdo->prepare('INSERT INTO `stock_category` (category_id, category_name) VALUES (NULL, ?) ');
+		$add_category->execute([$category_name]);		
+	}	
 }
 
 //проверить на наличие столбца в таблице

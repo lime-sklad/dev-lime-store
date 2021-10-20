@@ -1,10 +1,30 @@
-<div class="area-content widget__content search-content">
-	<ul class="ls-custom-scrollbar select-list select-saerch-list search-list-content" data-auto-cmplt-type="{{auto_attr}}" >
+<div class="area-content widget__content search-content {{auto_list.parent_modify_class}} ">
+	<ul class="ls-custom-scrollbar select-list select-saerch-list search-list-content {{auto_list.autocomlete_ul_modify_class}} " data-auto-cmplt-type="{{auto_attr}}" >
 		<li class="select-items">
 			<a href="javascript:void(0)" class="select-item select-search-item">
 				<span class="widget__button-text">Yazmağa başlayın ...</span>
 			</a>									
-		</li>							
+		</li>	
+
+		{% if auto_list.autocomplete_list %}
+
+			{% for key, val in auto_list.autocomplete_list %}
+				{% set provider_list = {
+					data: val.custom_value,
+					link_modify_class: auto_list.autocomlete_class_list,
+					li_modify_class: auto_list.autocomlete_li_modify_class,
+					data_sort_value: auto_list.data_sort_value,
+					data_sort: auto_list.data_sort,
+					data_id: val.custom_data_id,
+					mark: ''
+				}
+				%}
+
+				{% include '/component/search/search_list.twig'  with provider_list  %}
+			
+			{% endfor %}
+		{% endif %}
+
 	</ul>
 	{% include '/component/related_component/content_preloader.twig' %}
 </div>	

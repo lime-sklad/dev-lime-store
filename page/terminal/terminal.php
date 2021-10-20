@@ -1,23 +1,29 @@
 <?php
 
 	// $tpl = $twig->load($tpl_src);
-	$page_config = page_data_list(['type' => $type, 'page' => $page ]);
+	$data_page = page_data($page);
+
+	$page_config = $data_page['page_data_list'];
+
+// ls_var_dump($data_page[]);
 	//параметры поиска
 	$search_arr = array(
-		'input_class' 	 => 'search-auto', //классы поля ввода поиска
-		'parent_class'	 => '', //класс для родителя инпута
+		'input_class' 	 => 'search-auto area-input', //классы поля ввода поиска
+		'parent_class'	 => 'search-container-width', //класс для родителя инпута
 		'label'			 => '', //заполнить/оставить пустым или 
 		'input_placeholder' => 'Axtar',
+		'widget_class_list' => '',
+		'input_icon' => [
+			'icon' => 'la-search'
+		],
+		'widget_container_class_list' => 'flex-cntr',
 		'reset' => true,
 		'autocomplete' => array(
 			'type' 	=> 'search' 
 		)
 	);
 	
-	$table_result = render_data_template([
-		'type' => $type,
-		'page' => $page
-	]);
+	$table_result = render_data_template($data_page['sql'], $data_page['page_data_list']);
 
 	echo $twig->render('/component/inner_container.twig', [
 		'renderComponent' => [

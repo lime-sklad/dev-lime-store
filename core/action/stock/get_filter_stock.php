@@ -14,11 +14,24 @@ if(!isset($_POST['type'], $_POST['page'])) {
 
 $type = $_POST['type'];
 $page = $_POST['page'];
+$data = page_data($page);
 
-$page_config = page_data_list([
-	'type' => $type,
-	'page' => $page
-]);
+$td_data = $data['page_data_list'];
+
+$base_result = [];
+$res = [];
+$table = '';
+
+$sql_query_data = $data['sql'];
+
+$param 			= $sql_query_data['param'];
+$bind_list 		= $sql_query_data['param']['query']['bindList'];
+$table_name 	= $sql_query_data['table_name'];
+$base_query 	= $sql_query_data['base_query'];
+$sort_by 		= $sql_query_data['param']['sort_by'];
+$joins 			= $sql_query_data['param']['query']['joins'];
+
+$page_data_row = $td_data['get_data'];
 
 if(isset($_POST['id'])) {
 	$filter_list = $_POST['id'];
@@ -41,16 +54,26 @@ if(isset($_POST['id'])) {
 
 
 
+$search_array = [
+    'table_name' => 'user_control',
+    'col_list'   => " * ",
+    'base_query' => $base_query,			
+    'param' => [
+        'query' => [
+            'param' => $param['query']['param'],
+            'joins' => $query . $joins,
+            'bindList' => array(
+            )
+        ],
+        'sort_by' 	 => $sort_by,
+    ]
+];
 
-$render_tpl = render_data_template([
-	'type' => $type,
-	'page' => $page,
-	'search' => [
-		'param' =>  $query,
-		'bindList' => array(
-		)
-	]       
-]);  
+$render_tpl = render_data_template($search_array, $td_data);
+
+
+// exit();
+
 
 
 $table = $twig->render('/component/include_component.twig', [
@@ -67,7 +90,7 @@ $table = $twig->render('/component/include_component.twig', [
 $total = $twig->render('/component/include_component.twig', [
 	'renderComponent' => [
 		'/component/table/table_footer_row.twig' => [		
-			'table_total' => table_footer_result($page_config['table_total_list'], $render_tpl['base_result'])  
+			'table_total' => table_footer_result($td_data['table_total_list'], $render_tpl['base_result'])  
 		]  
 	]
 ]);

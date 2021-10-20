@@ -9,7 +9,7 @@
 
     $tab_list = get_tab_data($menu_list, $active);
 
-    // ls_var_dump($this_menu);
+    // ls_var_dump($tab_list);
 
     echo $twig->render('/component/include_component.twig', [
         'renderComponent' => [

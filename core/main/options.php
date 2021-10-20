@@ -8,7 +8,7 @@
 <div class="main-option-service">
 	<div class="options-list">
 	<?php
-		$menu = get_tab_main_page_test();
+		$menu = page_tab_list();
 
 		foreach($menu as $row => $value) {
 			$title = $value['title'];

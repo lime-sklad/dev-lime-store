@@ -148,6 +148,67 @@ function is_data_access_available($data) {
 }
 
 
+// проверка на доступ юзера к таблице возвращает переданнй арумент
+function is_check_data_premission($data, $value) {
+	global $dbpdo;
+
+	//id пользователя из сессии
+	$user_id = getUser('get_id');	
+
+	//находим в базе и выводим всю нужную инфорацию по заголовку
+	$get_header_info = $dbpdo->prepare('SELECT * FROM user_control
+		INNER JOIN th_list ON th_list.th_description = :th_value
+		INNER JOIN data_td_accsess ON data_td_accsess.td_tags_id = th_list.th_id AND data_td_accsess.user_id = :user_id 
+		');
+	$get_header_info->bindValue('th_value', $data);
+	$get_header_info->bindParam('user_id', $user_id);
+	$get_header_info->execute();
+
+	//если id имееться в базе то ничего не выводим; иначе вызываем функцию , которую передали (см.выше) 
+	if($get_header_info->rowCount()>0) {
+		return false;
+	} else {
+		return $value;
+	}	
+}
+
+//проверяем и выводим название таблицы
+function check_th_return_name($th) {
+	global $dbpdo;
+
+	//id пользователя из сессии
+	$user_id = getUser('get_id');	
+
+
+	$get_th = $dbpdo->prepare('SELECT * FROM th_list WHERE th_description = :th_value ');
+	$get_th->bindParam('th_value', $th);
+	$get_th->execute();
+
+	if($get_th->rowCount()>0) {
+		$row_th = $get_th->fetch();
+		$get_th_id = $row_th['th_id'];
+		$get_th_des = $row_th['th_description'];
+		$get_th_name = $row_th['th_name'];
+
+		//находим в базе и выводим всю нужную инфорацию по заголовку
+		$get_header_info = $dbpdo->prepare('SELECT * FROM data_td_accsess WHERE td_tags_id =:th_id AND user_id = :user_id 
+			');
+		$get_header_info->bindValue('th_id', $get_th_id);
+		$get_header_info->bindParam('user_id', $user_id);
+		$get_header_info->execute();
+
+		//если id имееться в базе то ничего не выводим; иначе вызываем функцию , которую передали (см.выше) 
+		if($get_header_info->rowCount()>0) {
+			return false;
+		} else {
+			return $get_th_name;
+		}	
+	} else {
+		return false;
+	}
+}
+
+
 
 // проверка на доступ юзера к таблице
 function check_access_right($arr) {
@@ -414,65 +475,7 @@ function get_user_access_list($var) {
 }
 
 
-// проверка на доступ юзера к таблице возвращает переданнй арумент
-function is_check_data_premission($data, $value) {
-	global $dbpdo;
 
-	//id пользователя из сессии
-	$user_id = getUser('get_id');	
-
-	//находим в базе и выводим всю нужную инфорацию по заголовку
-	$get_header_info = $dbpdo->prepare('SELECT * FROM user_control
-		INNER JOIN th_list ON th_list.th_description = :th_value
-		INNER JOIN data_td_accsess ON data_td_accsess.td_tags_id = th_list.th_id AND data_td_accsess.user_id = :user_id 
-		');
-	$get_header_info->bindValue('th_value', $data);
-	$get_header_info->bindParam('user_id', $user_id);
-	$get_header_info->execute();
-
-	//если id имееться в базе то ничего не выводим; иначе вызываем функцию , которую передали (см.выше) 
-	if($get_header_info->rowCount()>0) {
-		return 'access deneid';
-	} else {
-		return $value;
-	}	
-}
-
-//проверяем и выводим название таблицы
-function check_th_return_name($th) {
-	global $dbpdo;
-
-	//id пользователя из сессии
-	$user_id = getUser('get_id');	
-
-
-	$get_th = $dbpdo->prepare('SELECT * FROM th_list WHERE th_description = :th_value ');
-	$get_th->bindParam('th_value', $th);
-	$get_th->execute();
-
-	if($get_th->rowCount()>0) {
-		$row_th = $get_th->fetch();
-		$get_th_id = $row_th['th_id'];
-		$get_th_des = $row_th['th_description'];
-		$get_th_name = $row_th['th_name'];
-
-		//находим в базе и выводим всю нужную инфорацию по заголовку
-		$get_header_info = $dbpdo->prepare('SELECT * FROM data_td_accsess WHERE td_tags_id =:th_id AND user_id = :user_id 
-			');
-		$get_header_info->bindValue('th_id', $get_th_id);
-		$get_header_info->bindParam('user_id', $user_id);
-		$get_header_info->execute();
-
-		//если id имееться в базе то ничего не выводим; иначе вызываем функцию , которую передали (см.выше) 
-		if($get_header_info->rowCount()>0) {
-			return false;
-		} else {
-			return $get_th_name;
-		}	
-	} else {
-		return false;
-	}
-}
 
 //данные товаров с учетом правилами 
 function query_clear_by_user_access($arr) {
@@ -493,4 +496,10 @@ function query_clear_by_user_access($arr) {
 		} 
 	}
 	return $query;
+}
+
+
+//массив в котором мы связываем поля в базе с ключами которые можно запретить и с
+function sanitze_user_data($data) {
+
 }

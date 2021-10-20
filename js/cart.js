@@ -1,64 +1,6 @@
 /** EXPERIMENTAL */
 
 $(document).ready(function(){
-  $('body').on('focusout input', '.input-validate-length', function(){
-    var val = $(this).val();
-    input_validate_lenght(val, $(this));
-  });
-
-  $('body').on('focusout input', '.input-validate-price', function(){
-    var val = $(this).val();
-    var preg_val = input_validate_price(val);
-    $(this).val(preg_val);
-  });
-
-  $('body').on('focusout keyup input', '.input-validate-count', function(){
-    var $this = $(this);
-    var val = $this.val();
-    var preg_val = input_validate_count(val);
-    const cart_id = cart.get_cart_item_id($this);
-    const carts = cart.get_cart_list();
-    carts.forEach(el => {
-      if(el.id == cart_id) {
-        if(preg_val && preg_val <= 0) {
-          $this.val(1);
-        }
-        else if(preg_val > el.maxCount) {
-          $this.val(el.maxCount);
-        } else {
-          $this.val(preg_val);
-        }
-      }
-    });
-  });
-
-  function input_validate_lenght(val, $this) {
-    val.trim().length == 0 ? alert_vlidate_notice($this) : hide_validate_notice($this);
-  }
-
-  function input_validate_price(price) {
-    var price = price.replace(',', '.' );
-    var price = price.replace(/[^.\d]+/g,"");
-    var price = price.replace( /^([^\.]*\.)|\./g, '$1');
-    return price; 
-  }
-
-  function input_validate_count(count) {
-    var count = count.replace(/[^.\d]+/g,"").replace(/[^,\d]+/g,"");
-    var count = count.replace(/^0/,'');
-    return count;
-  }
-
-  function alert_vlidate_notice(el) {
-    hide_validate_notice(el);
-    el.addClass('input-validate-error');
-  }
-
-  function hide_validate_notice(el) {
-    el.removeClass('input-validate-error');
-    el.parent().find('.warning-notice').remove();
-  }
-  
 
   cart = {
     //** settings */
@@ -89,6 +31,8 @@ $(document).ready(function(){
           },
           success: function(data) {
             cart.render(data);
+
+            console.log(data);
           }
         });    
       }
@@ -100,7 +44,7 @@ $(document).ready(function(){
       });
     },
     render: function(data) {
-      $('.cart').find('.cart-item-list').append(data);
+      $('.cart').find('.cart-item-list').prepend(data);
       cart.is_draw_possible = true;
     },
     prepare_data: function(data) {
@@ -132,6 +76,20 @@ $(document).ready(function(){
       if(isPush) {
         cart.cart_list.push(this_data);    
       }
+    },
+    request_data(id) {
+      $.ajax({
+        url: '/core/action/stock/get_barcode_product.php',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+          id: id
+        },
+        success: (data) => {
+          console.log(data);
+          cart.push_cart(data);
+        }
+      });
     },
     add_count: function(stock, count) {
       cart.cart_list.forEach(el => {
@@ -266,6 +224,19 @@ $(document).ready(function(){
       cart.reset_cart();
     }
   };
+
+
+  $('body').on('focusout keyup input', '.input-validate-min-max-count', function(){
+    const cart_id = cart.get_cart_item_id($(this));
+    const carts = cart.get_cart_list();
+  
+    carts.forEach(el => {
+      if(el.id == cart_id) {
+        return input_validate_min_max_count(1, el.maxCount, $(this));
+      }
+    });
+  
+  });
   
   
   $('body').on('click', '.add-basket-button', function() {
@@ -296,23 +267,7 @@ $(document).ready(function(){
     cart.show_in_cart_count();
   });
   
-  
-  $('body').on('click', '.cart-counter', function(){
-    var $input = $(this).parent().find('.cart-order-count');
-    let count = $input.val();
-  
-    if($(this).hasClass('cart-plus-count')) {
-      count++;
-    } 
-    if($(this).hasClass('cart-minus-count')) {
-      count--;
-    }
-  
-    $input.val(count);
-    $input.trigger('input').focus();
-  });
-  
-  
+    
   $('body').on('keyup', '.cart-order-price', function(){
     var id = cart.get_cart_item_id($(this));
     var val = $(this).val().trim();
@@ -330,19 +285,8 @@ $(document).ready(function(){
   });
   
   $('body').on('click', '.add-to-cart', function(){
-    var barcode = $(this).closest('.stock-list').attr('id');
-    $.ajax({
-      url: '/core/action/get_barcode_product.php',
-      type: 'POST',
-      dataType: 'json',
-      data: {
-        id: barcode
-      },
-      success: (data) => {
-        console.log(data);
-        cart.push_cart(data);
-      }
-    });   
+    var id = $(this).closest('.stock-list').attr('id');
+    cart.request_data(id);
   });
   
   function init_obs() {
@@ -352,8 +296,7 @@ $(document).ready(function(){
     const config = {
       childList: true,
       subtree: true,
-      attributes: true,
-      characterData: true,
+      attributes: true
     };
   
     const callback = function(mutationList, observer) {
@@ -385,5 +328,25 @@ $(document).ready(function(){
   }
 
   init_obs();
+
+  $(document).pos();
+
+  $(document).on('scan.pos.barcode', function(event){
+    var barcode = event.code;
+    console.log(event);
+    $.ajax({
+      url: '/core/action/barcode/get_product_data.php',
+      type: 'POST',
+      dataType: 'json',
+      data: {
+      id: barcode
+      },
+      success: (data) => {
+      cart.request_data(data.res_id);
+      cart.display_total();
+      }
+    });         
+  });
+
 });
 /** END EXPERIMENTAL */

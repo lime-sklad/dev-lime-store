@@ -32,7 +32,7 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
 				//code
 			],
             '/component/main/menu_list.twig' => [
-                'menu' =>  get_tab_main_page_test()
+                'menu' => page_tab_list()
 			],
 			'/component/main/main.twig' => [
 				//data
@@ -46,7 +46,7 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
 			'user_name' => getUser('get_name'),
 			'user_role' => getUser('get_role'),
 			'menu_list' => [
-				'data' => get_tab_main_page_test()
+				'data' => page_tab_list()
 			]
 		]
 	]);

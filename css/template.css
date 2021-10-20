@@ -180,6 +180,11 @@
 .width-auto {
     width: auto;
 }
+
+.unset-max-width {
+    max-width: initial ! important;
+}
+
 .width-100 {
     width: 100%;
 }
@@ -297,10 +302,32 @@
         transform: rotate(360deg);
     }
 }
+
+@keyframes lsAppend {
+    0% {
+        background: #fff;
+    }
+
+    50% { 
+        background: rgb(255 217 59 / .7);
+    }
+    100% {
+        background: #fff;
+    }
+}
+
+
 .animate__lsFadeIn25 {
     -webkit-animation-name: lsFadeIn25;
     animation-name: lsFadeIn25
 }
+
+.modify {
+    animation: lsAppend 2s;
+    animation-timing-function: var(--smoohe_transiton);
+}
+
+
 /* animation end */
 
 .position-top-right {
@@ -511,11 +538,12 @@
     color: var(--primary_color);
 }
 .mark-success {
-    background: var(--green_alpha_10);
+    background: var(--green_alpha_10);  
     color: var(--green_success);
 }   
 .mark-warning {
     background: orange;
+    color: var(--black_alpha_50);
 }
 .mark-default {
     background: var(--gray_100);
@@ -531,13 +559,13 @@
     font-weight: 600; 
     margin-right: 0;       
 }
-.add-basket-btn-icon {
+.table-ui-btn {
     font-size: 22px;
     display: flex ! important;
     align-items: center;
     justify-content: center;
     padding: 0px 5px;
-    margin: 0px;
+    margin: 0px;    
 }
 
 .opacity-01 {

@@ -1,5 +1,5 @@
 <?php 
-require_once $_SERVER['DOCUMENT_ROOT'].'/function.php';
+require $_SERVER['DOCUMENT_ROOT'].'/function.php';
 
 // ls_var_dump($_POST);
 $error = false;
@@ -21,27 +21,50 @@ foreach($cart_list as $row) {
     }
     
     $id = (int) $row['id'];
-    $order_price = (int) $row['price'];
+    $order_price = (float) $row['price'];
     $order_count = (int) $row['count'];  
-    // ls_var_dump($order_count);
+    // ls_var_dump($order_price);
     if($order_count <= 0) {
         return alert_error('Заполните поля правильно!');
     }
-    $stock = ls_db_request(
-        [
-            'request' => [
-                'param' => " WHERE stock_id = :id AND stock_count  >= :count ",
-                'bindList' => [
+
+    $stock = ls_db_request([
+        'table_name' => 'stock_list',
+        'col_list'   => "*",
+        'base_query' => "",			
+        'param' => [
+            'query' => [
+                'param' => "  WHERE stock_id = :id AND stock_count  >= :count ",
+                'bindList' => array(
                     'id' => $id,
                     'count' => $order_count
-                ]
-            ]
-        ],[
-            'table_name' => 'stock_list',
-            'base_query' => 'SELECT * FROM stock_list ',
-            'sort_by' 	 => '   '	
+                ),
+                'joins' => "",
+            ],
+            'sort_by' 	 => "",
         ]
-    );
+    ]);
+
+
+    // $stock = ls_db_request(
+    //     [
+    //         'request' => [
+    //             'param' => " WHERE stock_id = :id AND stock_count  >= :count ",
+    //             'bindList' => [
+    //                 'id' => $id,
+    //                 'count' => $order_count
+    //             ]
+    //         ]
+    //     ],[
+    //         'table_name' => 'stock_list',
+    //         'col_list'   => '*',
+    //         'joins'      => '',
+    //         'base_query' => '',
+    //         'sort_by' 	 => ''	
+    //     ]
+    // );
+
+    // ls_var_dump($stock);
     if(empty($stock)) {
         return alert_error('no result');
     }
@@ -52,20 +75,23 @@ foreach($cart_list as $row) {
     $profit = $order_sum - $total_profit;
     $stock_data[$id] = [
         'stock_id' => $id,
+        'order_stock_name' => $stock_row['stock_name'],
+        'order_stock_imei' => $stock_row['stock_phone_imei'],
         'order_stock_count' => $order_count,
         'order_stock_sprice' => $order_price,
         'order_stock_total_price' => $order_sum,
         'order_total_profit' => $profit,
         'order_date' => $full_date,
         'order_my_date' => $short_date,
-        'order_real_time' => date('Y-m-d')
+        'order_real_time' => date('Y-m-d'),
+        'order_seller_name' => ''
     ];
 }
 
 if($error == false) {
     $dbpdo->beginTransaction();
     try {
-        // ls_db_insert('stock_order_report', $stock_data);
+        ls_db_insert('stock_order_report', $stock_data);
 
         foreach($stock_data as $index => $data) {
             $option = [
@@ -82,7 +108,7 @@ if($error == false) {
                     ]
                 ]
             ];
-            // ls_db_upadte($option, $data);
+            ls_db_upadte($option, $data);
         }
         $dbpdo->commit();
         

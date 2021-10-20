@@ -17,7 +17,7 @@ function lib_include_list() {
             '/js/hotkey.js',
             '/js/upd.function.js',
             '/js/upd.ajax.js',
-            '/js/cart.js'
+            '/js/cart.js',
             // '/js/ajax.js',
 
         ]

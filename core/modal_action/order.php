@@ -93,7 +93,7 @@ function modal_fields_list($stock_base, $page_config) {
 		'edit_stck_provider' => array(
 			'include_block' 	=> 'edit_provider',
 			'data_value' 		=> 'stock_provider',
-			'list_item' 		=> get_provider_list() 
+			'list_item' 		=> 'get_provider_list() '
 		),
 		'edit_stock_category' => array(
 			'include_block' 	=> 'edit_category',
@@ -183,54 +183,68 @@ if(isset($_POST['product_id'], $_POST['type'], $_POST['page'])) {
 	$id = $_POST['product_id'];
 
 	//получаем конфиги вкладки и страницы 
-	$page_config = page_data_list([
-		'type' => $type,
-		'page' => $page
-	]);	
-	//если тип товара амбар или транкзакци 
-	if($page == 'terminal') {
-		//делаем запрос в базу с id  и знаносим результат в переменную
-		$stock = render_data_template([
-			'type' => $type,
-			'page' => $page,
-			'search' => [
-				'param' => " AND stock_id = :stock_id ",
+	$data_page = page_data($page);
+
+	$page_config = $data_page['page_data_list'];
+
+	$sql_query_data = $data_page['sql'];
+
+	$param 			= $sql_query_data['param'];
+	$bind_list 		= $sql_query_data['param']['query']['bindList'];
+	$table_name 	= $sql_query_data['table_name'];
+	$base_query 	= $sql_query_data['base_query'];
+	$sort_by 		= $sql_query_data['param']['sort_by'];
+	$joins 			= $sql_query_data['param']['query']['joins'];
+
+	$search_array = [
+		'table_name' => 'user_control',
+		'col_list'   => " * ",
+		'base_query' => $base_query,			
+		'param' => [
+			'query' => [
+				'param' => $param['query']['param'],
+				'joins' =>  $joins." AND stock_list.stock_id = :stock_id ",
 				'bindList' => array(
 					'stock_id' => $id
 				)
-			]
-		]);		
+			],
+			'sort_by' 	 => $sort_by,
+		]
+	];	
+
+	//если тип товара амбар или транкзакци 
+	if($page == 'terminal') {
+		//делаем запрос в базу с id  и знаносим результат в переменную
+		$stock = render_data_template($search_array, $page_config);		
 	}		
 	
 	//если тип товара амбар или транкзакци 
 	if($page == 'stock') {
 		//делаем запрос в базу с id  и знаносим результат в переменную
-		$stock = render_data_template([
-			'type' => $type,
-			'page' => $page,
-			'search' => [
-				'param' => " AND stock_id = :stock_id ",
-				'bindList' => array(
-					'stock_id' => $id
-				)
-			]
-		]);
+		$stock = render_data_template($search_array, $page_config);	
 	}
 
 	if($page == 'report') {
 		if(isset($_POST['order_id'])) {
 			$order_id = $_POST['order_id'];
 
-			$stock = render_data_template([
-				'type' => $type,
-				'page' => $page,
-				'search' => [
-					'param' => " AND order_stock_id = :order_id ",
-					'bindList' => array(
-						'order_id' => $order_id
-					)
+			$search_array = [
+				'table_name' => 'user_control',
+				'col_list'   => " DISTINCT $col_name_prefix ",
+				'base_query' => $base_query,			
+				'param' => [
+					'query' => [
+						'param' => $param['query']['param'],
+						'joins' => " AND order_stock_id = :order_id ",
+						'bindList' => array(
+							'order_id' => $order_id
+						)
+					],
+					'sort_by' 	 => $sort_by,
 				]
-			]);
+			];
+
+			$stock = render_data_template($search_array, $page_config);	
 		}
 	}
 

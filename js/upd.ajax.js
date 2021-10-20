@@ -114,7 +114,7 @@ function send_filter(filter_list) {
 	//переключаем состяние на активный
 	$.ajax({
 		type: 'POST',
-		url:  '/core/action/get_filter_stock.php',
+		url:  '/core/action/stock/get_filter_stock.php',
 		data: {
 			id: filter_list,
 			page: pageData.page(),
@@ -236,7 +236,7 @@ $('body').on('click', '.info-stock', function(){
 
 	$.ajax({
 		type: 'POST',
-		url: '/core/modal_action/order.php',
+		url: '/core/action/modal/order.php',
 		data:{
 			product_id : product_id,
 			order_id: order_id, 
@@ -252,3 +252,126 @@ $('body').on('click', '.info-stock', function(){
 });
 
 /** end order */
+
+
+/** update stock */
+$('body').on('click', '.submit-save-stock', function() {
+	let prepare_data = {};
+
+	const stock_id = $('.edit-stock-id').data('id');
+
+	prepare_data['upd_product_id'] = stock_id;
+
+	$('.edit').each(function(){
+		if($(this).data('fields-name') && $(this).hasClass('edited')) {
+			var data_name = $(this).data('fields-name');
+			var val = $(this).val();
+			prepare_data[data_name] = val;
+		}
+	});
+
+	$.ajax({
+		type: 'POST',
+		url: 'core/action/stock/update_product.php',
+		data: prepare_data,
+		dataType: "json",
+		success: (data) => {
+			// console.log(data);
+			var error 	= data['error'];
+			var success = data['success'];
+
+			console.log(prepare_data);
+
+			if(error) {
+				pageData.alert_notice('error', error)
+			}
+
+			if(success) {
+				pageData.alert_notice('success', 'Ок');
+				
+				for (key in prepare_data) {
+					pageData.update_table_row(key, prepare_data[key], stock_id);
+				}
+
+				// update_table_row
+			}
+		}			
+
+	});
+
+});
+
+/** end update stock */
+
+
+/** удалить товар start */
+$(document).on('click', '.delete-stock', function() {
+	const id = $(this).data('delete-id');
+
+	$.ajax({
+		type: 'POST',
+		url: 'core/action/stock/delete_products.php',
+		data: {stock_id: id},
+		dataType: 'json',
+		success: (data) => {
+			if(data.success) {
+				pageData.alert_notice('success', data.success);
+				pageData.rightSideModalHide();
+				pageData.overlayHide();
+
+				var $stock = $(`.stock-list#${id}`); 
+
+				$stock.hide(1000, function() {
+					$stock.remove();
+				});
+			}
+			if(data.error) {
+				pageData.alert_notice('error', data.error);
+			}
+
+		}
+	});
+});
+
+/** удалить товар end */
+
+
+
+/** добавить товар товар start */
+$('body').on('click', '.submit-stock-addd-form', function() {
+	let prepare_data = {};
+
+	$('.add-stock').each(function(){
+		if($(this).data('fields-name')) {
+			var data_name = $(this).data('fields-name');
+			var val = $(this).val();
+			prepare_data[data_name] = val;
+		}
+	});
+
+	$.ajax({
+		type: 'POST',
+		url: 'core/action/stock/add_stock.php',
+		data: prepare_data,
+		dataType: "json",
+		success: (data) => {
+			// console.log(data);
+			var error 	= data['error'];
+			var success = data['success'];
+
+			console.log(prepare_data);
+
+			if(error) {
+				pageData.alert_notice('error', error)
+			}
+
+			if(success) {
+				pageData.alert_notice('success', 'Ок');
+			}
+		}			
+
+	});
+
+});
+
+/** удалить товар end */

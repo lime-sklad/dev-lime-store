@@ -1,16 +1,27 @@
-
-
-<li class="select-items">
+<li class="select-items {{li_modify_class}}">
 	<a href="javascript:void(0)" 
-	   class="select-item select-search-item {{link_modify_class}} search-item area-closeable selectable-search-item" 
-	   value="{{data}}" 
+	   class="select-item select-search-item {{link_modify_class}} " 
+	   value="{{data}}"
+
+	   {% if data_id %} data-id="{{data_id}}" {% endif %} 
 	   {% if data_sort_value %} data-sort-value="{{data}}" {% endif %} 
 	   {% if data_sort %} data-sort="{{data_sort}}"{% endif %} 
 	>
-		<span class="mark button-icon-i button-icon-left search-item-icon ">
+		<span class="mark button-icon-i button-icon-left search-item-icon">
 			<i class="las la-search"></i>
 		</span>
 		<span class="widget__button-text">{{data}}</span>
 		<span class="widget__mark">{{mark}}</span>
 	</a>									
 </li>	
+
+
+{# 
+
+
+	.selectable-search-item 					- нужно что бы заполнить инпут выбранным вариантом и закрыть выпадающий список
+	.area-closeable - при клике закрываем выпадающий список
+	.select-search-item 		- не знаю зачем нужен этот класс (может просто стили повесил на эти классы, надо было добавлять к классу class-name-js и class-name-css) 
+	.search-item 			- при нажатии сделать поиск
+	.select-item - на нем висит стили
+ #}

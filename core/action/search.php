@@ -1,67 +1,71 @@
 <?php 
 
-require $_SERVER['DOCUMENT_ROOT'].'/function.php';
-header('Content-type: Application/json');
+require_once $_SERVER['DOCUMENT_ROOT'].'/function.php';
 
+// autocmplt-type
+if(!isset($_POST['type'], $_POST['page'])) {
+	echo 'error';
+	exit();
+}
+
+$get_data 	  = [];
 $search_value = ls_trim($_POST['search_item_value']); 
-$page         = ls_trim($_POST['page']);
-$type         = ls_trim($_POST['type']);
+$type 		  = $_POST['type'];
+$page 	      = $_POST['page'];
 $get_sort_data    = ls_trim($_POST['sort_data']);
 
-$th_list = get_th_list();
-$td_data = page_data_list([
-	'page' => $page,
-	'type' => $type
-]);
 
-$sql_data = default_data_param_sql(['page' => $page, 'type' => $type]);
+$th_list = get_th_list();
+
+$sql_data = page_data($page);
+
+$td_data = $sql_data['page_data_list'];
 
 $base_result = [];
 $res = [];
+$table = '';
 
-$table_name = $sql_data['table_name'];
-$base_query = $sql_data['base_query'];
-$order_sort = $sql_data['sort_by'];
-$query = [
-    'table_name' => $table_name,
-    'base_query' => $base_query,
-    'sort_by'	 => $order_sort
-];
-$stock_list = [];
-$param[] = $sql_data['param'];
+$sql_query_data = $sql_data['sql'];
 
-foreach($td_data['get_data'] as $key => $col_name_prefix) {
+$param 			= $sql_query_data['param'];
+$bind_list 		= $sql_query_data['param']['query']['bindList'];
+$table_name 	= $sql_query_data['table_name'];
+$base_query 	= $sql_query_data['base_query'];
+$sort_by 		= $sql_query_data['param']['sort_by'];
+$joins 			= $sql_query_data['param']['query']['joins'];
+
+$page_data_row = $td_data['get_data'];
+
+foreach($page_data_row as $key => $col_name_prefix) {
 	$th_this = $th_list[$key];
-    $data_sort = $th_this['data_sort'];
-
+    
+	$data_sort = $th_this['data_sort'];
+	
 	if($data_sort == $get_sort_data) {
         if(!empty($search_value)) {
-            $render_tpl = render_data_template([
-                'type' => $type,
-                'page' => $page,
-                'search' => [
-                    'param' =>  " AND $col_name_prefix = :search ",
-                    'bindList' => array(
-                        'search' =>  $search_value
-                    )
-                ]       
-            ]);  
-        } else {
-            $render_tpl = render_data_template([
-                'type' => $type,
-                'page' => $page,
-                'search' => [
-                    'param' => " AND $col_name_prefix LIKE :search ",
-                    'bindList' => array(
-                        'search' => "%{$search_value}%"
-                    )
+            $search_array = [
+                'table_name' => 'user_control',
+                'col_list'   => " * ",
+                'base_query' => $base_query,			
+                'param' => [
+                    'query' => [
+                        'param' => $param['query']['param'],
+                        'joins' => $joins . " WHERE $col_name_prefix LIKE :search ",
+                        'bindList' => array(
+                            'search' =>  "%{$search_value}%"
+                        )
+                    ],
+                    'sort_by' 	 => $sort_by,
                 ]
-            ]);     
+            ];
+
+            $render_tpl = render_data_template($search_array, $sql_data['page_data_list']);
+
+        } else {
+            $render_tpl = render_data_template($data_page['sql'], $td_data);    
         }
 
-
-        
-        $table = $twig->render('/component/include_component.twig', [
+        $table .= $twig->render('/component/include_component.twig', [
             'renderComponent' => [
                 '/component/table/table_row.twig' => [
                     'table' => $render_tpl['result'],
@@ -71,11 +75,11 @@ foreach($td_data['get_data'] as $key => $col_name_prefix) {
             ]
         ]);
         
-        if(!empty($render_tpl['base_result'])) {
-            // $base_result[] = $render_tpl['base_result'];                  
+        if(!empty($render_tpl['base_result'])) {                
             $base_result = array_merge($base_result, $render_tpl['base_result'] );
         } 
-    }    
+
+	}
 }
 
 
@@ -87,42 +91,7 @@ $total = $twig->render('/component/include_component.twig', [
     ]
 ]);
 
-
 echo json_encode([
     'table' => $table,
     'total' => $total
 ]);
-
-
-
-
-// if($sort_data == 'name') {
-//     $render_tpl = render_data_template([
-//         'type' => $type,
-//         'page' => $page,
-//         'search' => [
-//             'param' =>  ' AND stock_name =  :stock_name ',
-//             'bindList' => array(
-//                 'stock_name' =>"%{$search_value}%"
-//             )
-//         ]       
-//     ]);
-// }
-// if($sort_data == 'provider') {
-//     $render_tpl = render_data_template([
-//         'type' => $type,
-//         'page' => $page,
-//         'search' => array(
-//             'param' => " AND stock_provider = :stock_provider",
-//             'bindList' => array(
-//                 ':stock_provider' => $search_value
-//             )
-//         )
-//     ]);     
-// }
-
-// echo $tpl->render([		
-//     'table' => $render_tpl,
-//     'table_tab' => $page,
-//     'table_type' => $type
-// ]);		

@@ -1,5 +1,5 @@
 {% for key, row in items %}
-<tr class="cart-item in-cart" data-cart-id="{{row.id}}">
+<tr class="cart-item in-cart modify" data-cart-id="{{row.id}}">
     <td>
         <span class="stock-list-title">{{row.id}}</span>
     </td>
@@ -11,20 +11,20 @@
             <div class="cart-input-icon cart-input-price-icon opacity-06">
                 <img src="../../img/icon/manat.svg">
             </div>                                        
-            <input type="text" class="cart-order-price input cart-input input-validate-length input-validate-price input-required" value="{{price}}">
+            <input type="text" class="cart-order-price input cart-input input-validate-length input-validate-price input-required" value="{{row.price}}">
         </div>
     </td>
     <td>
         <div class="flex flex-ai-cntr cart-input-container">
-            <button class="las la-minus btn btn-default add-basket-btn-icon cart-counter cart-minus-count"></button>
+            <button class="las la-minus btn btn-default add-basket-btn-icon cart-counter cart-minus-count" tabindex="-1"></button>
               <div class="counter-input">
-                <input type="text" class="cart-order-count cart-order-input input cart-input input-validate-length input-validate-count input-required"  value="{{count}}">
+                <input type="text" class="cart-order-count cart-order-input input cart-input cart-counter-input input-validate-length input-validate-count input-required input-validate-min-max-count"  value="{{row.count}}">
               </div>
-            <button class="las la-plus btn btn-default add-basket-btn-icon cart-counter cart-plus-count"></button>
+            <button class="las la-plus btn btn-default add-basket-btn-icon cart-counter cart-plus-count" tabindex="-1"></button>
         </div>                                  
     </td>
     <td>
-        <button class="btn btn-danger add-basket-btn-icon las la-trash remove-at-cart"></button>                                
+        <button class="btn btn-danger add-basket-btn-icon las la-trash remove-at-cart" tabindex="-1"></button>                                
     </td>
 </tr>  
 {% endfor %}

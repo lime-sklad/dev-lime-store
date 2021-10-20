@@ -3,7 +3,7 @@
 
     define('root_dir', $_SERVER['DOCUMENT_ROOT']);
 
-    $menu = get_tab_main_page_test();
+    $menu = page_tab_list();
 
     if(isset($_POST['data_page_route'])) {
         $page = $_POST['data_page_route'];
