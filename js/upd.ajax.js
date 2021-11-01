@@ -341,37 +341,39 @@ $(document).on('click', '.delete-stock', function() {
 $('body').on('click', '.submit-stock-addd-form', function() {
 	let prepare_data = {};
 
-	$('.add-stock').each(function(){
-		if($(this).data('fields-name')) {
-			var data_name = $(this).data('fields-name');
-			var val = $(this).val();
-			prepare_data[data_name] = val;
-		}
-	});
-
-	$.ajax({
-		type: 'POST',
-		url: 'core/action/stock/add_stock.php',
-		data: prepare_data,
-		dataType: "json",
-		success: (data) => {
-			// console.log(data);
-			var error 	= data['error'];
-			var success = data['success'];
-
-			console.log(prepare_data);
-
-			if(error) {
-				pageData.alert_notice('error', error)
+	if(is_required_input($('.form-input'))) {
+		$('.add-stock').each(function(){
+			if($(this).data('fields-name')) {
+				var data_name = $(this).data('fields-name');
+				var val = $(this).val();
+				prepare_data[data_name] = val;
 			}
+		});
 
-			if(success) {
-				pageData.alert_notice('success', 'Ок');
-			}
-		}			
+		$.ajax({
+			type: 'POST',
+			url: 'core/action/stock/add_stock.php',
+			data: prepare_data,
+			dataType: "json",
+			success: (data) => {
+				// console.log(data);
+				var error 	= data['error'];
+				var success = data['success'];
 
-	});
+				console.log(prepare_data);
 
+				if(error) {
+					pageData.alert_notice('error', error);
+				}
+
+				if(success) {
+					pageData.alert_notice('success', 'Ок');
+					$('.form-input').val('');
+				}
+			}			
+
+		});
+	}
 });
 
 /** удалить товар end */

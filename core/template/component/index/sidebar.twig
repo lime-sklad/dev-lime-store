@@ -7,7 +7,7 @@
 
     <div class="sidebar-content ls-custom-scrollbar">
         
-        <a href="javascript:void(0)" class="sidebar-profile display-flex flex-jc-cntr flex-ai-end" data-user-id={{sidebar.user_id}}>
+        <a href="javascript:void(0)" class="sidebar-profile display-flex  flex-ai-end" data-user-id={{sidebar.user_id}}>
             <div class="profile-image">
                 <img src="/img/icon/profile.png" class="profile-img">
             </div>
@@ -19,7 +19,7 @@
 
         <div class="sidebar-page-list">
             {% for route_index, row in sidebar.menu_list.data %}
-                <a href="javascript:void(0)" class="sidebar-list get_page_action display-flex flex-jc-cntr flex-ai-end scroll_top   " 
+                <a href="javascript:void(0)" class="sidebar-list get_page_action display-flex flex-ai-end scroll_top " 
                     data-page-route="{{route_index}}"
 					data-tab="{{row.tab.active}}"
                     title="{{row.title}}"

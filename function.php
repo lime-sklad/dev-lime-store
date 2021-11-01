@@ -1249,7 +1249,19 @@ function page_data($page) {
 					[
 						'block_name' => 'add_stock_category',
 						'custom_data' => get_category_list()
-					],					
+					],	
+					[
+						'block_name' => 'add_stock_count'
+					],
+					[
+						'block_name' => 'add_stock_min_quantity'
+					],
+					[
+						'block_name' => 'add_stock_first_price'
+					],	
+					[
+						'block_name' => 'add_stock_second_price'
+					],																									
 					[
 						'block_name' => 'add_save_form',
 					],																			

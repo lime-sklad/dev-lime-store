@@ -19,7 +19,19 @@ $col_post_list = [
 	],
 	'add_stock_category_id' => [
 		'col_name' => 'product_category'
-	]	
+	],
+	'add_stock_count' => [
+		'col_name' => 'stock_count'
+	],	
+	'add_stock_min_quantity' => [
+		'col_name' => 'min_quantity_stock'
+	],
+	'add_stock_first_price' => [
+		'col_name' => 'stock_first_price' 
+	],
+	'add_stock_second_price' => [
+		'col_name' => 'stock_second_price' 
+	],	
 ];
 
 if(!empty($_POST) && count($_POST) > 0) {
@@ -31,26 +43,32 @@ if(!empty($_POST) && count($_POST) > 0) {
 		}
 	}
 
-	ls_var_dump($data);
-
 	$default_data = [
-		'stock_visible' => 0,
-		'stock_get_fdate' => date("d.m.Y"),
-		'stock_get_year' => date("m.Y")
+		'stock_visible' 	=> 0,
+		'stock_get_fdate' 	=> date("d.m.Y"),
+		'stock_get_year' 	=> date("m.Y"),
+		'product_added' 	=> getUser('get_id')
 	];
 
 	$data = array_merge($data, $default_data);
 
-	// $data = array_merge($data, [
-	// 	'stock_visible' => 0
-	// ]);	
-	// $data = array_merge($data, [
-	// 	'min_quantity_stock' => 1
-	// ]);		
 
-	ls_var_dump($data);
+	// ls_var_dump($data);
 
-	// ls_db_insert('stock_list', [$data]);
+	try {
+		// ls_db_insert('stock_list', [$data]);
+
+		echo json_encode([
+			'success' => 'bla-bla'
+		]);
+	} catch (Exception $e) {
+		echo json_encode([
+			'error' => "Ошибка"
+		]);
+	}
+
+
+
 }
 
 

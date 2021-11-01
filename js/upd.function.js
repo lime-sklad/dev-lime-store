@@ -152,6 +152,11 @@ $('body').on('focusout input', '.input-validate-length', function(){
   input_validate_lenght(val, $(this));
 });
 
+$('body').on('focusout input', '.input-required', function(){
+  var val = $(this).val();
+  val.trim().length == 0 ? $(this).addClass('input-required-error') : $(this).removeClass('input-required-error');
+});
+
 $('body').on('focusout input', '.input-validate-price', function(){
   var val = $(this).val();
   var preg_val = input_validate_price(val);
@@ -194,6 +199,35 @@ function input_validate_min_max_count(min, max, $this) {
     $this.val(max);
   } else {
     $this.val(preg_val);
+  }
+}
+
+
+
+//валидация инпутов
+function validate_all_input($item) {
+  if($item.hasClass(['input-validate-length' || 'input-validate-price' || 'input-validate-count'])) {
+    $item.trigger('input', 'keyup');
+    
+    if($('.input-validate-error').length) {
+      pageData.alert_notice('error', 'заполните все поля');
+      return false;
+    }
+    return true;  
+  }
+}
+
+//валидация обьязательных полей
+function is_required_input($item) {
+  if($item.hasClass('input-required')) {
+    $item.trigger('input', 'keyup');
+  }
+
+  if($item.hasClass('input-required-error')) {
+      pageData.alert_notice('error', 'заполните все поля');
+      return false;
+  } else {
+    return true;
   }
 }
 

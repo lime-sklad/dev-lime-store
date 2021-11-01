@@ -17,6 +17,21 @@
 {% endif %}
 
 
+{% if row.block_name == 'add_stock_count' %}
+    {% include fields_path ~ 'stock_add_fields/add_stock_count_fields.twig' %}
+{% endif %}
+
+{% if row.block_name == 'add_stock_min_quantity' %}
+    {% include fields_path ~ 'stock_add_fields/add_stock_min_quantity_fields.twig' %}
+{% endif %}
+
+{% if row.block_name == 'add_stock_first_price' %}
+    {% include fields_path ~ 'stock_add_fields/add_stock_first_price_fields.twig' %}
+{% endif %}
+
+{% if row.block_name == 'add_stock_second_price' %}
+    {% include fields_path ~ 'stock_add_fields/add_stock_second_price_fields.twig' %}
+{% endif %}
 
 
 

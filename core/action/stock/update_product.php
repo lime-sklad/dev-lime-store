@@ -13,12 +13,12 @@ $option = [
 		'upd_product_id' => [ 
 			'query' => false,
 			'bind' => 'stock_id',
+			'require' => true
 		],	
 		//изменить название товра
 		'product_name' => [
 			'query' => "stock_list.stock_name = :prod_name",
 			'bind' => 'prod_name',
-			'require' => false,
 		],
 		//изменить описание товара (старое imei)
 		'product_description' => [
@@ -44,7 +44,6 @@ $option = [
 		'product_first_price' => [
 			'query' => "stock_list.stock_first_price = :f_price",
 			'bind' => 'f_price',
-			'require' => true
 		],
 		//изменить стоимость
 		'product_second_price' => [
@@ -54,8 +53,7 @@ $option = [
 		//изменить минимальное количество товара
 		'change_min_quantity' => [
 			'query' => "stock_list.min_quantity_stock = :min_count",
-			'bind' => 'min_count',
-			'require' => true			
+			'bind' => 'min_count',	
 		],
 
 		//изменить количество товара
