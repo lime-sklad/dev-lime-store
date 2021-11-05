@@ -329,12 +329,22 @@ function ls_reset_filter($stock_id) {
 	$reset_filter->execute();	
 }
 
+//получаем массив для меню на главной странице и сайдбаре
 function page_tab_list() {
-	
 	// для версия выше 7.4 return array_map(fn($post) => $post['tab'], page_data(false));
 	
 	//для версий ниже 7.4
-	return array_map(function($post) { return $post['tab']; }, page_data(false));
+	// return array_map(function($post) { return $post['tab']; }, page_data(false));
+
+	$page_data = page_data(false);
+	$res = [];
+	foreach ($page_data as $key => $value) {
+		if($value['tab']['is_main']) {
+			$res[$key] = $value['tab'];
+		}
+	}
+
+	return $res;
 }
 
 //тут описываем страницы 
@@ -530,7 +540,16 @@ function get_tab_data($key = null, $active = null) {
 				'modify_class' => '',
 				'text' => ''
 			]
-		)	 
+		),
+		'tab_admin' => array(
+			'type' => 'phone',
+			'tab_title' => 'Admin',
+			'tab_link' => '/page/admin/admin.php',
+			'tab_icon' => false,
+			'tab_modify_class' => 'pos-relative',
+			'mark' => false
+		)
+
 	);
 
 	if(!empty($key)) {
@@ -556,6 +575,7 @@ function collect_product_data($stock_list, $data_name) {
 	$th_list 	= [];
 	$complete 	= [];
 
+
 	$th 		= get_th_list();		
 
 	foreach ($data_name as $td_list => $td_row) {
@@ -578,7 +598,10 @@ function collect_product_data($stock_list, $data_name) {
 			$mass = [];
 			foreach ($stock_list as $key => $row) {
 				//fix return	
-				($row['stock_return_status'] == 1) ? $row['stock_return_status'] = ' ' : $row['stock_return_status'] = false;
+				if(array_key_exists('stock_return_status', $row)) {
+					($row['stock_return_status'] == 1) ? $row['stock_return_status'] = ' ' : $row['stock_return_status'] = false;
+				}
+			
 				
 				if(array_key_exists($td_row, $row)) {
 					$data = $row[$td_row];
@@ -586,8 +609,10 @@ function collect_product_data($stock_list, $data_name) {
 					$data = null;
 				}
 
+				// если в массиве есть id товара то добавляем его, если нет, то берем просто ключ 
+				array_key_exists('stock_id', $row) ? $id = $row['stock_id'] : $id = $key;
 
-				$result[$key][$row['stock_id']][] = [
+				$result[$key][$id][] = [
 					'data' 			=> $data,
 					'td_class' 		=> $td_class,
 					'link_class' 	=> $link_class,
@@ -597,7 +622,6 @@ function collect_product_data($stock_list, $data_name) {
 			}
 		}
 	}
-
 	$complete = [
 		'th' => $th_list,
 		'td' => $result
@@ -726,11 +750,22 @@ function get_th_list() {
 			'report_profit' => array(
 				'is_title' 			=> check_th_return_name('th_profit'),
 				'modify_class' 		=> 'th_w80',
-				'td_class' 			=> '',
+				'td_class' 			=> 'mark-success',
 				'link_class' 		=> 'stock-link-text-both',
 				'data_sort' 		=> '',
-				'mark'				=> false
-			),					
+				'mark'				=> array(
+					'mark_text' 		=> '',
+					'mark_modify_class' => 'manat-icon--black button-icon-right stock-list-icon'
+				)	
+			),	
+			'report_sum_amount' => array(
+				'is_title' => check_th_return_name('th_profit'),
+				'modify_class' => 'th_w100',
+				'td_class' => '',
+				'link_class' => 'stock-link-text-both',
+				'data_sort'	=> '',
+				'mark' => false
+			),				
 			'report_date_year' => array(
 				'is_title' 			=> false,
 				'modify_class' 		=> 'th_w80',
@@ -747,6 +782,22 @@ function get_th_list() {
 				'data_sort' 		=> '',
 				'mark'				=> false
 			),
+			'report_order_date' => array(
+				'is_title' 			=> check_th_return_name('th_report_serial'),
+				'modify_class' 		=> 'hide',
+				'td_class' 			=> 'hide',
+				'link_class' 		=> 'hide',
+				'data_sort' 		=> 'date',
+				'mark'				=> false				
+			),
+			'report_order_edit' => [
+				'is_title' 			=> 'Изменить',
+				'modify_class' 		=> 'th_w60',
+				'td_class' 			=> 'table-ui-reset',
+				'link_class' 		=> 'las la-pen btn btn-secondary width-100 table-ui-btn info-stock',
+				'data_sort' 		=> '',
+				'mark'				=> false				
+			],				
 			'terminal_add_basket' => array(
 				'is_title' 			=> ' ',
 				'modify_class' 		=> 'th_w60',
@@ -778,7 +829,15 @@ function get_th_list() {
 				'link_class' 		=> 'las la-pen btn btn-secondary width-100 table-ui-btn info-stock',
 				'data_sort' 		=> '',
 				'mark'				=> false				
-			]							 			  					
+			],
+			'user_name' => array(
+				'is_title' => 'Логин',
+				'modify_class' 		=> 'th_w150',
+				'td_class' 			=> '',
+				'link_class' 		=> 'stock-link-text-both res-user-name',
+				'data_sort' 		=> 'user_name',
+				'mark'				=> false
+			)						 			  					
 		];
 	
 	return $th_list;
@@ -949,12 +1008,12 @@ function ls_db_upadte($option, $data) {
 		}
 	}
 
-	if($conditions) {
-		$conditions = implode(", ", $conditions);
-	}
 
 	$query = $before;
-	$query .= $conditions;
+	if($conditions) {
+		$conditions = implode(", ", $conditions);
+		$query .= $conditions;
+	}
 	$query .= $after;
 
     try {
@@ -1037,6 +1096,7 @@ function page_data($page) {
 	$list = [
 		'terminal' => [
 			'tab' => [
+				'is_main' => true,
 				'title' 			=> 'Əməliyyatlar',
 				'icon'				=> [
 					'img_big'		 	=> 'img/svg/046-shopping.svg',
@@ -1091,15 +1151,59 @@ function page_data($page) {
 					'sum_first_price'					
 				],
 				'modal' => [
-					'template_block' => 'terminal_order',
-					'modal_fields' => [
-						'user',
-						'stock_name',
-						'stock_imei',
-						'stock_provider',
-						'order_first_price',
-						'spoiler_filter',
-					]
+					'template_block' => 'info_product',
+					'modal_fields' => array(
+						'info_product_name' => [
+							'db' => 'stock_name',
+							'custom_data' => false,
+							'premission' => true
+						],
+						'info_product_description' => [
+							'db' => 'stock_phone_imei',
+							'custom_data' => false,
+							'premission' => true
+						],
+						'info_product_count' => [
+							'db' => 'stock_count',
+							'custom_data' => false,
+							'premission' => true
+						],
+						'info_product_category' => [
+							'db' => 'category_name',
+							'custom_data' => false,
+							'premission' => true
+						],						
+						'info_product_provider' => [
+							'db' => 'provider_name',
+							'custom_data' => false,
+							'premission' => true
+						],						
+						'info_product_first_price' => [
+							'db' => 'stock_first_price',
+							'custom_data' => false,
+							'premission' => is_data_access_available('th_buy_price')
+						],
+						'info_product_second_price' => [
+							'db' => 'stock_second_price',
+							'custom_data' => false,
+							'premission' => true
+						],
+						'info_product_count' => [
+							'db' => 'stock_count',
+							'custom_data' => false,
+							'premission' => true
+						],
+						'info_product_min_quantity' => [
+							'db' => 'min_quantity_stock',
+							'custom_data' => false,
+							'premission' => true
+						],
+						'info_product_add_date' => [
+							'db' => 'stock_get_fdate',
+							'custom_data' => false,
+							'premission' => true
+						]												
+					)
 				],
 				'filter_fields' => [
 					'color',
@@ -1113,6 +1217,7 @@ function page_data($page) {
 
 		'stock' => [
 			'tab' => [
+				'is_main' => true,
 				'title'		 		=> 'Anbar',
 				'icon'				=> [
 					'img_big'		 	=> 'img/svg/070-file hosting.svg',
@@ -1268,10 +1373,147 @@ function page_data($page) {
 				)				
 
 			]
-		],					
+		],	
+		'report' => [
+			'tab' => [
+				'is_main' => true,
+				'title'		 		=> 'Hesabat',
+				'icon'				=> [
+					'img_big'		 	=> 'img/svg/070-file hosting.svg',
+					'img_small'			=> '',
+					'modify_class' 		=> 'las las la-donate'
+				],
+				'link'  			=> '/page/base.php',		
+				'template_src'      => '/page/base_tpl.twig',
+				'background_color'  => 'rgba(72, 61, 139, 0.1)',
+				'tab' => array(
+					'list' => [
+						'tab_report_phone'
+					],
+					'active' => 'tab_report_phone'			
+				)
+			],			
+			'sql' => [
+				'table_name' => 'stock_list as tb',
+				'col_list'	=> '*',
+				'base_query' =>  " INNER JOIN stock_list ON stock_list.stock_id  != 0 
+				                   INNER JOIN stock_order_report ON  stock_order_report.stock_order_visible = 0
+				                    ",
+				'param' => array(
+					'query' => array(
+						'param' =>  " AND stock_order_report.stock_id = stock_list.stock_id
+									  AND stock_order_report.order_stock_count > 0",
+						"joins" => "  LEFT JOIN stock_provider ON stock_provider.provider_id = stock_list.product_provider
+									  LEFT JOIN stock_category ON stock_category.category_id = stock_list.product_category ",		
+						'bindList' => array(
+						)
+					),
+					'sort_by' => " GROUP BY stock_order_report.order_stock_id DESC ORDER BY stock_order_report.order_stock_id DESC "
+				),
+					
+			],
+			'page_data_list' => [
+				'get_data' => [
+					'report_order_id'	=> 'order_stock_id',
+					'sales_date'  		=> 'order_date',
+					'name'			 	=> 'stock_name',
+					'description'		=> 'stock_phone_imei',
+					'category'			=> 'category_name',
+					'provider'			=> 'provider_name',
+					'report_note'		=> 'order_who_buy',
+					'first_price'		=> 'stock_first_price',
+					'second_price'		=> 'order_stock_sprice',
+					'count'				=> 'order_stock_count',
+					'report_profit'		=> 'order_total_profit',
+					'report_order_date'		=> 'order_my_date',
+					'report_order_edit'	=> null
+
+				],
+				'table_total_list'	=> [	
+				],
+				'modal' => [
+					'template_block' => 'report_return',
+					'modal_fields' => array(
+						'user' => [
+							'db' 			=> false, 
+							'custom_data' 	=> getUser('get_id'), 
+							'premission' 	=> true
+						],
+						'report_order_id' => [
+							'db' => 'order_stock_id',
+							'custom_data' => false,
+							'premission' => true
+						],
+						'info_product_name' => [
+							'db' => 'stock_name',
+							'custom_data' => false,
+							'premission' => true
+						],
+						'info_product_description' => [
+							'db' => 'stock_phone_imei',
+							'custom_data' => false,
+							'premission' => true
+						],
+						'report_return_btn' => [
+							'db' => false,
+							'custom_data' => false,
+							'premission' => true
+						]									
+					)					
+				],
+				'filter_fields' => [
+				],
+			]
+		],	
+		'admin' => [
+			'tab' => [
+				'is_main' => true,
+				'title'		 		=> 'Admin',
+				'icon'				=> [
+					'img_big'		 	=> 'img/svg/070-file hosting.svg',
+					'img_small'			=> '',
+					'modify_class' 		=> 'las la-user-cog'
+				],
+				'link'  			=> '/page/base.php',		
+				'template_src'      => '/page/base_tpl.twig',
+				'background_color'  => 'rgba(72, 61, 139, 0.1)',
+				'tab' => array(
+					'list' => [
+						'tab_admin'
+					],
+					'active' => 'tab_admin'			
+				)
+			],			
+			'sql' => [
+				'table_name' => 'user_control as tb',
+				'col_list'	=> '*',
+				'base_query' =>  " WHERE user_visible = 0 ",
+				'param' => array(
+					'query' => array(
+						'param' => "",
+						"joins" => "",		
+						'bindList' => array(
+						)
+					),
+					'sort_by' => " ORDER BY user_id DESC "
+				),	
+			],
+			'page_data_list' => [
+				'get_data' => [
+					'user_name' => 'user_name'
+				],
+				'table_total_list'	=> [	
+				],
+				'modal' => [
+					'template_block' => 'report_return',
+					'modal_fields' => array(									
+					)					
+				],
+				'filter_fields' => [
+				],
+			]
+		]						
 	];
-
-
 
 	$param = [];
 
@@ -1882,26 +2124,27 @@ function get_category_list() {
 }
 
 
-function get_report_date_list($type) {
-	$res = ls_db_request(
-		array(
-			'request' => [
-				'param' => " AND stock_type = :stock_type  AND order_stock_count > 0 ",
-				'bindList' => array(
-					'stock_type' => $type
-				)
-			]
-		),
-		array(
-			'table_name' => 'stock_order_report',
-			'base_query' =>  "SELECT DISTINCT order_my_date FROM stock_order_report WHERE stock_order_visible = 0 ",
-			'sort_by' => ' ORDER BY order_real_time desc '
-		)
-	);
+function get_report_date_list() {
 
+	$res = ls_db_request([
+		'table_name' => "stock_order_report",
+		'col_list' => " DISTINCT order_my_date ",
+		'base_query' => ' WHERE order_stock_count > 0 AND stock_order_visible = 0',
+		'param' => [
+			'query' => [
+				'param' => "",
+				'joins' => "",
+				'bindList' => array()
+			],
+			'sort_by' => " ORDER BY order_real_time DESC "
+		]
+	]);
+	
 	foreach($res as $key => $row) {
 		$dd[] = $row['order_my_date'];
 	}
+
+	$dd['default'] = date("m.Y");
 
 	return $dd;
 }
