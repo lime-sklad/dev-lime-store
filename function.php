@@ -548,8 +548,7 @@ function get_tab_data($key = null, $active = null) {
 			'tab_icon' => false,
 			'tab_modify_class' => 'pos-relative',
 			'mark' => false
-		)
-
+		),
 	);
 
 	if(!empty($key)) {
@@ -570,13 +569,20 @@ function get_tab_data($key = null, $active = null) {
 }
 
 
-function collect_product_data($stock_list, $data_name) {
+function collect_product_data($stock_list, $page_data_list) {
 	$result 	= [];
 	$th_list 	= [];
 	$complete 	= [];
+	$sort_key = false;
+
+	$data_name = $page_data_list['get_data'];
+
+	if(array_key_exists('sort_key', $page_data_list)) {
+		$sort_key = $page_data_list['sort_key'];
+	}
 
 
-	$th 		= get_th_list();		
+	$th = get_th_list();		
 
 	foreach ($data_name as $td_list => $td_row) {
 		$th_this		 	= $th[$td_list];
@@ -610,7 +616,9 @@ function collect_product_data($stock_list, $data_name) {
 				}
 
 				// если в массиве есть id товара то добавляем его, если нет, то берем просто ключ 
-				array_key_exists('stock_id', $row) ? $id = $row['stock_id'] : $id = $key;
+				// array_key_exists('stock_id', $row) ? $id = $row['stock_id'] : $id = $key;
+		
+				$sort_key ? $id = $row[$sort_key] : $id = $key;
 
 				$result[$key][$id][] = [
 					'data' 			=> $data,
@@ -759,12 +767,12 @@ function get_th_list() {
 				)	
 			),	
 			'report_sum_amount' => array(
-				'is_title' => check_th_return_name('th_profit'),
-				'modify_class' => 'th_w100',
-				'td_class' => '',
-				'link_class' => 'stock-link-text-both',
-				'data_sort'	=> '',
-				'mark' => false
+				'is_title' 			=> check_th_return_name('th_profit'),
+				'modify_class' 		=> 'th_w100',
+				'td_class' 			=> '',
+				'link_class' 		=> 'stock-link-text-both',
+				'data_sort'			=> '',
+				'mark' 				=> false
 			),				
 			'report_date_year' => array(
 				'is_title' 			=> false,
@@ -830,14 +838,46 @@ function get_th_list() {
 				'data_sort' 		=> '',
 				'mark'				=> false				
 			],
+			'user_id' => array(
+				'is_title' 			=> 'id',
+				'modify_class' 		=> 'th_w40',
+				'td_class' 			=> '',
+				'link_class' 		=> 'stock-link-text-both',
+				'data_sort' 		=> false,
+				'mark'				=> false
+			),
 			'user_name' => array(
 				'is_title' => 'Логин',
-				'modify_class' 		=> 'th_w150',
+				'modify_class' 		=> 'th_w300',
 				'td_class' 			=> '',
 				'link_class' 		=> 'stock-link-text-both res-user-name',
 				'data_sort' 		=> 'user_name',
 				'mark'				=> false
-			)						 			  					
+			),
+			'user_password' => array(
+				'is_title' => getUser('get_role') == 'admin' ? 'Parol' : false,
+				'modify_class' 		=> 'th_w100',
+				'td_class' 			=> '',
+				'link_class' 		=> 'stock-link-text-both res-user-password',
+				'data_sort' 		=> false,
+				'mark'				=> false
+			),
+			'user_role' => array(
+				'is_title' 			=> 'Роль',
+				'modify_class' 		=> 'th_w100',
+				'td_class' 			=> '',
+				'link_class' 		=> 'stock-link-text-both res-user-role',
+				'data_sort' 		=> false,
+				'mark'				=> false
+			),
+			'user_edit' => array(
+				'is_title' 			=> 'Изменить',
+				'modify_class' 		=> 'th_w60',
+				'td_class' 			=> 'table-ui-reset',
+				'link_class' 		=> 'las la-pen btn btn-secondary width-100 table-ui-btn info-stock',
+				'data_sort' 		=> '',
+				'mark'				=> false	
+			)
 		];
 	
 	return $th_list;
@@ -850,7 +890,6 @@ function ls_db_request($query) {
 
 	$param_row = $query['param'];
 
-	
 	$result 			= [];
 	$conditions 		= [];
 	$table_name 		= $query['table_name'];
@@ -872,6 +911,7 @@ function ls_db_request($query) {
 	$conditions = array_merge($conditions, $bind_list);
 
 	$stock_view = $dbpdo->prepare($query);
+
 
 	foreach($conditions as $bind_key => $bindValue) {
 		$stock_view->bindValue($bind_key, $bindValue);
@@ -1132,6 +1172,7 @@ function page_data($page) {
 				),	
 			],
 			'page_data_list' => [
+				'sort_key' => 'stock_id',
 				'get_data' => [
 					'id' 				=> 'stock_id',
 					'name'			 	=> 'stock_name',
@@ -1252,6 +1293,7 @@ function page_data($page) {
 				),	
 			],
 			'page_data_list' => [
+				'sort_key' => 'stock_id',
 				'get_data' => [
 					'id' 				=> 'stock_id',
 					'stock_add_date'	=> 'stock_get_fdate',
@@ -1388,7 +1430,7 @@ function page_data($page) {
 				'background_color'  => 'rgba(72, 61, 139, 0.1)',
 				'tab' => array(
 					'list' => [
-						'tab_report_phone'
+						'tab_report_phone',
 					],
 					'active' => 'tab_report_phone'			
 				)
@@ -1413,6 +1455,7 @@ function page_data($page) {
 					
 			],
 			'page_data_list' => [
+				'sort_key' => 'order_stock_id',
 				'get_data' => [
 					'report_order_id'	=> 'order_stock_id',
 					'sales_date'  		=> 'order_date',
@@ -1454,6 +1497,11 @@ function page_data($page) {
 							'custom_data' => false,
 							'premission' => true
 						],
+						'report_order_note' => [
+							'db' => 'order_who_buy',
+							'custom_data' => false,
+							'premission' => true
+						],
 						'report_return_btn' => [
 							'db' => false,
 							'custom_data' => false,
@@ -1479,7 +1527,7 @@ function page_data($page) {
 				'background_color'  => 'rgba(72, 61, 139, 0.1)',
 				'tab' => array(
 					'list' => [
-						'tab_admin'
+						'tab_admin',
 					],
 					'active' => 'tab_admin'			
 				)
@@ -1487,11 +1535,11 @@ function page_data($page) {
 			'sql' => [
 				'table_name' => 'user_control as tb',
 				'col_list'	=> '*',
-				'base_query' =>  " WHERE user_visible = 0 ",
+				'base_query' =>  "",
 				'param' => array(
 					'query' => array(
-						'param' => "",
-						"joins" => "",		
+						'param' => " WHERE user_visible = 0 ",
+						"joins" => " ",		
 						'bindList' => array(
 						)
 					),
@@ -1499,20 +1547,30 @@ function page_data($page) {
 				),	
 			],
 			'page_data_list' => [
+				'sort_key' => 'user_id',
 				'get_data' => [
-					'user_name' => 'user_name'
+					'user_id'			=> 'user_id',
+					'user_name' 		=> 'user_name',
+					'user_password' 	=> 'user_password',
+					'user_role' 		=> 'user_role',
+					'user_edit'			=> null
 				],
 				'table_total_list'	=> [	
 				],
 				'modal' => [
-					'template_block' => 'report_return',
+					'template_block' => 'edit_user',
 					'modal_fields' => array(									
-					)					
+						'user_id' => [
+							'db' 			=> 'user_id', 
+							'custom_data' 	=> false,
+							'premission' 	=> true
+						],
+					)
 				],
 				'filter_fields' => [
 				],
 			]
-		]						
+		],									
 	];
 
 	$param = [];
@@ -1967,7 +2025,7 @@ function render_data_template($sql_data, $get_data) {
 	//страница
 	$stock_list = ls_db_request($sql_data);
 	return [
-		'result' => collect_product_data($stock_list, $get_data['get_data']),
+		'result' => collect_product_data($stock_list, $get_data),
 		'base_result' => query_clear_by_user_access([ 'query' => $stock_list, 'access' => $get_data ])
 	]; 	
 
