@@ -12,6 +12,8 @@ if(!isset($_POST['type'], $_POST['page'])) {
 	die;
 }
 
+$search_bind_list = [];
+
 $type = $_POST['type'];
 $page = $_POST['page'];
 $data = page_data($page);
@@ -49,7 +51,13 @@ if(isset($_POST['id'])) {
 	}	
 	$query = implode("\n", $query);
 } else {
-	$query = '';
+	if($page == 'report') {
+		$query = ' AND stock_order_report.order_my_date = :mydateyear ';
+		$search_bind_list['mydateyear'] = date("m.Y");
+	} else {
+		$query = '';		
+	}
+
 }
 
 
@@ -62,8 +70,7 @@ $search_array = [
         'query' => [
             'param' => $param['query']['param'],
             'joins' => $query . $joins,
-            'bindList' => array(
-            )
+            'bindList' => $search_bind_list
         ],
         'sort_by' 	 => $sort_by,
     ]

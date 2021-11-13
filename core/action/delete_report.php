@@ -14,7 +14,7 @@ if(isset($_POST['delete_report'])) {
 	$upd_report_row->bindParam('delete_report_id', $delete_report_id, PDO::PARAM_INT);
 	$upd_report_row->execute();
 
-	$delete_report = $dbpdo->prepare("DELETE FROM stock_order_report WHERE order_stock_id=?");
+	$delete_report = $dbpdo->prepare("DELETE FROM stock_order_report WHERE order_stock_id= ?");
 	$delete_report->execute([$delete_report_id]); 	
 
 	$success = array('ok' => 'ok');

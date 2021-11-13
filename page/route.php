@@ -28,7 +28,9 @@
 
         $link = $tab_this['tab_link'];
 
-        include root_dir.$link;
+        if(access_request_uri($link)) {
+            include root_dir.$link;
+        }
     }
 
 

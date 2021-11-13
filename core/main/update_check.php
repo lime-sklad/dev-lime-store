@@ -156,7 +156,8 @@
 		header('Content-type: Application/json');
 
 		$product_err = [
-		  'notify' 		=> $type
+		  'notify' 		=> $type,
+		  'error'		=> $type
 		];			
 
 		//выводим сообщение и останавливаем

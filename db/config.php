@@ -1,12 +1,14 @@
 <?php 
 date_default_timezone_set('Asia/Baku');
+ini_set('session.cookie_lifetime', 30*60);
 session_start();
 define('DBHOST','localhost');
 define('DBUSER','root');
 define('DBPASS','');
 define('DBNAME','lime_sklad');
 
-define('DIR','http://domain.com/');
+define('LS_DIR','E:/Emil/xampp/htdocs/');
+define('LS_HOST', "http://localhost/");
 define('SITEEMAIL','noreply@domain.com');
 
 try 
@@ -15,8 +17,8 @@ try
     $dbpdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $dbpdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 
-    require_once $_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
-	$loader = new \Twig\Loader\FilesystemLoader($_SERVER['DOCUMENT_ROOT'].'/core/template/');
+    require_once LS_DIR.'/vendor/autoload.php';
+	$loader = new \Twig\Loader\FilesystemLoader(LS_DIR.'/core/template/');
 	$twig = new \Twig\Environment($loader);
 
 } 

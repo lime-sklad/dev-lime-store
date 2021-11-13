@@ -1,49 +1,44 @@
 <?php
+	$data_page = page_data($page);
+	$page_config = $data_page['page_data_list'];
 
-//в этой функции описываем какие данные выводим для определенной категории
 
-
-	// get_report_date_list($type);
-
-	//параметры поиска
-	$search_arr = array(
-		'input_class' 	 => 'search-auto', //классы поля ввода поиска
-		'parent_class'	 => '', //класс для родителя инпута
-		'label'			 => '', //заполнить/оставить пустым или 
-		'input_placeholder' 	 => 'Axtar',
-		'reset' => true,
-		'autocomplete' => array(
-			'type' 	=> 'search' 
-		)
-	);
-	$page_config = page_data_list(['type' => $type, 'page' => $page ]);
-
-	$table_result = render_data_template([
-		'type' => $type,
-		'page' => $page,
-		'search' => array(
-			'param' => " AND stock_order_report.order_my_date = :mydateyear ",
-			'bindList' => array(
-				'mydateyear' => get_my_dateyear()
+		//параметры поиска
+		$search_arr = array(
+			'input_class' 	 => 'search-auto area-input', 	//классы поля ввода поиска
+			'parent_class'	 => 'search-container-width', 			//класс для родителя инпута
+			'input_placeholder' => 'Axtar', //заполнить/оставить пустым или
+			'reset' => true, 
+			'input_icon' => [
+				'icon' => 'la-search',
+			],
+			'widget_class_list' => '',
+			'widget_container_class_list' => 'flex-cntr',
+			'autocomplete' 	 => array(
+				'type' => 'search',
+				'parent_modify_class' => '',
+				'autocomlete_class_list' => 'get_item_by_filter search-item area-closeable selectable-search-item'
 			)
-		)
+		);
+		
+	$data_page['sql']['param']['query']['param'] = $data_page['sql']['param']['query']['param'] . "  AND stock_order_report.order_my_date = :mydateyear";
+	$data_page['sql']['param']['query']['bindList']['mydateyear'] = date("m.Y");
 
-	]);
+	$table_result = render_data_template($data_page['sql'], $data_page['page_data_list']);
 
-	// ls_var_dump($table_result['base_result']);
-	
 	echo $twig->render('/component/inner_container.twig', [
 		'renderComponent' => [
+			'/component/pulgin/stats_card/stats_card_container.twig' => [],
 			'/component/related_component/include_widget.twig' => [
 				'/component/widget/report_date_picker.twig' => [
-					// 'res' => get_report_date_list($type)
+					'res' => get_report_date_list()
 				],
 				'/component/search/search.twig' => $search_arr,				
 			],
 			'/component/table/table_wrapper.twig' => [
 				'table'				=> $table_result['result'],
 				'table_tab' 		=> $page,
-				'table_type' 		=> $type,				
+				'table_type' 		=> $type,
 			],
 			'/component/table/table_footer_wrapper.twig' => [
 				'table_total' => table_footer_result($page_config['table_total_list'], $table_result['base_result'])

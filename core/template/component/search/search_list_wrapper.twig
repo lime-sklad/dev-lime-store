@@ -1,11 +1,5 @@
 <div class="area-content widget__content search-content {{auto_list.parent_modify_class}} ">
 	<ul class="ls-custom-scrollbar select-list select-saerch-list search-list-content {{auto_list.autocomlete_ul_modify_class}} " data-auto-cmplt-type="{{auto_attr}}" >
-		<li class="select-items">
-			<a href="javascript:void(0)" class="select-item select-search-item">
-				<span class="widget__button-text">Yazmağa başlayın ...</span>
-			</a>									
-		</li>	
-
 		{% if auto_list.autocomplete_list %}
 
 			{% for key, val in auto_list.autocomplete_list %}
@@ -27,4 +21,4 @@
 
 	</ul>
 	{% include '/component/related_component/content_preloader.twig' %}
-</div>	
+</div>

@@ -1,0 +1,35 @@
+<div class="stats-card-container mrgn-bottom-50">
+    <div class="stats-card-list">
+
+    </div>
+</div>
+
+<script defer>
+        var date = $('.report-date-picker').val();
+
+        load_stats_card(date);
+        
+        console.log('I WANT DIE JEEEEEEEEEEEEEEEEEEEEZ');
+
+        $('body').on('click', '.report-date-picker-item--cards-load', function(){
+            var pick_date = $(this).data('sort-value');
+            load_stats_card(pick_date);
+        });
+    
+
+    function load_stats_card(date = null) {
+        $.ajax({
+            type: 'GET',
+            url: 'core/pulgin/stats_card/stats_report.php',
+            dataType: 'json',
+            data: {
+                page: pageData.page(),
+                type: pageData.type(),
+                date: date
+            },
+            success: (data) => {
+                $('.stats-card-list').html(data.report_cards);
+            }
+        });
+    }
+</script>

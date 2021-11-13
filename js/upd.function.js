@@ -15,7 +15,7 @@ $(document).ready(function(){
   const random_img = Math.floor(Math.random() * image_name.length);
 
   $('.menu').css({
-    'background-image' : `url(../img/pattern/${image_name[random_img]})`
+    'background-image' : `url(img/pattern/${image_name[random_img]})`
   });
 
   //delete this
@@ -34,6 +34,14 @@ $(document).ready(function(){
       // заполняем таблицу данными 
       $('.table-list').html(data);
     },
+    prependTable: function(data) {
+      // заполняем таблицу данными 
+      $('.table-list').prepend(data);
+    },    
+    appendTable: function(data) {
+      // заполняем таблицу данными 
+      $('.table-list').append(data);
+    },    
     update_table_row: function(key, value, id) {
       const $this = $(`.stock-list#${id}`);
       const amimate_delay = 1500;
@@ -68,7 +76,14 @@ $(document).ready(function(){
 
         case 'category_name_text':
           $this.find('.res-stock-category').find('.stock-list-title').html(value);
-          break;                                                    
+          break;   
+          
+        case 'upd_category_name': 
+          $this.find('.res-category-name').find('.stock-list-title').html(value);
+          break;  
+
+        case 'upd_provider_name':
+          $this.find('.res-edit-provider-name').find('.stock-list-title').html(value);
       }
 
 
@@ -445,6 +460,10 @@ $(document).on('click', '.selectable-search-item.selected', function(){
   if($parent.find('.scroll-auto').length) {
     console.log('22');
     $input = $parent.find('.scroll-auto');
+  }
+
+  if($parent.find('.input-select').length) {
+     $input = $parent.find('.input-select');
   }
 
   $input.val(data_text);

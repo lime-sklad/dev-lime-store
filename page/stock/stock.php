@@ -28,7 +28,7 @@
 	);
 	
 	$table_result = render_data_template($data_page['sql'], $data_page['page_data_list']);
-
+	
 	echo $twig->render('/component/inner_container.twig', [
 		'renderComponent' => [
 			'/component/related_component/include_widget.twig' => [

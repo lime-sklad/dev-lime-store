@@ -1,0 +1,16 @@
+
+{% for key, val in data.res %}
+    <div class="stats-item">
+        <div class="stats-item-icon">
+            {{ val.icon|raw }}
+        </div>
+        
+        <div class="stats-content">
+            <span class="stats-title">{{val.title}}</span>
+            <div class="stats-value">
+                <span class="stats-text">{{val.value}}</span>
+                <span class="mark mark-text {{val.mark.mark_modify_class}}"> {{ val.mark.mark_text }}</span>        
+            </div>
+        </div>
+    </div>
+{% endfor  %}

@@ -5,8 +5,8 @@ header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
-require_once $_SERVER['DOCUMENT_ROOT'].'/function.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
+require_once 'function.php';
+require_once 'vendor/autoload.php';
 
 	echo $twig->render('/component/include_component.twig', [
 		'renderComponent' => [
@@ -51,4 +51,5 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
 		]
 	]);
 	
+	require_once 'core/main/update_check.php';
 

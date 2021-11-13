@@ -39,8 +39,8 @@ if(isset($_POST['btn-login']))
 	if($row['user_password'] == $pass){
     	$_SESSION['user'] = $row['user_id'];
     	$_SESSION['time_start_login'] = time();
-    	header('Location: /core/main/check_files.php'); 
-    	exit();     
+		header("Location: core/main/check_files.php");
+		exit();
 	}else{
         echo '<a href="login" style="color: red;">Пожалуйста, проверьте правильность написания логина и пароля.</a>';
     }

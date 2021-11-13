@@ -191,7 +191,10 @@ $th_list_data = array(
 					array("th_rasxod", 			  	"Xarc"),
 					array("th_report_serial", "№"),
 					array("th_serial", "№"),
-					array("th_description", "Təsvir")
+					array("th_description", "Təsvir"),
+
+
+					array("th_admin_password", "Şifrə"),
 				);
 //создаем таблицу и заполняем ее 30.08
 check_table_exists($th_list, $th_list_sql, $th_list_data);

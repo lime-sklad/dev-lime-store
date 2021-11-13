@@ -1,4 +1,4 @@
-<div class="report_date_select_wrp">
+{# <div class="report_date_select_wrp">
 	<div class="report_date_select_box">
 		<div class="report_date_fotm">
 			<label for="report_options_list">Tarix: </label>
@@ -10,4 +10,44 @@
             </select>
         </div>
     </div>
-</div>            
+</div>             #}
+
+
+<div class="">
+    <span class="fields-label">Tarix</span>
+    {# <input type="text" class="input edit edit-stock-name-input" placeholder="..." value="{{row.value}}" data-fields-name="product_provider"> #}
+
+    {% set custom_arr = [] %}
+
+    {% for row, val in data.res %}
+        {% set custom_arr = custom_arr|merge({(loop.index0) : {'custom_value': val, 'custom_data_id': val}}) %}
+    {% endfor %}
+
+   {% set searh_param = {
+		input_class: 'input-select edit area-button report-date-picker', 
+		parent_class: 'fields-autocomplete', 		
+		input_placeholder: 'Выберите ', 
+        input_type: 'button',
+        input_value: data.res.default,
+        fields_name: '',
+        input_icon: {
+            icon: 'la-calendar-alt',
+        },
+		reset: false, 
+        widget_class_list: 'widget-fields',
+        widget_container_class_list: 'widget-fields-container',
+		autocomplete:  {
+			type: '',
+            autocomplete_list: custom_arr,
+            data_sort: 'date',
+            data_sort_value: true,
+            autocomlete_class_list: "selectable-search-item area-closeable select-hidden-fields-input search-item report-date-picker-item--cards-load",
+        },
+   }
+   %}
+
+    {% include '/component/search/search.twig'  with { 'data': searh_param }  %}
+
+
+    <input type="hidden" class=" hidden_input hidden-fields-input" data-fields-name="">
+</div>

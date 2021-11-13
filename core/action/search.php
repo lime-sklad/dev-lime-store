@@ -43,6 +43,7 @@ foreach($page_data_row as $key => $col_name_prefix) {
 	
 	if($data_sort == $get_sort_data) {
         if(!empty($search_value)) {
+            $bind_list['search'] = "%{$search_value}%";
             $search_array = [
                 'table_name' => 'user_control',
                 'col_list'   => " * ",
@@ -51,13 +52,11 @@ foreach($page_data_row as $key => $col_name_prefix) {
                     'query' => [
                         'param' => $param['query']['param'],
                         'joins' => $joins . " WHERE $col_name_prefix LIKE :search ",
-                        'bindList' => array(
-                            'search' =>  "%{$search_value}%"
-                        )
+                        'bindList' => $bind_list
                     ],
                     'sort_by' 	 => $sort_by,
                 ]
-            ];
+            ];      
 
             $render_tpl = render_data_template($search_array, $sql_data['page_data_list']);
 

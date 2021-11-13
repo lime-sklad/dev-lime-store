@@ -1,5 +1,6 @@
 {%  set fields_path = '/component/modal/fields/' %}
 
+{# edit product #}
 {% if row.block_name == 'edit_stock_id' %}
     {% include fields_path ~ 'edit/stock_id.twig' %}
 {% endif %}
@@ -46,4 +47,109 @@
 
 {% if row.block_name == 'delete_stock' %}
     {% include fields_path ~ 'edit/delete_stock_fields.twig' %}
+{% endif %}
+
+
+
+{# info / terminal #}
+{% if row.block_name == 'info_product_name' %}
+    {% include fields_path ~ 'info/product_name_info_fields.twig' %}
+{% endif %}
+
+{% if row.block_name == 'info_product_description' %}
+    {% include fields_path ~ 'info/product_description_info_fields.twig' %}
+{% endif %}
+
+{% if row.block_name == 'info_product_count' %}
+    {% include fields_path ~ 'info/product_count_info_fields.twig' %}
+{% endif %}
+
+{% if row.block_name == 'info_product_first_price' %}
+    {% include fields_path ~ 'info/product_first_price_info_fields.twig' %}
+{% endif %}
+
+{% if row.block_name == 'info_product_second_price' %}
+    {% include fields_path ~ 'info/product_second_price_info_fields.twig' %}
+{% endif %}
+
+{% if row.block_name == 'info_product_category' %}
+    {% include fields_path ~ 'info/product_category_info_fields.twig' %}
+{% endif %}
+
+{% if row.block_name == 'info_product_provider' %}
+    {% include fields_path ~ 'info/product_provider_info_fields.twig' %}
+{% endif %}
+
+{% if row.block_name == 'info_product_min_quantity' %}
+    {% include fields_path ~ 'info/product_min_quantity_info_fields.twig' %}
+{% endif %}
+
+{% if row.block_name == 'info_product_add_date' %}
+    {% include fields_path ~ 'info/product_add_date_info_fields.twig' %}
+{% endif %}
+
+
+
+{# report #}
+{% if row.block_name == 'report_return_btn' %}
+    {% include fields_path ~ 'report/report_return_btn_fields.twig' %}
+{% endif %}
+
+{% if row.block_name == 'report_order_id' %}
+    {% include fields_path ~ 'report/report_order_id_fields.twig' %}
+{% endif %}
+
+{% if row.block_name == 'report_order_note' %}
+    {% include fields_path ~ 'report/report_order_note_fields.twig' %}
+{% endif %}
+
+
+{# admin #}
+{% if row.block_name == 'user_id' %}
+    {% include fields_path ~ 'admin/user_id_fields.twig' %}
+{% endif %}
+
+{% if row.block_name == 'user_name' %}
+    {% include fields_path ~ 'admin/user_name_fields.twig' %}
+{% endif %}
+
+{% if row.block_name == 'user_password' %}
+    {% include fields_path ~ 'admin/user_password_fields.twig' %}
+{% endif %}
+
+
+
+{# category #}
+{% if row.block_name == 'category_id' %}
+    {% include fields_path ~ 'category/category_id_fields.twig' %}
+{% endif %}
+
+{% if row.block_name == 'category_name' %}
+    {% include fields_path ~ 'category/edit_category_name_fields.twig' %}
+{% endif %}
+
+{% if row.block_name == 'delete_category' %}
+    {% include fields_path ~ 'category/delete_category.twig' %}
+{% endif %}
+
+{% if row.block_name == 'save_category' %}
+    {% include fields_path ~ 'category/save_category.twig' %}
+{% endif %}
+
+
+{# provider #}
+{% if row.block_name == 'provider_id' %}
+    {% include fields_path ~ 'provider/provider_id_fields.twig' %}
+{% endif %}
+
+{% if row.block_name == 'provider_name' %}
+    {% include fields_path ~ 'provider/edit_provider_name_fields.twig' %}
+{% endif %}
+
+{% if row.block_name == 'delete_provider' %}
+    {% include fields_path ~ 'provider/delete_provider.twig' %}
+{% endif %}
+
+{% if row.block_name == 'save_provider' %}
+    {% include fields_path ~ 'provider/save_provider.twig' %}
 {% endif %}

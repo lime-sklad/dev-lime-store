@@ -8,7 +8,7 @@ $option = [
                   JOIN stock_order_report ON stock_order_report.order_stock_id = :delete_id
                   SET stock_list.stock_count = stock_list.stock_count + stock_order_report.order_stock_count, 
                   stock_order_report.order_stock_count = 0,
-				  stock_order_report.visible = 3 ",
+				  stock_order_report.stock_order_visible = 3 ",
     'after' => "  WHERE stock_list.stock_id = stock_order_report.stock_id ",    
 	'post_list' => [
 		'report_id' => [
@@ -18,5 +18,7 @@ $option = [
 	]
 ];
 
+
+// ls_var_dump($_POST);
 echo ls_db_upadte($option, $_POST);
 

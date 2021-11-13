@@ -10,9 +10,6 @@
     {% for row, val in row.custom_data %}
 
         {% set custom_arr = custom_arr|merge({(loop.index0) : {'custom_value': val.category_name, 'custom_data_id': val.category_id}}) %}
-
-            
-    
     {% endfor %}
 
    {% set searh_param = {

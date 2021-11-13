@@ -31,7 +31,7 @@ if(isset($_POST['product_id'], $_POST['type'], $_POST['page'])) {
 	$sort_by 		= $sql_query_data['param']['sort_by'];
 	$joins 			= $sql_query_data['param']['query']['joins'];
 
-  
+	$sort_key = $page_config['sort_key'];
 
 	$search_array = [
 		'table_name' => ' user_control ',
@@ -39,31 +39,21 @@ if(isset($_POST['product_id'], $_POST['type'], $_POST['page'])) {
 		'base_query' => $base_query,			
 		'param' => [
 			'query' => [
-				'param' => $param['query']['param'] . " AND stock_list.stock_id = :stock_id  ",
-				'joins' =>  $joins. ' WHERE user_control.user_id = :u_id ',
+				'param' => $param['query']['param'] . " AND $sort_key = :stock_id  ",
+				'joins' =>  $joins,
 				'bindList' => array(
-					'stock_id' => $id,
-                    'u_id' => getUser('get_id')
+					'stock_id' => $id
 				)
 			],
 			'sort_by' 	 =>  $sort_by . ' LIMIT 1 ',
 		]
 	];	
-
-	//если тип товара амбар или транкзакци 
-	if($page == 'terminal') {
-		//делаем запрос в базу с id  и знаносим результат в переменную
-		$stock = render_data_template($search_array, $page_config);		
-	}		
 	
-	//если тип товара амбар или транкзакци 
-	if($page == 'stock') {
-		//делаем запрос в базу с id  и знаносим результат в переменную
-		$stock = render_data_template($search_array, $page_config);	
-	}
-
+	//делаем запрос в базу с id  и знаносим результат в переменную
+	$stock = render_data_template($search_array, $page_config);	
 
 	if($stock && !empty($stock)) {
+
 		//данные товаров
 		$stock_base = $stock['base_result'][0];	
 		
@@ -94,8 +84,9 @@ if(isset($_POST['product_id'], $_POST['type'], $_POST['page'])) {
             'user_role'  => getUser('get_role')
         ];
 
-		$input_fileds_list['stock'] = [
-			'id' => $stock_base['stock_id']
+
+		$input_fileds_list['get'] = [
+			'id' => $stock_base[$sort_key]
 		];
         echo $template->renderBlock($page_config['modal']['template_block'], ['res' => $input_fileds_list]);
 	}

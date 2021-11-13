@@ -36,11 +36,11 @@ $stock_return_image = '<img src="img/icon/investment.png" style="width: 20px; he
 
 
 
-$update_check_day = 'Wednesday'; 
-
+// $update_check_day = 'Saturday'; 
+$update_check_day = date("l");
 $ordertoday = date("d.m.Y");
 $order_myear = date("m.Y");
-$weak_now = date("l/off"); //date("l");
+$weak_now = date("l"); //date("l");
 $deactive_date = date('d.m.Y', strtotime('+30 day'));
 
 
@@ -472,7 +472,7 @@ function get_tab_data($key = null, $active = null) {
 	$tab_arr = array(
 		'tab_terminal_phone' => array(
 			'type'				=> 'phone',
-			'tab_title'			=> 'Telefonlar',
+			'tab_title'			=> 'Mallar',
 			'tab_link' 			=> '/page/terminal/terminal.php',
 			'tab_icon' 			=> '',
 			'tab_modify_class'  => ''
@@ -486,7 +486,7 @@ function get_tab_data($key = null, $active = null) {
 		),
 		'tab_stock_phone' => array(
 			'type'				=> 'phone',
-			'tab_title'			=> 'Telefonlar',
+			'tab_title'			=> 'Mallar',
 			'tab_link' 			=> '/page/stock/stock.php',
 			'tab_icon' 			=> '',
 			'tab_modify_class'  => ''
@@ -500,7 +500,7 @@ function get_tab_data($key = null, $active = null) {
 		),
 		'tab_report_phone' => array(
 			'type'				=> 'phone',
-			'tab_title'			=> 'Telefonlar',
+			'tab_title'			=> 'Mallar',
 			'tab_link' 			=> '/page/report/report.php',
 			'tab_icon' 			=> '/img/icon/investment.png',
 			'tab_modify_class'  => ''		
@@ -532,7 +532,7 @@ function get_tab_data($key = null, $active = null) {
 		),
 		'tab_stock_form' => array(
 			'type' => false,
-			'tab_title' => 'Форма',
+			'tab_title' => 'Yeni məhsul',
 			'tab_link' => '/page/form/stock/stock_add_form.php',
 			'tab_icon' => false,
 			'tab_modify_class' => 'pos-relative',
@@ -549,6 +549,24 @@ function get_tab_data($key = null, $active = null) {
 			'tab_modify_class' => 'pos-relative',
 			'mark' => false
 		),
+		'tab_category_form' => array(
+			'type' => false,
+			'tab_data_page' => 'category_form',
+			'tab_title' => 'Kategoriya',
+			'tab_link' => '/page/form/category/category_form.php',
+			'tab_icon' => false,
+			'tab_modify_class' => 'pos-relative',
+			'mark' => false
+		),
+		'tab_provider_form' => array(
+			'type' => false,
+			'tab_data_page' => 'provider_form',
+			'tab_title' => 'Təchizatçı',
+			'tab_link' => '/page/form/provider/provider_form.php',
+			'tab_icon' => false,
+			'tab_modify_class' => 'pos-relative',
+			'mark' => false
+		)		
 	);
 
 	if(!empty($key)) {
@@ -855,7 +873,7 @@ function get_th_list() {
 				'mark'				=> false
 			),
 			'user_password' => array(
-				'is_title' => getUser('get_role') == 'admin' ? 'Parol' : false,
+				'is_title' 			=> check_th_return_name('th_admin_password'),
 				'modify_class' 		=> 'th_w100',
 				'td_class' 			=> '',
 				'link_class' 		=> 'stock-link-text-both res-user-password',
@@ -877,6 +895,30 @@ function get_th_list() {
 				'link_class' 		=> 'las la-pen btn btn-secondary width-100 table-ui-btn info-stock',
 				'data_sort' 		=> '',
 				'mark'				=> false	
+			),
+			'category_name' => array(
+				'is_title' 			=> 'Название Категории',
+				'modify_class' 		=> 'w100',
+				'td_class' 			=> '',
+				'link_class' 		=> 'stock-link-text-both res-category-name',
+				'data_sort' 		=> 'category',
+				'mark'				=> false
+			),
+			'provider_name' => array(
+				'is_title' 			=> 'Təchizatçı',
+				'modify_class' 		=> 'w100',
+				'td_class' 			=> '',
+				'link_class' 		=> 'stock-link-text-both res-edit-provider-name',
+				'data_sort' 		=> 'provider',
+				'mark'				=> false
+			),			
+			'edit' => array(
+				'is_title' 			=> 'Изменить',
+				'modify_class' 		=> 'th_w60',
+				'td_class' 			=> 'table-ui-reset',
+				'link_class' 		=> 'las la-pen btn btn-secondary width-100 table-ui-btn info-stock',
+				'data_sort' 		=> '',
+				'mark'				=> false				
 			)
 		];
 	
@@ -1162,8 +1204,8 @@ function page_data($page) {
 					'query' => array(
 						'param' =>  " AND stock_list.stock_count > 0  
 									  AND stock_list.stock_visible = 0 ",
-						"joins" => "  LEFT JOIN stock_provider ON stock_provider.provider_id = stock_list.product_provider
-									  LEFT JOIN stock_category ON stock_category.category_id = stock_list.product_category ",									  
+						"joins" => "  LEFT JOIN stock_provider ON stock_provider.provider_id = stock_list.product_provider AND stock_provider.visible = 'visible'
+									  LEFT JOIN stock_category ON stock_category.category_id = stock_list.product_category AND stock_category.visible = 'visible' ",									  
 						'bindList' => array(
 						)
 					),
@@ -1255,7 +1297,6 @@ function page_data($page) {
 				]					
 			],
 		],
-
 		'stock' => [
 			'tab' => [
 				'is_main' => true,
@@ -1284,9 +1325,9 @@ function page_data($page) {
 					'query' => array(
 						'param' =>  " AND stock_list.stock_count >= stock_list.min_quantity_stock
 									  AND stock_list.stock_visible = 0 ",
-						"joins" => "  LEFT JOIN stock_provider ON stock_provider.provider_id = stock_list.product_provider
-									  LEFT JOIN stock_category ON stock_category.category_id = stock_list.product_category ",		
-						'bindList' => array(
+						"joins" => "  LEFT JOIN stock_provider ON stock_provider.provider_id = stock_list.product_provider AND stock_provider.visible = 'visible'
+									  LEFT JOIN stock_category ON stock_category.category_id = stock_list.product_category  AND stock_category.visible = 'visible' ",		
+						'bindList' => array(						
 						)
 					),
 					'sort_by' => " GROUP BY stock_list.stock_id DESC ORDER BY stock_list.stock_id DESC "
@@ -1444,7 +1485,7 @@ function page_data($page) {
 				'param' => array(
 					'query' => array(
 						'param' =>  " AND stock_order_report.stock_id = stock_list.stock_id
-									  AND stock_order_report.order_stock_count > 0",
+									  AND stock_order_report.order_stock_count > 0 ",
 						"joins" => "  LEFT JOIN stock_provider ON stock_provider.provider_id = stock_list.product_provider
 									  LEFT JOIN stock_category ON stock_category.category_id = stock_list.product_category ",		
 						'bindList' => array(
@@ -1472,7 +1513,16 @@ function page_data($page) {
 					'report_order_edit'	=> null
 
 				],
-				'table_total_list'	=> [	
+				'table_total_list'	=> [
+					'sum_profit',
+					'stock_order_count',
+					
+				],
+				'stats_card' => [
+					'order_turnover',
+					'order_profit',
+					'rasxod',
+					'order_count',
 				],
 				'modal' => [
 					'template_block' => 'report_return',
@@ -1528,6 +1578,8 @@ function page_data($page) {
 				'tab' => array(
 					'list' => [
 						'tab_admin',
+						'tab_category_form',
+						'tab_provider_form'
 					],
 					'active' => 'tab_admin'			
 				)
@@ -1565,12 +1617,180 @@ function page_data($page) {
 							'custom_data' 	=> false,
 							'premission' 	=> true
 						],
+						'user_name' => [
+							'db' 			=> 'user_name',
+							'custom_data' 	=> 'false',
+							'premission'	=> true
+						],
+						'user_password' => [
+							'db' 			=> 'user_password',
+							'custom_data' 	=> 'false',
+							'premission'	=> is_data_access_available('th_admin_password')
+						]
 					)
 				],
 				'filter_fields' => [
 				],
 			]
-		],									
+		],
+		'category_form' => [
+			'tab' => [
+				'is_main' => false,
+				'title'		 		=> 'Kategoriya',
+				'icon'				=> [
+					'img_big'		 	=> 'img/svg/070-file hosting.svg',
+					'img_small'			=> '',
+					'modify_class' 		=> 'las la-user-cog'
+				],
+				'link'  			=> '/page/base.php',		
+				'template_src'      => '/page/base_tpl.twig',
+				'background_color'  => 'rgba(72, 61, 139, 0.1)',
+				'tab' => array(
+					'list' => [
+						'tab_category_form'
+					],
+					'active' => 'tab_category_form'
+				)
+			],			
+			'sql' => [
+				'table_name' => ' stock_category as tb ',
+				'col_list'	=> '*',
+				'base_query' =>  " INNER JOIN stock_category ",
+				'param' => array(
+					'query' => array(
+						'param' => ' ON stock_category.visible = "visible" ',
+						"joins" => " ",		
+						'bindList' => array(
+						)
+					),
+					'sort_by' => " GROUP BY stock_category.category_id DESC ORDER BY stock_category.category_id DESC "
+				),	
+			],
+			'page_data_list' => [
+				'sort_key' => 'category_id',
+				'get_data' => [
+					'id' => 'category_id',
+					'category_name' => 'category_name',
+					'edit'	   => null
+				],
+				'table_total_list'	=> [
+				],
+				'modal' => [
+					'template_block' => 'edit_modal',
+					'modal_fields' => array(
+						'category_id' => [
+							'db' 			=> 'category_id', 
+							'custom_data' 	=> false, 
+							'premission' 	=> true
+						],
+						'category_name' => [
+							'db' 			=> 'category_name',
+							'custom_data'	=> false,
+							'premission'	=> true
+						],
+						'delete_category' => [
+							'db' 			=> 'category_id',
+							'custom_data'	=> false,
+							'premission'	=> true	
+						],
+						'save_category' => [
+							'db' 			=> false,
+							'custom_data'	=> false,
+							'premission'	=> true
+						]						 
+					)	
+				],
+				'filter_fields' => [
+				],
+				'form_fields_list' => array(
+					[
+						'block_name' => 'add_category_name',
+					],
+					[
+						'block_name' => 'add_save_category',
+					],					
+				),					
+			]
+		],
+		'provider_form' => [
+			'tab' => [
+				'is_main' => false,
+				'title'		 		=> 'Təchizatçı',
+				'icon'				=> [
+					'img_big'		 	=> 'img/svg/070-file hosting.svg',
+					'img_small'			=> '',
+					'modify_class' 		=> 'las la-user-cog'
+				],
+				'link'  			=> '/page/base.php',		
+				'template_src'      => '/page/base_tpl.twig',
+				'background_color'  => 'rgba(72, 61, 139, 0.1)',
+				'tab' => array(
+					'list' => [
+						'tab_provider_form'
+					],
+					'active' => 'tab_provider_form'
+				)
+			],			
+			'sql' => [
+				'table_name' => ' stock_provider as tb ',
+				'col_list'	=> '*',
+				'base_query' =>  " INNER JOIN stock_provider ",
+				'param' => array(
+					'query' => array(
+						'param' => ' ON stock_provider.visible = "visible" ',
+						"joins" => " ",		
+						'bindList' => array(
+						)
+					),
+					'sort_by' => " GROUP BY stock_provider.provider_id DESC ORDER BY stock_provider.provider_id DESC "
+				),	
+			],
+			'page_data_list' => [
+				'sort_key' => 'provider_id',
+				'get_data' => [
+					'id' => 'provider_id',
+					'provider_name' => 'provider_name',
+					'edit'	   => null
+				],
+				'table_total_list'	=> [
+				],
+				'modal' => [
+					'template_block' => 'edit_modal',
+					'modal_fields' => array(
+						'provider_id' => [
+							'db' 			=> 'provider_id', 
+							'custom_data' 	=> false, 
+							'premission' 	=> true
+						],
+						'provider_name' => [
+							'db' 			=> 'provider_name',
+							'custom_data'	=> false,
+							'premission'	=> true
+						],
+						'delete_provider' => [
+							'db' 			=> 'provider_id',
+							'custom_data'	=> false,
+							'premission'	=> true	
+						],
+						'save_provider' => [
+							'db' 			=> false,
+							'custom_data'	=> false,
+							'premission'	=> true
+						]						 
+					)	
+				],
+				'filter_fields' => [
+				],
+				'form_fields_list' => array(
+					[
+						'block_name' => 'add_provider_name',
+					],
+					[
+						'block_name' => 'add_save_provider',
+					],					
+				),					
+			]
+		],														
 	];
 
 	$param = [];
@@ -2074,6 +2294,8 @@ function table_footer_result($type_list, $data) {
 	$search_result = count($data);
 	$sum_stock_first_price = [];
 	$sum_profit = 0;
+	$sum_order_count = 0;
+
 	foreach($data as $stock) {
 		if(array_key_exists('stock_count', $stock)) {
 			$stock_total_count[] = $stock['stock_count'];
@@ -2085,6 +2307,10 @@ function table_footer_result($type_list, $data) {
 
 		if(array_key_exists('order_total_profit', $stock)) {
 			$sum_profit += $stock['order_total_profit'];
+		}
+
+		if(array_key_exists('order_stock_count', $stock)) {
+			$sum_order_count += $stock['order_stock_count'];
 		}
 	}
 
@@ -2129,7 +2355,17 @@ function table_footer_result($type_list, $data) {
 						'mark_modify_class' => 'mark-icon-manat button-icon-right manat-icon--black'			
 					]
 				]);
-				break;					
+				break;
+				case 'stock_order_count':
+					array_push($res, [
+					   'title' => 'Ümumi say',
+					   'value' => $sum_order_count,
+					   'mark' 	=> [
+						   'mark_text' => 'ədəd',
+						   'mark_modify_class' => ''
+					   ]
+				   ]);
+				   break;							
 		}
 	}
 
@@ -2140,7 +2376,6 @@ function table_footer_result($type_list, $data) {
 
 // получаем список поставщиков
 function get_provider_list() {
-
 	$provider = ls_db_request([
 		'table_name' => ' stock_provider ',
 		'col_list' => ' * ',
@@ -2162,7 +2397,6 @@ function get_provider_list() {
 
 // получаем список поставщиков
 function get_category_list() {
-
 	$provider = ls_db_request([
 		'table_name' => ' stock_category ',
 		'col_list' => ' * ',
@@ -2183,7 +2417,6 @@ function get_category_list() {
 
 
 function get_report_date_list() {
-
 	$res = ls_db_request([
 		'table_name' => "stock_order_report",
 		'col_list' => " DISTINCT order_my_date ",
@@ -2207,3 +2440,28 @@ function get_report_date_list() {
 	return $dd;
 }
 
+// расход
+
+function get_total_rasxod($date) {
+	$res = ls_db_request([
+		'table_name' => 'rasxod',
+		'col_list' => ' sum(rasxod_money) as total_rasxod_money  ',
+		'base_query' => ' ',
+		'param' => [
+			'query' => [
+				'param' => " WHERE rasxod_year_date = :mydateyear  AND rasxod_visible = 0",
+				'joins' => "",
+				'bindList' => array(
+					'mydateyear' => $date
+				)
+			],
+			'sort_by' => ' ORDER BY rasxod_id DESC '
+		]
+	]);
+
+	return $res[0]['total_rasxod_money'];
+}
+
+function decorate_num($price) {
+	return number_format($price, 0, '', ' ');
+}

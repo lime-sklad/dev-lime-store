@@ -66,13 +66,15 @@ function access_request_uri($uri) {
 		$acces_page_list->bindParam('base_link', $base_uri);
 		$acces_page_list->execute();
 		if($acces_page_list->rowCount()>0 ) {
-			echo "Xəta! <br> Bu əməliyyatı yerinə yetirmək üçün yetərli hüquqlarınız yoxdur. URL";
+			echo "Xəta! <br> Bu əməliyyatı yerinə yetirmək üçün yetərli hüquqlarınız yoxdur.";
 			return false;
 			exit();
 		} else {
 			return true;
 		}
 	}
+
+	return true;
 }
 
 

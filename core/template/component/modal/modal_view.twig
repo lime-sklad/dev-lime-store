@@ -1,17 +1,55 @@
 {% block terminal_order %}
 	<div class="module_order_wrp ls-custom-scrollbar">
-		<div class="modal_order_form" data-order-id="{{res.stock.id}}">
+		<div class="modal_order_form" data-order-id="{{res.get.id}}">
 			{% include '/component/modal/include_fields.twig' %}
 		</div>
 	</div>
 {% endblock %}
 
 
+{% block info_product  %}
+<h3 class="modal-title">Информация</h3>
+<div class="module_order_wrp ls-custom-scrollbar">
+	<div class="modal_order_form" data-order-id="{{res.get.id}}">
+		{% include '/component/modal/include_fields.twig' %}
+	</div>
+</div>
+{% endblock %}
+
+
+{% block report_return %}
+<h3 class="modal-title">Информация</h3>
+<div class="module_order_wrp ls-custom-scrollbar">
+	<div class="modal_order_form" data-order-id="{{res.get.id}}">
+		{% include '/component/modal/include_fields.twig' %}
+	</div>
+</div>
+{% endblock %}
 
 {% block edit_product %}
 <h3 class="modal-title">Редактировать</h3>
 <div class="module_order_wrp ls-custom-scrollbar">
-	<div class="modal_order_form" data-order-id="{{res.stock.id}}">
+	<div class="modal_order_form" data-order-id="{{res.get.id}}">
+		{% include '/component/modal/include_fields.twig' %}
+	</div>
+</div>
+{% endblock %}
+
+{# admin #}
+{% block edit_user %}
+<h3 class="modal-title">Редактировать</h3>
+<div class="module_order_wrp ls-custom-scrollbar">
+	<div class="modal_order_form" data-order-id="{{res.get.id}}">
+		{% include '/component/modal/include_fields.twig' %}
+	</div>
+</div>
+{% endblock %}
+
+{# category #}
+{% block edit_modal %}
+<h3 class="modal-title">Редактировать</h3>
+<div class="module_order_wrp ls-custom-scrollbar">
+	<div class="modal_order_form" data-order-id="{{res.get.id}}">
 		{% include '/component/modal/include_fields.twig' %}
 	</div>
 </div>
