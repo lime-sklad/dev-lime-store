@@ -153,3 +153,29 @@
 {% if row.block_name == 'save_provider' %}
     {% include fields_path ~ 'provider/save_provider.twig' %}
 {% endif %}
+
+
+{# rasxod #}
+{% if row.block_name == 'edit_rasxod_id' %}
+    {% include fields_path ~ 'rasxod/rasxod_id_fields.twig' %}
+{% endif %}
+
+{% if row.block_name == 'edit_rasxod_description' %}
+    {% include fields_path ~ 'rasxod/edit_rasxod_description.twig' %}
+{% endif %}
+
+{% if row.block_name == 'edit_rasxod_amount' %}
+    {% include fields_path ~ 'rasxod/edit_rasxod_amount.twig' %}
+{% endif %}
+
+{% if row.block_name == 'delete_rasxod' %}
+    {% include fields_path ~ 'rasxod/delete_rasxod.twig' %}
+{% endif %}
+
+{% if row.block_name == 'save_rasxod' %}
+    {% include fields_path ~ 'rasxod/save_rasxod.twig' %}
+{% endif %}
+
+
+
+

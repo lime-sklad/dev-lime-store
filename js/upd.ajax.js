@@ -7,6 +7,43 @@ $.ajaxSetup({
     } 
 });
 
+/** LOGIN */
+	$(document).submit('.login-form', function(e){
+		e.preventDefault();
+		var user_login = $('.user-login').val();
+		var user_password = $('.user-password').val();
+		if(validate_all_input($('.input'))) {
+			$.ajax({
+				type: 'POST',
+				url: 'core/action/admin/auth.php',
+				dataType: 'json',
+				data: {
+					login: user_login,
+					password: user_password
+				},
+				success: (data) => {
+					if(data.success) {
+						window.location.reload();
+					} 
+					
+					if(data.error) {
+						pageData.alert_notice('error', data.error);
+					}
+				}
+			});
+		}
+
+	});
+/** END LOGIN */
+
+
+
+
+
+
+
+
+
 /** START report */
 
 //удаление отчёта
@@ -275,37 +312,38 @@ $('body').on('click', '.submit-save-stock', function() {
 			var data_name = $(this).data('fields-name');
 			var val = $(this).val();
 			prepare_data[data_name] = val;
+			console.log(this);
 		}
 	});
 
-	$.ajax({
-		type: 'POST',
-		url: 'core/action/stock/update_product.php',
-		data: prepare_data,
-		dataType: "json",
-		success: (data) => {
-			// console.log(data);
-			var error 	= data['error'];
-			var success = data['success'];
+	// $.ajax({
+	// 	type: 'POST',
+	// 	url: 'core/action/stock/update_product.php',
+	// 	data: prepare_data,
+	// 	dataType: "json",
+	// 	success: (data) => {
+	// 		// console.log(data);
+	// 		var error 	= data['error'];
+	// 		var success = data['success'];
 
-			console.log(prepare_data);
+	// 		console.log(prepare_data);
 
-			if(error) {
-				pageData.alert_notice('error', error)
-			}
+	// 		if(error) {
+	// 			pageData.alert_notice('error', error)
+	// 		}
 
-			if(success) {
-				pageData.alert_notice('success', 'Ок');
+	// 		if(success) {
+	// 			pageData.alert_notice('success', 'Ок');
 				
-				for (key in prepare_data) {
-					pageData.update_table_row(key, prepare_data[key], stock_id);
-				}
+	// 			for (key in prepare_data) {
+	// 				pageData.update_table_row(key, prepare_data[key], stock_id);
+	// 			}
 
-				// update_table_row
-			}
-		}			
+	// 			// update_table_row
+	// 		}
+	// 	}			
 
-	});
+	// });
 
 });
 /** end update stock */
@@ -347,14 +385,8 @@ $(document).on('click', '.delete-stock', function() {
 $('body').on('click', '.submit-stock-addd-form', function() {
 	let prepare_data = {};
 
-	if(is_required_input($('.form-input'))) {
-		$('.add-stock').each(function(){
-			if($(this).data('fields-name')) {
-				var data_name = $(this).data('fields-name');
-				var val = $(this).val();
-				prepare_data[data_name] = val;
-			}
-		});
+	if(is_required_input($(this).closest('.stock-from-container').find('.form-input'))) {
+		prepare_data = prepare_form_fields($(this).closest('.stock-from-container'));
 
 		$.ajax({
 			type: 'POST',
@@ -384,50 +416,86 @@ $('body').on('click', '.submit-stock-addd-form', function() {
 
 /** добавить товар end */
 
-
 // добавить категорию
 $('body').on('click', '.add-submit-category', function() {
 	let prepare_data = {};
 
-	if(is_required_input($('.form-input'))) {
-		$('.add-stock').each(function(){
-			if($(this).data('fields-name')) {
-				var data_name = $(this).data('fields-name');
-				var val = $(this).val();
-				prepare_data[data_name] = val;
-			}
-		});
-
-		$.ajax({
-			type: 'POST',
-			url: 'core/action/category/add_category.php',
-			data: {
-				post_data: prepare_data,
-				page: pageData.page(),
-				type: pageData.type()
-			},
-			dataType: "json",
-			success: (data) => {
-				// console.log(data);
-				var error 	= data['error'];
-				var success = data['success'];
-				
-				if(error) {
-					pageData.alert_notice('error', error);
-				}
-
-				if(success) {
-					pageData.alert_notice('success', 'Ок');
-					$('.form-input').val('');
-
-					if(data.table) {
-						return pageData.prependTable(data.table);
+	if($(this).closest('.modal-form').length) {
+		if(is_required_input($(this).closest('.modal-form').find('.form-input'))) {
+			prepare_data = prepare_form_fields($(this).closest('.modal-form'));
+			$.ajax({
+				type: 'POST',
+				url: 'core/action/category/modal_add_category.php',
+				data: {
+					post_data: prepare_data,
+				},
+				dataType: "json",
+				success: (data) => {
+					if(data.success) {
+						$('.category-input-value').val(data.category_name);
+						$('.hidden-category-id').val(data.category_id);
+						pageData.rightSideModalHide();
+						pageData.overlayHide();						
 					}
-				}
-			}			
-
-		});
+				}			
+			});
+		}		
 	}
+
+	if($(this).closest('.stock-from-container').length) {
+		if(is_required_input($(this).closest('.stock-from-container').find('.form-input'))) {
+			prepare_data = prepare_form_fields($(this).closest('.stock-from-container'));
+			$.ajax({
+				type: 'POST',
+				url: 'core/action/category/add_category.php',
+				data: {
+					post_data: prepare_data,
+					page: pageData.page(),
+					type: pageData.type()
+				},
+				dataType: "json",
+				success: (data) => {
+					// console.log(data);
+					var error 	= data['error'];
+					var success = data['success'];
+					
+					if(error) {
+						pageData.alert_notice('error', error);
+					}
+	
+					if(success) {
+						pageData.alert_notice('success', 'Ок');
+						$('.form-input').val('');
+	
+						if(data.table) {
+							return pageData.prependTable(data.table);
+						}
+					}
+				}			
+	
+			});
+		}
+	}
+});
+
+
+// добавить поставщика в модальном окне
+$('body').on('click', '.open-category-form-modal', function(){
+	$.ajax({
+		url: 'core/action/category/modal_form_category.php',
+		type: 'POST',
+		dataType: 'json',
+		success: (data) => {
+			if(data.error) {
+				pageData.notice_modal('error', data.error);
+			}
+
+			if(data.success) {
+				pageData.overlayShow();
+				pageData.rightSideModal(data.success);
+			}
+		}
+	});
 });
 
 
@@ -514,46 +582,86 @@ $(document).on('click', '.delete-category', function() {
 $('body').on('click', '.add-submit-provider', function() {
 	let prepare_data = {};
 
-	if(is_required_input($('.form-input'))) {
-		$('.add-stock').each(function(){
-			if($(this).data('fields-name')) {
-				var data_name = $(this).data('fields-name');
-				var val = $(this).val();
-				prepare_data[data_name] = val;
-			}
-		});
+	if($(this).closest('.modal-form').length) {
+		if(is_required_input($(this).closest('.modal-form').find('.form-input'))) {
+			prepare_data = prepare_form_fields($(this).closest('.modal-form'));
+			$.ajax({
+				type: 'POST',
+				url: 'core/action/provider/modal_add_provider.php',
+				data: {
+					post_data: prepare_data,
+				},
+				dataType: "json",
+				success: (data) => {
+					if(data.success) {
+						$('.provider-input-value').val(data.provider_name);
+						$('.hidden-provider-id').val(data.provider_id);
 
-		$.ajax({
-			type: 'POST',
-			url: 'core/action/provider/add_provider.php',
-			data: {
-				post_data: prepare_data,
-				page: pageData.page(),
-				type: pageData.type()
-			},
-			dataType: "json",
-			success: (data) => {
-				// console.log(data);
-				var error 	= data['error'];
-				var success = data['success'];
-				
-				if(error) {
-					pageData.alert_notice('error', error);
-				}
-
-				if(success) {
-					pageData.alert_notice('success', 'Ок');
-					$('.form-input').val('');
-
-					if(data.table) {
-						return pageData.prependTable(data.table);
+						pageData.rightSideModalHide();
+						pageData.overlayHide();
 					}
-				}
-			}			
+				}			
+	
+			});
+		}
+	}
 
-		});
+	if($(this).closest('.stock-from-container').length) {
+		if(is_required_input($(this).closest('.stock-from-container').find('.form-input'))) {
+			prepare_data = prepare_form_fields($(this).closest('.stock-from-container'));
+			$.ajax({
+				type: 'POST',
+				url: 'core/action/provider/add_provider.php',
+				data: {
+					post_data: prepare_data,
+					page: pageData.page(),
+					type: pageData.type()
+				},
+				dataType: "json",
+				success: (data) => {
+					console.log(data);
+					var error 	= data['error'];
+					var success = data['success'];
+					
+					if(error) {
+						pageData.alert_notice('error', error);
+					}
+	
+					if(success) {
+						pageData.alert_notice('success', 'Ок');
+						$('.form-input').val('');
+	
+						if(data.table) {
+							return pageData.prependTable(data.table);
+						}
+					}
+				}			
+	
+			});
+		}
 	}
 });
+
+// добавить поставщика в модальном окне
+$('body').on('click', '.open-provider-form-modal', function(){
+	$.ajax({
+		url: 'core/action/provider/modal_form_provider.php',
+		type: 'POST',
+		dataType: 'json',
+		success: (data) => {
+			if(data.error) {
+				pageData.notice_modal('error', data.error);
+			}
+
+			if(data.success) {
+				pageData.overlayShow();
+				pageData.rightSideModal(data.success);
+			}
+		}
+	});
+});
+
+
 
 // изменить категорию
 $('body').on('click', '.submit-save-provider', function() {
@@ -629,3 +737,120 @@ $(document).on('click', '.delete-provider', function() {
 	});
 });
 /** удалить поставщик end */
+
+
+/**
+ * добавить расходы
+ */
+$(document).on('click', '.add-submit-rasxod', function() {
+	if(is_required_input($(this).closest('.stock-from-container').find('.form-input'))) {
+		prepare_data = prepare_form_fields($(this).closest('.stock-from-container'));
+		$.ajax({
+			type: 'POST',
+			url: 'core/action/rasxod/add_rasxod.php',
+			data: {
+				post_data: prepare_data,
+				page: pageData.page(),
+				type: pageData.type()
+			},
+			dataType: "json",
+			success: (data) => {
+				var error 	= data['error'];
+				var success = data['success'];
+				
+				if(error) {
+					pageData.alert_notice('error', error);
+				}
+
+				if(success) {
+					pageData.alert_notice('success', 'Ок');
+					$('.form-input').val('');
+
+					if(data.table) {
+						return pageData.prependTable(data.table);
+					}
+				}
+			}	
+		});
+	}
+});
+
+/**
+ * изменить данные расхода
+ */
+ $('body').on('click', '.submit-save-rasxod', function() {
+	let prepare_data = {};
+
+	if(is_required_input($(this).closest('.modal_order_form').find('.input-required'))) {
+		const rasxod_id = $('.rasxod-id').data('id');
+
+		prepare_data['rasxod_id'] = rasxod_id;
+	
+		$('.edit').each(function(){
+			if($(this).data('fields-name') && $(this).hasClass('edited')) {
+				var data_name = $(this).data('fields-name');
+				var val = $(this).val();
+				prepare_data[data_name] = val;
+			}
+		});
+	
+		$.ajax({
+			type: 'POST',
+			url: 'core/action/rasxod/update_rasxod.php',
+			data: prepare_data,
+			dataType: "json",
+			success: (data) => {
+				// console.log(data);
+				var error 	= data['error'];
+				var success = data['success'];
+	
+				console.log(prepare_data);
+	
+				if(error) {
+					pageData.alert_notice('error', error)
+				}
+	
+				if(success) {
+					pageData.alert_notice('success', 'Ок');
+	
+					for (key in prepare_data) {
+						pageData.update_table_row(key, prepare_data[key], rasxod_id);
+					}				
+				}
+			}			
+	
+		});
+	}
+});
+
+
+/**
+ * удалить расход
+ */
+ $(document).on('click', '.delete-rasxod', function() {
+	const id = $(this).data('delete-id');
+
+	$.ajax({
+		type: 'POST',
+		url: 'core/action/rasxod/delete_rasxod.php',
+		data: {id: id},
+		dataType: 'json',
+		success: (data) => {
+			if(data.success) {
+				pageData.alert_notice('success', data.success);
+				pageData.rightSideModalHide();
+				pageData.overlayHide();
+
+				var $stock = $(`.stock-list#${id}`); 
+
+				$stock.hide(1000, function() {
+					$stock.remove();
+				});
+			}
+			if(data.error) {
+				pageData.alert_notice('error', data.error);
+			}
+
+		}
+	});
+});

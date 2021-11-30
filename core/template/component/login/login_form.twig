@@ -1,0 +1,35 @@
+<div class="menu menu--active vh-100 flex-jc-cntr flex-ai-cntr">
+    <form action="core/action/admin/auth.php" method="POST" class="form login-form animate__animated animate__zoomInUp">
+        <div class="login-form-title">
+            <a href="" class="logo-text flex-cntr login-logo-text">
+                <span class="logo-text-cap-letter flex-cntr">L</span>ime Store
+            </a>
+
+            <h1 class="login-header-title-text">Daxil olmaq</h1>
+        </div>       
+
+        <div class="fields login-fields">
+            <span class="fields-label">Login</span>
+            <div class="input-container">
+                <div class="input-icon input-icon-i">
+                    <i class="las la-user"></i>
+                </div>
+                <input type="text" required name="login" class="input user-login input-validate input-validate-length" value="{{data.login}}">
+            </div>
+        </div>
+        <div class="fields login-fields">
+            <span class="fields-label">Password</span>
+            <div class="input-container">
+                <div class="input-icon input-icon-i input-icon-right">
+                    <i class="las la-lock"></i>
+                </div>            
+                <input type="password" required name="password" class="input user-password input-validate input-validate-length">
+            </div>
+        </div>
+        <div class="fields login-fields">
+            <button class="btn btn-primary login-btn" type="submit">Giriş</button>
+        </div>
+    </form>
+</div>
+
+

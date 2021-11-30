@@ -3,8 +3,7 @@
 <head>
 	<title>Lime Store </title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">	
-	<link rel="icon" type="image/x-icon" href="img/favicon.ico">	
-    <link rel="preconnect" href="https://fonts.gstatic.com">
+	<link rel="icon" type="image/x-icon" href="img/favicon.ico">
     {% for key, path in data.lib_list.css  %}
         <link  rel="stylesheet" type="text/css" href="{{path}}?v={{data.v}}">
     {% endfor %}

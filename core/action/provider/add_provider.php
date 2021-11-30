@@ -2,40 +2,18 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'].'/function.php';
 
-header('Content-type: Application/json');
+include 'provider.controller.php';
 
-$data = [];
-$arr = [];
-$col_post_list = [
-	'add_provider_name' => [
-		'col_name' => 'provider_name',
-		'required' => true
-	],
-];
+header('Content-type: Application/json');
 
 
 if(!empty($_POST) && count($_POST['post_data']) > 0) {
-	$post_data = $_POST['post_data'];
-
-	foreach ($col_post_list as $key => $value) {
-		if(array_key_exists($key, $post_data)) {
-			$data = array_merge($data, [
-				$value['col_name'] => $post_data[$key]
-			]);
-		}
-	}
-
-	$default_data = [
-		'visible' => 'visible',
-	];
-
-	$data = array_merge($data, $default_data);
-
 	try {
-		ls_db_insert('stock_provider', [$data]);
+		add_new_provider($_POST['post_data'], $dbpdo);
 
 		$page = $_POST['page'];
 		$type = $_POST['type'];
+
 		$this_data = page_data($page);
 		$page_config = $this_data['page_data_list'];
 
@@ -55,7 +33,9 @@ if(!empty($_POST) && count($_POST['post_data']) > 0) {
 
 		echo json_encode([
 			'success' => 'ok',
-			'table' => $table
+			'table' => $table,
+			'provider_id' => $table_result['base_result'][0]['provider_id'],
+			'provider_name' => $table_result['base_result'][0]['provider_name'],
 		]);	
 	} catch (Exception $e) {
 		echo json_encode([

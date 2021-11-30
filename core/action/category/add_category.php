@@ -1,38 +1,13 @@
 <?php 
 
 require_once $_SERVER['DOCUMENT_ROOT'].'/function.php';
+include 'category.controller.php';
 
 header('Content-type: Application/json');
 
-$data = [];
-$arr = [];
-$col_post_list = [
-	'add_category_name' => [
-		'col_name' => 'category_name',
-		'required' => true
-	],
-];
-
-
 if(!empty($_POST) && count($_POST['post_data']) > 0) {
-	$post_data = $_POST['post_data'];
-
-	foreach ($col_post_list as $key => $value) {
-		if(array_key_exists($key, $post_data)) {
-			$data = array_merge($data, [
-				$value['col_name'] => $post_data[$key]
-			]);
-		}
-	}
-
-	$default_data = [
-		'visible' => 'visible',
-	];
-
-	$data = array_merge($data, $default_data);
-
 	try {
-		ls_db_insert('stock_category', [$data]);
+		add_new_category($_POST['post_data']);
 
 		$page = $_POST['page'];
 		$type = $_POST['type'];

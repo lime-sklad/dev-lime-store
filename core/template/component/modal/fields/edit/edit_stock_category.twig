@@ -13,8 +13,8 @@
     {% endfor %}
 
    {% set searh_param = {
-		input_class: 'scroll-auto edit area-button', 
-		parent_class: 'width-100', 		
+		input_class: 'scroll-auto edit area-button input-dropdown', 
+		parent_class: 'width-100 input-dropdown-parent', 		
 		input_placeholder: 'Выберите ', 
         input_type: 'button',
         input_value: row.value,
@@ -26,10 +26,16 @@
         widget_class_list: 'widget-fields',
         widget_container_class_list: 'widget-fields-container',
 		autocomplete:  {
+            includs: {
+                renderAutoComponent: {
+                    '/component/search/dom_live_search.twig': '1',
+                },
+            },            
 			type: 'check_category',
-            parent_modify_class: "fields-autocomplete",
             autocomplete_list: custom_arr,
-            autocomlete_class_list: "selectable-search-item area-closeable select-category-id select-hidden-fields-input",
+            parent_modify_class: "fields-autocomplete input-dropdown-auto-list-parent",
+            autocomlete_ul_modify_class: 'input-dropdown-auto-ul',
+            autocomlete_class_list: "selectable-search-item area-closeable select-category-id select-hidden-fields-input input-dropdown-auto-list-li",
         },
    }
    %}

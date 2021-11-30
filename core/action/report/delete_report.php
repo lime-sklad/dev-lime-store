@@ -8,7 +8,8 @@ $option = [
                   JOIN stock_order_report ON stock_order_report.order_stock_id = :delete_id
                   SET stock_list.stock_count = stock_list.stock_count + stock_order_report.order_stock_count, 
                   stock_order_report.order_stock_count = 0,
-				  stock_order_report.stock_order_visible = 3 ",
+				  stock_order_report.stock_order_visible = 3,
+				  stock_list.stock_return_status = 1 ",
     'after' => "  WHERE stock_list.stock_id = stock_order_report.stock_id ",    
 	'post_list' => [
 		'report_id' => [

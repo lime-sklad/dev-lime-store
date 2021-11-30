@@ -1,10 +1,17 @@
 <?php
-require __DIR__.'/db/config.php';
-//upd 
-require __DIR__.'/private.function.php';
-require __DIR__.'/core/function/stock.function.php';
-require __DIR__.'/core/action/admin/user.function.php';
-require __DIR__.'/include/lib_include.php';
+require $_SERVER['DOCUMENT_ROOT'].'/db/config.php';
+require $_SERVER['DOCUMENT_ROOT'].'/core/function/db.wrapper.php';
+//upd  
+require $_SERVER['DOCUMENT_ROOT'].'/private.function.php';
+require $_SERVER['DOCUMENT_ROOT'].'/core/function/stock.function.php';
+require $_SERVER['DOCUMENT_ROOT'].'/core/action/admin/user.function.php';
+require $_SERVER['DOCUMENT_ROOT'].'/include/lib_include.php';
+
+if(!isset($_SESSION['user'])){
+	$login_dir = 'http://localhost/login.php';
+	header("Location: $login_dir");
+	exit();      
+}
 
 //проверка доступа страницы
 access_request_action($_SERVER['REQUEST_URI']);
@@ -120,17 +127,16 @@ function get_filter_prefix_title($prefix) {
 	return $result;
 }
 
-//собриаем фильтр и выводим массив в шаблон
+
+/**
+ * @param fileter_list = array(
+ *		'color',
+ *		'storage',
+ *		'ram'
+ *	  );
+ * собриаем фильтр и выводим массив в шаблон
+ */
 function filter_category($filter_list, $id) {
-	/**example $filter_list 
-	*
-	*	$filter_list = array(
-	*		'color',
-	*		'storage',
-	*		'ram'
-	*	);
-	*
-	**/
 	$total = [];
 	foreach ($filter_list as $prefix) {
 		//получем название фильтра и описание
@@ -224,15 +230,14 @@ function get_active_filters($prefix, $id) {
 }
 
 
-//получить информацию товара по id
+/**
+ * @param arr =  array(
+ *				'id' => $id,
+ *				'action' => 'get_name'
+ *			);
+ * получить информацию товара по id
+ */
 function get_stock_by_id($arr) {
-	/**example
-	*	$arr =  array(
-	*		'id' => $id,
-	*		'action' => 'get_name'
-	*	);
-	*/
-
 	$id = $arr['id'];
 	$action = $arr['action'];
 
@@ -296,7 +301,7 @@ function ls_var_dump($var) {
 /**  обновляем фильтры продукта или добавляем
 *	 example
 *
-*	$param = array(
+*	@param = array(
 *		'stock_id' => $id,
 *		'filter_id' => array(id, id, id)
 *	);
@@ -347,124 +352,7 @@ function page_tab_list() {
 	return $res;
 }
 
-//тут описываем страницы 
-// function get_tab_main_page_test() {
-// 	$menu_list = [
-// 		'terminal' =>	[
-// 			'title' 			=> 'Əməliyyatlar',
-// 			'icon'				=> [
-// 				'img_big'		 	=> '',
-// 				'img_small'			=> '',
-// 				'modify_class' 		=> 'las la-store-alt'
-// 			],
-// 			'link'  			=> '/page/base.php',
-// 			'template_src'      => 'page/base_tpl.twig',
-// 			'background_color'  => 'rgba(0, 150, 136, 0.1)',
-// 			'tab' => array(
-// 				'list' => [
-// 					'tab_terminal_phone',
-// 					'tab_terminal_akss',
-// 					'tab_cart'
-// 				],
-// 				'active' => 'tab_terminal_phone'
-// 			)
-// 		],	
-		// 'stock' =>	[
-		// 	'title'		 		=> 'Anbar',
-		// 	'icon'				=> [
-		// 		'img_big'		 	=> '',
-		// 		'img_small'			=> '',
-		// 		'modify_class' 		=> 'las la-boxes'
-		// 	],
-		// 	'link'  			=> '/page/base.php',		
-		// 	'template_src'      => '/page/base_tpl.twig',
-		// 	'background_color'  => 'rgba(72, 61, 139, 0.1)',
-		// 	'tab' => array(
-		// 		'list' => [
-		// 			'tab_stock_phone',
-		// 			'tab_stock_akss',
-		// 			'tab_stock_form'
-		// 		],
-		// 		'active' => 'tab_stock_phone'			
-		// 	)
-		// ],	
-// 		'report' => [
-// 			'title' 			=> 'Hesabat',
-// 			'icon'				=> [
-// 				'img_big'		 	=> '',
-// 				'img_small'			=> '',
-// 				'modify_class' 		=> 'las la-coins'
-// 			],
-// 			'link'  			=> '/page/base.php',
-// 			'template_src'		=> '/page/base_tpl.twig',
-// 			'background_color'  => 'rgba(33, 150, 243, 0.1)',			
-// 			'tab' => array(
-// 				'list'=> [
-// 					'tab_report_phone', 
-// 					'tab_report_akss'
-// 				],
-// 				'active' => 'tab_report_phone'
-			
-// 			)
-// 		],	
-// 		'admin' => [
-// 			'title' => 'Admin',
-// 			'icon'				=> [
-// 				'img_big'		 	=> '',
-// 				'img_small'			=> '',
-// 				'modify_class' 		=> 'las la-user-lock'
-// 			],
-// 			'link'  => '/page/admin/admin.php',
-// 			'background_color' => 'rgba(255, 48, 48, 0.1)',
-// 			'default_tab' => '',			
-// 			'tab' => array(
-								
-// 			)
-// 		],			
-// 		'note' => [
-// 			'title' => 'Notlar',
-// 			'icon'				=> [
-// 				'img_big'		 	=> '',
-// 				'img_small'			=> '',
-// 				'modify_class' 		=> 'lar la-sticky-note'
-// 			],
-// 			'link'  => '/page/note/note.php',
-// 			'background_color' => 'rgba(255, 255, 101, 0.1)',
-// 			'default_tab' => '',			
-// 			'tab' => array(
-								
-// 			)
-// 		],	
-// 		'rasxod' => [
-// 			'title' => 'Xərc (Rasxod)',
-// 			'icon'				=> [
-// 				'img_big'		 	=> '',
-// 				'img_small'			=> '',
-// 				'modify_class' 		=> 'las la-file-invoice-dollar'
-// 			],
-// 			'link'  => '/page/rasxod/rasxod.php',
-// 			'background_color' => 'rgba(255, 48, 48, 0.1)',
-// 			'default_tab' => '',			
-// 			'tab' => array(
-								
-// 			)
-// 		]
-// 	];
-// 	return $menu_list;
-// }
 
-// function type_list($get_list) {
-// 	$list = [
-// 		'phone' => [
-// 			'type' => 'phone',
-// 			'tab_title' => 'Telefonlar'
-// 		],
-// 		'akss' => [
-// 			'type' => 'akss',
-// 			'tab_title' =>	'DigƏr'
-// 		]
-// 	];
-// }
 //тут описываем вкладки и страницы
 function get_tab_data($key = null, $active = null) {
 	$result = [];
@@ -543,7 +431,7 @@ function get_tab_data($key = null, $active = null) {
 		),
 		'tab_admin' => array(
 			'type' => 'phone',
-			'tab_title' => 'Admin',
+			'tab_title' => 'Account',
 			'tab_link' => '/page/admin/admin.php',
 			'tab_icon' => false,
 			'tab_modify_class' => 'pos-relative',
@@ -566,7 +454,25 @@ function get_tab_data($key = null, $active = null) {
 			'tab_icon' => false,
 			'tab_modify_class' => 'pos-relative',
 			'mark' => false
-		)		
+		),
+		'tab_rasxod' => array(
+			'type' => false,
+			'tab_data_page' => 'rasxod',
+			'tab_title' => 'Расходы',
+			'tab_link' => '/page/rasxod/rasxod.php',
+			'tab_icon' => false,
+			'tab_modify_class' => 'pos-relative',
+			'mark' => false
+		),
+		'tab_rasxod_form' => array(
+			'type' => false,
+			'tab_data_page' => 'rasxod',
+			'tab_title' => 'Добавить расходы',
+			'tab_link' => '/page/form/rasxod/rasxod_form.php',
+			'tab_icon' => false,
+			'tab_modify_class' => 'pos-relative',
+			'mark' => false
+		),								
 	);
 
 	if(!empty($key)) {
@@ -586,7 +492,7 @@ function get_tab_data($key = null, $active = null) {
 
 }
 
-
+// тут адов говно код, который тем не менее работает. Переделать!
 function collect_product_data($stock_list, $page_data_list) {
 	$result 	= [];
 	$th_list 	= [];
@@ -919,262 +825,48 @@ function get_th_list() {
 				'link_class' 		=> 'las la-pen btn btn-secondary width-100 table-ui-btn info-stock',
 				'data_sort' 		=> '',
 				'mark'				=> false				
-			)
+			),
+			'rasxod_date' => array(
+				'is_title' 			=> check_th_return_name('th_report_serial'),
+				'modify_class' 		=> 'hide',
+				'td_class' 			=> 'hide',
+				'link_class' 		=> 'hide',
+				'data_sort' 		=> 'rasxod-date',
+				'mark'				=> false
+			),
+			'rasxod_day_date' => array(
+				'is_title' 			=> 'Tarix',
+				'modify_class'		=> 'th_w120',
+				'td_class'			=> '',
+				'link_class'		=> 'stock-link-text-both res-rasxod-date',
+				'data_sort'			=> 'rasxod-day-date',
+				'mark'				=> false
+			),
+			'rasxod_description' => array(
+				'is_title' 			=> 'Tesvir',
+				'modify_class'		=> 'th_w300',
+				'td_class'			=> '',
+				'link_class'		=> 'stock-link-text-both res-rasxod-description',
+				'data_sort'			=> 'rasxod-description',
+				'mark'				=> false
+			),
+			'rasxod_amount' => array(
+				'is_title' 			=> 'Amount',
+				'modify_class'		=> 'th_w60',
+				'td_class'			=> 'mark-danger',
+				'link_class'		=> 'stock-link-text-both res-rasxod-amount',
+				'data_sort'			=> false,
+				'mark'				=> [
+					'mark_text' 		=> '',
+					'mark_modify_class' => 'manat-icon--black button-icon-right stock-list-icon'
+				]
+			),
 		];
 	
 	return $th_list;
 }
 
-
-function ls_db_request($query) {
-
-	global $dbpdo;
-
-	$param_row = $query['param'];
-
-	$result 			= [];
-	$conditions 		= [];
-	$table_name 		= $query['table_name'];
-	$col_list 			= $query['col_list'];
-	$base_query 		= $query['base_query'];
-	$param				= $param_row['query']['param'];
-	$joins				= $param_row['query']['joins'];
-	$bind_list			= $param_row['query']['bindList'];
-	$sort_by			= $param_row['sort_by'];
-
-
-	$query  = "SELECT $col_list FROM $table_name ";
-	$query .= $base_query;
-	$query .= $param;
-	$query .= $joins;
-	$query .= $sort_by;
-
-
-	$conditions = array_merge($conditions, $bind_list);
-
-	$stock_view = $dbpdo->prepare($query);
-
-
-	foreach($conditions as $bind_key => $bindValue) {
-		$stock_view->bindValue($bind_key, $bindValue);
-	}
-	$stock_view->execute();
-
-	while ($row = $stock_view->fetch(PDO::FETCH_ASSOC)) {	
-		$result[] = $row;
-	}
-
-	// $result = $stock_view->fetchAll(PDO::FETCH_ASSOC);
-	return  $result;
-
-	exit();
-
-	/**
-	 * функция принимает 2 агрумента в виде массива
-	 * внутри первого массива, массив `request` который имеет ключи `param` и массив `bindList`
-	 * 	param - параметр запроса, в котором указыается сам запрос к базе без указания названия табицы и перечисления столбцов
-	 * 	массив bindList  - данные(переменные) которые используются в запросе заносим в этот массив
-	 * внутри второго массива ключи table_name, base_query, sort_by
-	 * table_name - Название таблицы
-	 * base_query - Дефолтный sql запрос к таблице в котором указываем навазние таблицы и все поля
-	 * sort_by - указваем сортировку, можно оставить пустым 
-	 */	
-
-	global $dbpdo;
-	$stock_list 		= [];
-	$result 			= [];
-	$conditions 		= [];
-
-	$param_row 			= $query['param']['query'];
-	$param 				= $param_row['param'];
-
-	$col_list 			= $query['col_list'];
-	$table_name 		= $query['table_name'];
-	$base_query 		= $query['base_query'];
-	$sort_by			= $query['sort_by'];
-	$joins 				= $param['joins'];
-
-	$query  = "SELECT $col_list FROM $table_name ";
-	$query .= $base_query;
-
-	foreach($query as $q => $query_row) {
-
-		$param = $query_row['param'];
-		$bind_list = $query_row['bindList'];
-		$query .= $param;
-		$joins .= $query_row['joins'];
-		$conditions = array_merge($conditions, $bind_list);		
-	}
-	$query .= $joins;
-	$query .= $sort_by;
-
-	$stock_view = $dbpdo->prepare($query);	
-
-	foreach($conditions as $bind_key => $bindValue) {
-		$stock_view->bindValue($bind_key, $bindValue);
-	}
-
-	$stock_view->execute();
-	// while ($row = $stock_view->fetch(PDO::FETCH_BOTH)) {	
-	// 	$result[] = $row;
-	// }
-
-	$result = $stock_view->fetchAll(PDO::FETCH_ASSOC);
-	return  $result;	
-}
- 
-function ls_db_upadte($option, $data) {
-
-
-/**
- * Первым аргументом передаём массив с настройками запрса: 
- * 		$option = [
- *         'before' => " UPDATE stock_list SET ",
- *         'after' => " WHERE stock_id = :stock_id",
- *         'post_list' => [
- *             'stock_id' => [
- *                 'query' => false,
- *                 'bind' => 'stock_id'
- *             ],
- *             'order_stock_count' => [
- *                 'query' => "stock_list.stock_count = stock_list.stock_count - :product_count",
- *                 'bind' => 'product_count'
- *             ]
- *         ]  
- *      ];
- * 
- *  	before - Тут указываем название таблицы
- * 		after - тут указываем что будет в запросе после перечесления SET
- * 		post_list - это массив в котором мы указываем массив с индексом из второго аргумента $data
- * 			индекс напрмер как в примере выше stock_id это ключ из массива $data, мы указываем какое значение взять из data
- * 			указывая его ключ. Далле в query - указываем сам запрос, что обновить и какой столбец. В bind указываем название бинда котору
- * 			мы указали выше в запросе query
- * 		
- * 		$data это массив с данными которые будут добавлены в таблицу
- * 		массив должен иметь такую структуру
- * 			$data = [
- * 				array(
- * 					'stock_id' => 777,
- * 					'order_stock_count' => 'some count'
- * 				),
- * 				array(
- * 					'stock_id' => 888,
- * 					'order_stock_count' => 'some count'
- * 				)
- * 			]; 
- *  
- * */	 
-	
-	global $dbpdo;
-	$before 	= $option['before'];
-	$after 		= $option['after'];
-	$post_list  = $option['post_list'];
-	$conditions = [];
-	foreach($post_list as $post_key => $post_value) {
-		if(array_key_exists($post_key, $data)) {
-			if(array_key_exists('require', $post_value)) {
-				if(empty($data[$post_key])) {
-					return json_encode([
-						'error' => 'Заполните все обязательные поля!'
-					]);
-				}
-			}
-
-			if($post_value['query']) {
-				$conditions[] = $post_value['query'];
-			}
-			
-			if($post_value['bind']) {
-				$bind_list[$post_value['bind']] = $data[$post_key];
-			}
-		}
-	}
-
-
-	$query = $before;
-	if($conditions) {
-		$conditions = implode(", ", $conditions);
-		$query .= $conditions;
-	}
-	$query .= $after;
-
-    try {
-		$update = $dbpdo->prepare($query);
-	
-		foreach($bind_list as $bind_key => $bind_value) {
-			$update->bindValue($bind_key, $bind_value);
-		}
-		$update->execute();
-	
-		return json_encode([
-			'success' => 'ok'
-		]);
-	} catch(PDOException $e) {
-		return json_encode([
-			'error' => 'Ошибка' . $e
-		]);
-	}
-}
-
-function ls_db_insert($table_name, $data) {
-/**
- * 	Певрвый аргуемнт название таблицы
- * 	Второй аргумент массив с данными которые будем добавлять в базу
- * 	Структура массива с данными:
- * 		 $data = [
- * 			array(
- * 				'Название столбца' => 'Значение',
- * 				'Название столбца 2' => 'Значение 2'
- * 			)
- * 		];
- * 
- *	Добавлять в базу можно сразу несколько записей, нужно просто в массив $data
- *	добавить несколько массивов как в примере выше:
- * 
- * 		$data = [
- * 			array(
- * 				'Название столбца первая запись' => ' Первое Значение',
- * 				'Название столбца #2 первая запись ' => 'Первое Значение #2'
- * 			),
- * 			array(
- * 				'Название столбца вторая запись' => ' Второе Значение',
- * 				'Название столбца #2 вторая запись ' => 'Второе Значение #2'
- * 			)  
- * 		];
- * 
- *  
- * 
- */
-
-
-	global $dbpdo;
-
-	$col_names_list = array_keys($data[array_key_first($data)]);
-	$col_names_list = implode(",", $col_names_list);
-	$toBind = array();
-	$valusList = array();
-	$sql_val = [];
-	foreach($data as $index => $row) {
-		$params = array();
-		
-		foreach($row as $col_name => $value) {
-			$params[] = '?';
-			$toBind[] = $value;
-		}
-
-		$sql_val[] = "(" . implode(", ", $params) .")";
-	}
-
-	$sql_values =  implode(", ", $sql_val);
-
-	$query = "INSERT INTO $table_name ($col_names_list) VALUES $sql_values";
-		
-	$stmt = $dbpdo->prepare($query);
-	$stmt->execute($toBind);
-}
-
 function page_data($page) {
-
 	$list = [
 		'terminal' => [
 			'tab' => [
@@ -1231,7 +923,6 @@ function page_data($page) {
 				'table_total_list' => [
 					'stock_count',
 					'search_count',
-					'sum_first_price'					
 				],
 				'modal' => [
 					'template_block' => 'info_product',
@@ -1285,7 +976,7 @@ function page_data($page) {
 							'db' => 'stock_get_fdate',
 							'custom_data' => false,
 							'premission' => true
-						]												
+						]
 					)
 				],
 				'filter_fields' => [
@@ -1314,7 +1005,7 @@ function page_data($page) {
 						'tab_stock_phone',
 						'tab_stock_form'
 					],
-					'active' => 'tab_stock_phone'			
+					'active' => 'tab_stock_phone'
 				)
 			],			
 			'sql' => [
@@ -1350,7 +1041,7 @@ function page_data($page) {
 				],
 				'table_total_list'	=> [
 					'stock_count',
-					'sum_first_price'		
+					'sum_first_price'
 				],
 				'modal' => [
 					'template_block' => 'edit_product',
@@ -1449,11 +1140,11 @@ function page_data($page) {
 					],	
 					[
 						'block_name' => 'add_stock_second_price'
-					],																									
+					],
 					[
 						'block_name' => 'add_save_form',
-					],																			
-				)				
+					],
+				)
 
 			]
 		],	
@@ -1556,8 +1247,8 @@ function page_data($page) {
 							'db' => false,
 							'custom_data' => false,
 							'premission' => true
-						]									
-					)					
+						]
+					)
 				],
 				'filter_fields' => [
 				],
@@ -1581,7 +1272,7 @@ function page_data($page) {
 						'tab_category_form',
 						'tab_provider_form'
 					],
-					'active' => 'tab_admin'			
+					'active' => 'tab_admin'	
 				)
 			],			
 			'sql' => [
@@ -1611,7 +1302,7 @@ function page_data($page) {
 				],
 				'modal' => [
 					'template_block' => 'edit_user',
-					'modal_fields' => array(									
+					'modal_fields' => array(
 						'user_id' => [
 							'db' 			=> 'user_id', 
 							'custom_data' 	=> false,
@@ -1726,7 +1417,7 @@ function page_data($page) {
 				'background_color'  => 'rgba(72, 61, 139, 0.1)',
 				'tab' => array(
 					'list' => [
-						'tab_provider_form'
+						'tab_provider_form',
 					],
 					'active' => 'tab_provider_form'
 				)
@@ -1787,10 +1478,102 @@ function page_data($page) {
 					],
 					[
 						'block_name' => 'add_save_provider',
-					],					
-				),					
+					],
+				),
 			]
-		],														
+		],
+		'rasxod' => [
+			'tab' => [
+				'is_main' => true,
+				'title' 			=> 'Расходы',
+				'icon'				=> [
+					'img_big'		 	=> '',
+					'img_small'			=> '',
+					'modify_class' 		=> 'la la-money'
+				],
+				'link'  			=> '/page/base.php',
+				'template_src'      => 'page/base_tpl.twig',
+				'background_color'  => '',
+				'tab' => array(
+					'list' => [
+						'tab_rasxod',
+						'tab_rasxod_form'
+					],
+					'active' => 'tab_rasxod'
+				)
+			],			
+			'sql' => [
+				'table_name' => 'rasxod as tb',
+				'col_list'	=> "*",
+				'base_query' =>  " INNER JOIN rasxod ON rasxod.rasxod_visible !=1  ",
+				'param' => array(
+					'query' => array(
+						'param' =>  " ",
+						"joins" => " ",									  
+						'bindList' => array(
+						)
+					),
+					'sort_by' => " 	GROUP BY rasxod.rasxod_id DESC  
+									ORDER BY rasxod.rasxod_id DESC "
+				),	
+			],
+			'page_data_list' => [
+				'sort_key' => 'rasxod_id',
+				'get_data' => [
+					'id' 					=> 'rasxod_id',
+					'rasxod_date'			=> 'rasxod_year_date',
+					'rasxod_day_date'		=> 'rasxod_day_date',
+					'rasxod_description'	=> 'rasxod_description',
+					'rasxod_amount'			=> 'rasxod_money',
+					'edit'					=> null
+				],
+				'table_total_list' => [
+				],
+				'modal' => [
+					'template_block' => 'info_product',
+					'modal_fields' => array(
+						'edit_rasxod_id' => [
+							'db' 			=> 'rasxod_id',
+							'custom_data' 	=> false, 
+							'premission' 	=> true								
+						],
+						'edit_rasxod_description' => [
+							'db' 			=> 'rasxod_description',
+							'custom_data' 	=> false, 
+							'premission' 	=> true							
+						],
+						'edit_rasxod_amount' => [
+							'db'		  	=> 'rasxod_money',
+							'custom_data' 	=> false,
+							'premission'  	=> true
+						],
+						'delete_rasxod' => [
+							'db' 			=> 'rasxod_id',
+							'custom_data' 	=> false, 
+							'premission' 	=> true	
+						],
+						'save_rasxod' => [
+							'db' 			=> false,
+							'custom_data' 	=> false, 
+							'premission' 	=> true	
+						]
+					)
+				],
+				'filter_fields' => [
+				],
+				'form_fields_list' => array(
+					[
+						'block_name' => 'add_rasxod_description',
+					],
+					[
+						'block_name' => 'add_rasxod_amount'
+					],
+					[
+						'block_name' => 'add_save_rasxod',
+					],					
+				),						
+			],
+		],		
 	];
 
 	$param = [];
@@ -1825,412 +1608,10 @@ function page_data($page) {
 
 }
 
-
-// function page_data($arr) {
-// 	$page = $arr['page'];
-// 	$type = $arr['type'];
-// 	$param = [];
-
-// 	if($page == 'terminal') {
-// 		$table_name = 'stock_list';	
-// 		$base_query = " SELECT * FROM user_control
-// 		INNER JOIN stock_list ON stock_visible != 3 ";
-// 		switch($type) {
-// 			case 'phone':
-// 				$param = array(
-// 					'query' => array(
-// 						'param' =>  " AND stock_type = :stock_type 
-// 									  AND stock_count > 0  
-// 									  AND stock_visible = 0 
-// 									  INNER JOIN `provider` as pr ON  pr.provider_id = stock_list.product_provider ",
-// 						'bindList' => array(
-// 							':stock_type' => $type
-// 						)
-// 					),
-// 					'sort_by' => " GROUP BY stock_list.stock_id DESC ORDER BY stock_list.stock_id DESC "
-// 				);
-// 				break;
-// 			case 'akss':
-// 				$param = array(
-// 					'query' => array(
-// 						'param' =>  " AND stock_type = :stock_type 
-// 									  AND stock_count > 0  
-// 									  AND stock_visible = 0 
-// 									  INNER JOIN stock_category as sc ON sc.category_id = stock_list.product_category " ,
-// 						'bindList' => array(
-// 							':stock_type' => $type
-// 						)
-// 					),
-// 					'sort_by' => " GROUP BY stock_list.stock_id DESC ORDER BY stock_list.stock_id DESC "
-// 				);
-// 				break;				
-// 		}
-// 	}
-
-	// if($page == 'stock') {	
-	// 	$table_name = 'stock_list';	
-	// 	$base_query = " SELECT * FROM user_control 
-	// 					INNER JOIN stock_list ON stock_list.stock_visible != 3";
-	// 	switch($type) {
-	// 		case 'phone':
-	// 			$param = array(
-	// 				'query' => array(
-	// 					'param' =>  " AND stock_list.stock_type = :stock_type 
-	// 								  AND stock_list.stock_count > 0  
-	// 								  AND stock_list.stock_visible = 0 " ,
-	// 					'bindList' => array(
-	// 						':stock_type' => $type
-	// 					)
-	// 				),
-	// 				'sort_by' => " GROUP BY stock_list.stock_id DESC ORDER BY stock_list.stock_id DESC "	
-	// 			);
-	// 			break;
-	// 		case 'akss':
-	// 			$param = array(
-	// 				'query' => array(
-	// 					'param' =>  " AND stock_list.stock_type = :stock_type 
-	// 								  AND stock_list.stock_count >= 0  
-	// 								  AND stock_list.stock_visible = 0 " ,
-	// 					'bindList' => array(
-	// 						':stock_type' => $type
-	// 					)
-	// 				),
-	// 				'sort_by' => "GROUP BY stock_list.stock_id DESC ORDER BY stock_list.stock_id DESC"	
-	// 			);
-	// 			break;				
-	// 	}
-	// }	
-
-// 	if($page == 'report') {	
-// 		$table_name = 'stock_list, stock_order_report';
-// 		$base_query = "SELECT * FROM user_control 
-// 						INNER JOIN stock_list ON stock_list.stock_id != 0
-						
-// 					    INNER JOIN stock_order_report ON  stock_order_report.stock_order_visible = 0
-// 					   ";			
-// 		switch($type) {
-// 			case 'phone':
-// 				$param = array(
-// 					'query' => array(
-// 						'param' =>  " AND stock_list.stock_type = :stock_type
-// 									  AND stock_order_report.stock_id = stock_list.stock_id
-// 									  AND stock_order_report.order_stock_count > 0 ",
-// 						'bindList' => array(
-// 							':stock_type' => $type
-// 						)
-// 					),
-// 					'sort_by' => " GROUP BY stock_order_report.order_stock_id DESC
-// 					ORDER BY stock_order_report.order_stock_id DESC"	
-// 				);
-// 				break;
-// 			case 'akss':
-// 				$param = array(
-// 					'query' => array(
-// 						'param' =>  " AND stock_list.stock_type = :stock_type
-// 									  AND stock_order_report.stock_id = stock_list.stock_id
-// 									  AND stock_order_report.order_stock_count > 0 ",
-// 						'bindList' => array(
-// 							':stock_type' => $type
-// 						)
-// 					),
-// 					'sort_by' => " GROUP BY stock_order_report.order_stock_id DESC"
-					
-// 				);
-// 				break;				
-// 		}
-// 	}	
-
-// 	$get_param = false;
-// 	$get_sort  = false;
-
-// 	if(array_key_exists('query', $param)) {
-// 		$get_param = $param['query'];
-// 	}
-// 	if(array_key_exists('sort_by', $param)) {
-// 		$get_sort = $param['sort_by'];
-// 	}
-// 	// return $param;
-// 	return [
-// 		 'param' 		=> $get_param,
-// 		 'sort_by' 		=> $get_sort,
-// 		 'table_name' 	=> $table_name,
-// 		 'base_query' 	=> $base_query
-// 	];
-// }
-
-//тут описываем какие данные нужно выводить для кажждо категории, нужно тут описывать
-// function page_data_list($arr) {
-// 	$page = $arr['page'];
-// 	$type = $arr['type'];
-
-
-// 	if($page == 'terminal') {
-// 		if($type == 'phone') {
-
-// 			$res = [
-// 				'get_data' => [
-// 					'id' 				=> 'stock_id',
-// 					'name'			 	=> 'stock_name',
-// 					'description' 		=> 'stock_phone_imei',
-// 					'first_price'		=> 'stock_first_price',
-// 					'second_price' 		=> 'stock_second_price',
-// 					'provider' 			=> 'provider_name',
-// 					'return_status' 	=> 'stock_return_status',
-// 					'terminal_add_basket' => null
-// 				],
-// 				'table_total_list' => [
-// 					'stock_count',
-// 					'search_count',
-// 					'sum_first_price'					
-// 				],
-// 				'modal' => [
-// 					'template_block' => 'terminal_order',
-// 					'modal_fields' => [
-// 						'user',
-// 						'stock_name',
-// 						'stock_imei',
-// 						'stock_provider',
-// 						'order_first_price',
-// 						'spoiler_filter',
-// 						'order_note',
-// 						'order_hidden_count',
-// 						'order_second_price',
-// 						'order_total_amount',
-// 						'order_submit'
-// 					]
-// 				],
-// 				'filter_fields' => [
-// 					'color',
-// 					'used',
-// 					'storage',
-// 					'ram',
-// 					'brand'
-// 				]
-// 			];	
-// 		}
-	
-// 		if($type == 'akss') {		
-// 			$res = [
-// 				'get_data' => [
-// 					'id' 				=> 'stock_id',
-// 					'name'			 	=> 'stock_name',
-// 					'description' 		=> 'stock_phone_imei',					
-// 					'first_price'		=> 'stock_first_price',
-// 					'second_price' 		=> 'stock_second_price',
-// 					'count'				=> 'stock_count',
-// 					'category' 			=> 'category_name',
-// 					'terminal_add_basket' => null,
-
-// 				],
-// 				'table_total_list' => [
-// 					'stock_count',
-// 					'search_count',
-// 					'sum_first_price'
-// 				],
-// 				'modal' => [
-// 					'template_block' => 'terminal_order',
-// 					'modal_fields' => [
-// 						'user',
-// 						'stock_name',
-// 						'stock_provider',
-// 						'spoiler_filter',
-// 						'order_note',
-// 						'order_stock_count',
-// 						'order_second_price',
-// 						'order_total_amount',
-// 						'order_submit'
-// 					]					
-// 				],
-// 				'filter_fields' => [
-// 					'color',
-// 					'brand'
-// 				]
-// 			];
-// 		}
-
-// 	}
-
-
-// 	if($page == 'stock') {
-		// if($type == 'phone') {
-		// 	$res = [
-		// 		'get_data' => [
-		// 			'id' 				=> 'stock_id',
-		// 			'stock_add_date'	=> 'stock_get_fdate',
-		// 			'name'			 	=> 'stock_name',
-		// 			'imei' 				=> 'stock_phone_imei',
-		// 			'first_price'		=> 'stock_first_price',
-		// 			'second_price' 		=> 'stock_second_price',
-		// 			'provider' 			=> 'stock_provider',
-		// 			'return_status'		=> 'stock_return_status'
-		// 		],
-		// 		'table_total_list'	=> [
-		// 			'total_count',
-		// 			'total_first_price_sum',
-		// 		],
-		// 		'modal' => [
-		// 			'template_block' => 'edit_product',
-		// 			'modal_fields' => array(
-		// 				'user',
-		// 				'edit_stock_name',
-		// 				'edit_stock_imei',
-		// 				'edit_stck_provider',
-		// 				'edit_stock_first_price',
-		// 				'edit_stock_second_price',
-		// 				'edit_stock_hidden_count',
-		// 				'edit_filter_spoiler',
-		// 				'edit_save'
-		// 			)					
-		// 		],
-		// 		'filter_fields' => [
-		// 			'color',
-		// 			'storage',
-		// 			'ram',
-		// 			'brand'
-		// 		],
-		// 		'form_fields_list' => array(
-		// 			'name'			=> true,
-		// 			'imei'			=> true,
-		// 			'first_price'	=> true,
-		// 			'hidden_count'	=> true,
-		// 			'second_price'	=> true,
-		// 			'provider'	    => true
-		// 		)				
-
-		// 	];	
-		
-// 		}
-	
-// 		if($type == 'akss') {
-// 			$res = [
-// 				'get_data' => [
-// 					'id' 				=> 'stock_id',
-// 					'stock_add_date'	=> 'stock_get_fdate', 	
-// 					'name'			 	=> 'stock_name',
-// 					'first_price'		=> 'stock_first_price',
-// 					'second_price' 		=> 'stock_second_price',
-// 					'count'				=> 'stock_count',
-// 					'category' 			=> 'stock_provider'						
-// 				],
-// 				'table_total_list' => [
-// 					'total_count',
-// 					'total_first_price_sum'
-// 				],
-// 				'modal' => [
-// 					'template_block' => 'edit_product',
-// 					'modal_fields' => array(
-// 						'user',
-// 						'edit_stock_name',
-// 						'edit_stock_category',
-// 						'edit_stck_provider',
-// 						'edit_stock_first_price',
-// 						'edit_stock_second_price',
-// 						'edit_stock_count',
-// 						'edit_filter_spoiler',
-// 						'edit_save'
-// 					)					
-// 				],
-// 				'filter_fields' => [
-// 					'color',
-// 					'storage',
-// 					'ram',
-// 					'brand'
-// 				],
-// 				'form_fields_list' => array(
-// 					'name'			=> true,
-// 					'first_price'	=> true,
-// 					'count'			=> true,
-// 					'second_price'	=> true,
-// 					'provider'	    => true
-// 				)
-// 			];			
-// 		}
-				
-// 	}
-
-// 	if($page == 'report') {		
-// 		if($type == 'phone') {
-// 			$res = [
-// 				'get_data' => [
-// 					'report_date_year' 	=> 'order_my_date',
-// 					'report_order_id' 	=> 'order_stock_id',
-// 					'sales_date'		=> 'order_date',
-// 					'name'			 	=> 'stock_name',
-// 					'imei'				=> 'stock_phone_imei',
-// 					'second_price'		=> 'order_stock_sprice',
-// 					'provider'			=> 'stock_provider',
-// 					'report_note'		=> 'order_who_buy',
-// 					'count'				=> 'order_stock_count',
-// 					'report_profit'		=> 'order_total_profit',
-// 				],
-// 				'table_total_list'	=> [
-// 					'sum_profit'
-// 				],
-// 				'modal' => [
-// 					'template_block' => 'edit_product',
-// 					'modal_fields' => array(
-// 						'user',
-// 						'report_order_id',
-// 						'stock_name',
-// 						'stock_imei',
-// 						'stock_provider',
-// 						'report_order_price',
-// 						'report_order_count',
-// 						'order_total_amount',
-// 						'report_save_edit'
-// 					)
-// 				],
-// 				'filter_fields' => [
-// 					'color',
-// 					'brand'
-// 				],				
-
-// 			];								
-// 		}
-	
-// 		if($type == 'akss') {
-// 			$res = [
-// 				'get_data' => [
-// 					'report_date_year'  => 'order_my_date',
-// 					'report_order_id' 	=> 'order_stock_id',
-// 					'sales_date'		=> 'order_date',
-// 					'name'			 	=> 'stock_name',
-// 					'second_price'		=> 'order_stock_sprice',
-// 					'category'			=> 'stock_provider',
-// 					'report_note'		=> 'order_who_buy',
-// 					'count'				=> 'order_stock_count',
-// 					'report_profit'		=> 'order_total_profit',
-// 				],
-// 				'table_total_list'	=> [
-// 					'sum_profit',
-// 				],
-// 				'modal' => [
-// 					'template_block' => 'edit_product',
-// 					'modal_fields' => array(
-// 						'name',
-// 						'report_order_id',
-// 						'report_order_count',
-// 						'report_save_edit'
-// 					)
-// 				],
-// 				'filter_fields' => [
-// 					'color',
-// 					'brand'
-// 				],				
-
-// 			];					
-	
-// 		}					
-// 	}
-
-// 	return $res;
-// }
-
-
 // в этой функцие описываем какие данные таблицы нужны для определённой категории
 // пример вызова функции
 /**
- * 	$arr = array(
+ * 	@param $arr = array(
  * 	 'type' => 'phone/akss/..'         - обьязательное поле 
  * 	 'page => 'terminal/stock/report'  - обьязательное поле
  * 	'search' => array(                 - не обьязательное поле
@@ -2431,9 +1812,7 @@ function get_report_date_list() {
 		]
 	]);
 	
-	foreach($res as $key => $row) {
-		$dd[] = $row['order_my_date'];
-	}
+	$dd = array_column($res, 'order_my_date');
 
 	$dd['default'] = date("m.Y");
 
@@ -2441,7 +1820,6 @@ function get_report_date_list() {
 }
 
 // расход
-
 function get_total_rasxod($date) {
 	$res = ls_db_request([
 		'table_name' => 'rasxod',
@@ -2461,6 +1839,29 @@ function get_total_rasxod($date) {
 
 	return $res[0]['total_rasxod_money'];
 }
+
+function get_rasxod_date_list() {
+	$res = ls_db_request([
+		'table_name' => "rasxod",
+		'col_list' => " DISTINCT rasxod_year_date ",
+		'base_query' => ' WHERE rasxod_visible = 0',
+		'param' => [
+			'query' => [
+				'param' => "",
+				'joins' => "",
+				'bindList' => array()
+			],
+			'sort_by' => " ORDER BY rasxod_id DESC "
+		]
+	]);
+	
+	$dd = array_column($res, 'rasxod_year_date');
+
+	$dd['default'] = date("m.Y");
+
+	return $dd;
+}
+
 
 function decorate_num($price) {
 	return number_format($price, 0, '', ' ');

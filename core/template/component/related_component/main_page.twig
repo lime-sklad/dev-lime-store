@@ -1,5 +1,7 @@
 <div class="app-container flex width-100 vh-100">
-    {% include '/component/index/sidebar.twig' %}
-
+    {% if sidebar.menu_list.data  %}
+        {% include '/component/index/sidebar.twig' %}
+    {% endif %}
+    
     {% include '/component/container.twig' %}
 </div>

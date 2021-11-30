@@ -48,7 +48,8 @@ $filter_data = array(
 					array("5", "Samsung"),
 					array("5", "Apple"),
 					array("5", "Xiomi"),
-					array("5", "Mi")
+					array("5", "Mi"),
+					array("5", "Nokia"),
 					
 				);
 //fix 0.06/7 название таблицы, [название столбца], [данне которые нужно найти и заменить на...] 
@@ -233,7 +234,7 @@ $provider_sql = "CREATE TABLE `stock_provider` (
 					 PRIMARY KEY (`provider_id`)
 				) ENGINE = InnoDB;";
 
-$get_stock_provider_list = $dbpdo->prepare("SELECT DISTINCT stock_provider FROM stock_list WHERE stock_visible = 0 AND stock_type = 'phone' ");
+$get_stock_provider_list = $dbpdo->prepare("SELECT DISTINCT stock_provider FROM stock_list WHERE stock_type = 'phone' AND  stock_provider IS NOT NULL");
 $get_stock_provider_list->execute();
 $provider_list = $get_stock_provider_list->fetchAll(PDO::FETCH_COLUMN);
 check_table_exists($provider_table_name, $provider_sql, $provider_list);
@@ -247,7 +248,7 @@ $stock_category_sql = "CREATE TABLE `stock_category` (
 	 PRIMARY KEY (`category_id`)
 ) ENGINE = InnoDB;";
 
-$get_stock_category_list = $dbpdo->prepare("SELECT DISTINCT stock_provider FROM stock_list WHERE stock_visible = 0 AND stock_type = 'akss' ");
+$get_stock_category_list = $dbpdo->prepare("SELECT DISTINCT stock_provider FROM stock_list WHERE  stock_type = 'akss' AND stock_provider IS NOT NULL");
 $get_stock_category_list->execute();
 $stock_category_list = $get_stock_category_list->fetchAll(PDO::FETCH_COLUMN);
 check_table_exists($stock_category_name, $stock_category_sql, $stock_category_list);
@@ -416,72 +417,73 @@ function check_db_data($table_name, $array) {
 	
 	//provider_name
 	if($table_name == 'stock_provider') {
-		foreach ($array as $data) {
-			try {
-				$check_provider = $dbpdo->prepare('SELECT * FROM `stock_provider`
-				WHERE provider_name = :provider_name');
-				$check_provider->bindParam('provider_name', $data);
-				$check_provider->execute();
+		// if($array) {
+		// 	foreach ($array as $data) {
+		// 		if($data) {
+		// 			try {
+		// 				$check_provider = $dbpdo->prepare('SELECT * FROM `stock_provider`
+		// 				WHERE provider_name = :provider_name');
+		// 				$check_provider->bindParam('provider_name', $data);
+		// 				$check_provider->execute();
+		
+		// 				if($check_provider->rowCount()>0) {
+		// 					echo " данные есть";
+		// 				} else {
+		// 					$data_arr = array(
+		// 						'provider_name' => $data
+		// 					);
+		
+		// 					install_data( $table_name, $data_arr );
+		
+		// 					$update_stock_provider = $dbpdo->prepare("UPDATE stock_list 
+		// 						INNER JOIN stock_provider ON stock_list.stock_provider = stock_provider.provider_name 
+		// 						SET stock_list.product_provider = stock_provider.provider_id
+		// 						WHERE stock_list.stock_type = 'phone' 
+		// 					");
+		// 					$update_stock_provider->execute();	
 
-				if($check_provider->rowCount()>0) {
-					echo " данные есть";
-				} else {
-					$data_arr = array(
-						'provider_name' => $data
-					);
-
-					install_data( $table_name, $data_arr );
-					echo 'stock_providerstock_providerstock_provider';
-					$update_stock_provider = $dbpdo->prepare("UPDATE stock_list INNER JOIN stock_provider ON stock_list.stock_provider = stock_provider.provider_name SET stock_list.product_provider = stock_provider.provider_id WHERE stock_list.stock_type = 'phone' ");
-					$update_stock_provider->execute();
-			
-					// $unset_stock_provider = $dbpdo->prepare("UPDATE stock_list SET stock_provider = NULL WHERE stock_type = 'phone' ");
-					// $unset_stock_provider->execute();	
-					// $unset_stock_provider = $dbpdo->prepare("UPDATE stock_list SET stock_provider = NULL WHERE stock_provider = :datas ");
-					// $unset_stock_provider->bindValue('datas', $data);
-					// $unset_stock_provider->execute();										
-				} 
-
-			} catch(PDOException $e) {
-				echo $e."\n";
-				echo " таблицы ".$table_name." не существует 11111 </pre>";
-			}
-		}
+		// 					$unset_fucking_provider = $dbpdo->prepare("UPDATE stock_list SET stock_provider = NULL WHERE stock_provider = :datas");
+		// 					$unset_fucking_provider->bindParam('datas', $data);
+		// 					$unset_fucking_provider->execute();								
+		// 				} 
+		
+		// 			} catch(PDOException $e) {
+		// 				echo $e."\n";
+		// 				echo " таблицы ".$table_name." не существует 11111 </pre>";
+		// 			}
+		// 		}
+		// 	}
+		// }
 	}
 
 	if($table_name == 'stock_category') {
-		foreach ($array as $data) {
-			try {
-				$check_category = $dbpdo->prepare('SELECT * FROM `stock_category`
-				WHERE category_name = :cat_name');
-				$check_category->bindParam('cat_name', $data);
-				$check_category->execute();
-
-				if($check_category->rowCount()>0) {
-					echo " ";
-				} else {
-					$data_arr = array(
-						'category_name' => $data
-					);
-
-					echo 'stock_categorystock_categorystock_category';
-
-					install_data( $table_name, $data_arr );
-
-					$update_stock_category = $dbpdo->prepare("UPDATE stock_list INNER JOIN stock_category ON stock_list.stock_provider = stock_category.category_name SET stock_list.product_category = stock_category.category_id WHERE stock_list.stock_type = 'akss' ");
-					$update_stock_category->execute();
-			
-					// $unset_stock_category = $dbpdo->prepare("UPDATE stock_list SET stock_provider = NULL WHERE stock_provider = :datas ");
-					// $unset_stock_category->bindValue('datas', $data);
-					// $unset_stock_category->execute();					
-				} 
-
-			} catch(PDOException $e) {
-				echo $e."\n";
-				echo " таблицы ".$table_name." не существует 11111 </pre>";
+		if($array) {
+			foreach ($array as $data) {
+				if($data) {
+					try {
+						$check_category = $dbpdo->prepare('SELECT * FROM `stock_category`
+						WHERE category_name = :cat_name');
+						$check_category->bindParam('cat_name', $data);
+						$check_category->execute();
+		
+						if($check_category->rowCount()>0) {
+							echo " ";
+						} else {
+							$data_arr = array(
+								'category_name' => $data
+							);
+		
+							install_data( $table_name, $data_arr );
+						} 
+		
+					} catch(PDOException $e) {
+						echo $e."\n";
+						echo " таблицы ".$table_name." не существует 11111 </pre>";
+					}
+				}
 			}
 		}
-	}	
+	}		
 }
 
 
@@ -524,17 +526,32 @@ function install_data($table_name, $data_arr) {
 	}
 
 	if($table_name == 'stock_provider') {
-		$provider_name = $data_arr['provider_name'];
+		// $provider_name = $data_arr['provider_name'];
 
-		$add_provider = $dbpdo->prepare('INSERT INTO stock_provider (provider_id, provider_name) VALUES (NULL, ?) ');
-		$add_provider->execute([$provider_name]);		
+		// $add_provider = $dbpdo->prepare('INSERT INTO stock_provider (provider_id, provider_name) VALUES (NULL, ?) ');
+		// $add_provider->execute([$provider_name]);			
 	}
 
 	if($table_name == 'stock_category') {
 		$category_name = $data_arr['category_name'];
 
-		$add_category = $dbpdo->prepare('INSERT INTO `stock_category` (category_id, category_name) VALUES (NULL, ?) ');
-		$add_category->execute([$category_name]);		
+		$add_category = $dbpdo->prepare('INSERT INTO stock_category (category_id, category_name) VALUES (NULL, ?) ');
+		$add_category->execute([$category_name]);	
+		
+		if(!empty(trim($category_name))) {
+			$update_stock_category = $dbpdo->prepare("UPDATE user_control 
+			INNER JOIN stock_category ON stock_category.category_name = :cat_name
+			LEFT JOIN stock_list ON stock_list.stock_provider = stock_category.category_name 
+			SET stock_list.product_category = stock_category.category_id, stock_list.stock_provider = NULL
+			");
+			$update_stock_category->bindValue('cat_name', $category_name);
+			$update_stock_category->execute();	
+		}
+
+		
+		// $unset_fucking_category = $dbpdo->prepare("UPDATE stock_list SET stock_provider = NULL WHERE stock_provider = :datas");
+		// $unset_fucking_category->bindParam('datas', $category_name);
+		// $unset_fucking_category->execute(); 		
 	}	
 }
 

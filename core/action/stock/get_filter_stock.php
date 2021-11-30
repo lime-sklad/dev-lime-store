@@ -51,10 +51,18 @@ if(isset($_POST['id'])) {
 	}	
 	$query = implode("\n", $query);
 } else {
+	// дики треш - изменить
 	if($page == 'report') {
 		$query = ' AND stock_order_report.order_my_date = :mydateyear ';
 		$search_bind_list['mydateyear'] = date("m.Y");
-	} else {
+	} 
+	// дикий треш - нужно переписать так что бы надобновсти не было	
+	else if($page == 'rasxod') {
+		$query = ' AND rasxod.rasxod_year_date= :mydateyear ';
+		$search_bind_list['mydateyear'] = date("m.Y");
+	}
+	
+	else {
 		$query = '';		
 	}
 

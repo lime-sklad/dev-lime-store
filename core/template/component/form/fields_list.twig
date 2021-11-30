@@ -1,58 +1,74 @@
 {%  set fields_path = '/component/form/fields/' %}
 
+
+{# stock #}
 {% if row.block_name == 'add_stock_name' %}
-    {% include fields_path ~ 'stock_add_fields/add_stock_name_fields.twig' %}
+    {% include fields_path ~ 'stock/add_stock_name_fields.twig' %}
 {% endif %}
 
 {% if row.block_name == 'add_stock_description' %}
-    {% include fields_path ~ 'stock_add_fields/add_stock_description_fields.twig' %}
+    {% include fields_path ~ 'stock/add_stock_description_fields.twig' %}
 {% endif %}
 
 {% if row.block_name == 'add_stock_provider' %}
-    {% include fields_path ~ 'stock_add_fields/add_stock_provider_fields.twig' %}
+    {% include fields_path ~ 'stock/add_stock_provider_fields.twig' %}
 {% endif %}
 
 {% if row.block_name == 'add_stock_category' %}
-    {% include fields_path ~ 'stock_add_fields/add_stock_category_fields.twig' %}
+    {% include fields_path ~ 'stock/add_stock_category_fields.twig' %}
 {% endif %}
 
-
 {% if row.block_name == 'add_stock_count' %}
-    {% include fields_path ~ 'stock_add_fields/add_stock_count_fields.twig' %}
+    {% include fields_path ~ 'stock/add_stock_count_fields.twig' %}
 {% endif %}
 
 {% if row.block_name == 'add_stock_min_quantity' %}
-    {% include fields_path ~ 'stock_add_fields/add_stock_min_quantity_fields.twig' %}
+    {% include fields_path ~ 'stock/add_stock_min_quantity_fields.twig' %}
 {% endif %}
 
 {% if row.block_name == 'add_stock_first_price' %}
-    {% include fields_path ~ 'stock_add_fields/add_stock_first_price_fields.twig' %}
+    {% include fields_path ~ 'stock/add_stock_first_price_fields.twig' %}
 {% endif %}
 
 {% if row.block_name == 'add_stock_second_price' %}
-    {% include fields_path ~ 'stock_add_fields/add_stock_second_price_fields.twig' %}
+    {% include fields_path ~ 'stock/add_stock_second_price_fields.twig' %}
 {% endif %}
 
 {% if row.block_name == 'add_save_form' %}
-    {% include fields_path ~ 'stock_add_fields/add_Stock_save_btn.twig' %}
+    {% include fields_path ~ 'stock/add_Stock_save_btn.twig' %}
 {% endif %}
 
 
 {# category #}
 {% if row.block_name == 'add_category_name' %}
-    {% include fields_path ~ 'category_add_fields/add_category_name_fields.twig' %}
+    {% include fields_path ~ 'category/add_category_name_fields.twig' %}
 {% endif %}
 
 {% if row.block_name == 'add_save_category' %}
-    {% include fields_path ~ 'category_add_fields/add_category_submit_btn_fields.twig' %}
+    {% include fields_path ~ 'category/add_category_submit_btn_fields.twig' %}
 {% endif %}
 
 
 {# provider #}
 {% if row.block_name == 'add_provider_name' %}
-    {% include fields_path ~ 'provider_add_fields/add_provider_name_fields.twig' %}
+    {% include fields_path ~ 'provider/add_provider_name_fields.twig' %}
 {% endif %}
 
 {% if row.block_name == 'add_save_provider' %}
-    {% include fields_path ~ 'provider_add_fields/add_provider_submit_btn_fields.twig' %}
+    {% include fields_path ~ 'provider/add_provider_submit_btn_fields.twig' %}
+{% endif %}
+
+
+
+{# rasxod #}
+{% if row.block_name == 'add_rasxod_description' %}
+    {% include fields_path ~ 'rasxod/add_rasxod_description_fields.twig' %}
+{% endif %}
+
+{% if row.block_name == 'add_rasxod_amount' %}
+    {% include fields_path ~ 'rasxod/add_rasxod_amount_fields.twig' %}
+{% endif %}
+
+{% if row.block_name == 'add_save_rasxod' %}
+    {% include fields_path ~ 'rasxod/add_rasxod_save.twig' %}
 {% endif %}

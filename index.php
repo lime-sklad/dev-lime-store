@@ -50,6 +50,3 @@ require_once 'vendor/autoload.php';
 			]
 		]
 	]);
-	
-	require_once 'core/main/update_check.php';
-

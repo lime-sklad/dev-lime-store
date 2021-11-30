@@ -1,0 +1,21 @@
+{# в php передаем данные с компонетами вида 
+
+   array(
+       includs => [
+           'someIncludsName' => [
+               'compnent_name.twig' => [array|data|some data],
+               'anouther_component.twig' => [array]
+           ],
+           'moreIncludsName' => [
+               'one_component.twig' => [somedata]
+           ]
+       ]
+   )
+
+ #}
+
+{% for include_key in includs %}
+    {% for include_pcomponent_path, data in include_key %}
+        {% include include_pcomponent_path %}
+    {% endfor %}
+{% endfor %}    

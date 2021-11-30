@@ -1,7 +1,14 @@
 <div class="area-content widget__content search-content {{auto_list.parent_modify_class}} ">
+	
+	{% if auto_list.includs %}
+		<div class="auto-widgets">
+			{% set includs = auto_list.includs %}
+			{% include '/component/include_once_component.twig' with includs %}		
+		</div>
+	{% endif %}
+
 	<ul class="ls-custom-scrollbar select-list select-saerch-list search-list-content {{auto_list.autocomlete_ul_modify_class}} " data-auto-cmplt-type="{{auto_attr}}" >
 		{% if auto_list.autocomplete_list %}
-
 			{% for key, val in auto_list.autocomplete_list %}
 				{% set provider_list = {
 					data: val.custom_value,

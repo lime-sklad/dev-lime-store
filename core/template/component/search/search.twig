@@ -14,7 +14,7 @@
 								
 				<input type="{% if data.input_type %}{{data.input_type|trim}}{% else %}text{% endif %}" 
 				 	   autocomplete="off"
-					   class="search-input search-action {{data.input_class}}" 
+					   class="input search-input search-action {{data.input_class}}" 
 					   
 					   {% if data.fields_name %}data-fields-name="{{data.fields_name}}"{% endif %}
 					   {% if data.stock_page %}data-stock-page="{{data.stock_page}}"{% endif %}
@@ -25,7 +25,7 @@
 					   required >
 				{% if data.reset %}
 						<div class="reset-search-value">
-							<a href="javascript:void(0)" class="reset-search reset-search-button">
+							<a href="javascript:void(0)" class="reset-search reset-search-button reset-input">
 								<span class="reset-button-icon button-icon-i">
 									<i class="las la-times"></i>
 								</span>

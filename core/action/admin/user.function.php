@@ -1,32 +1,65 @@
 <?php 
+function user_login($login, $pass) {
+	$u_data = ls_db_request([
+		'table_name' => 'user_control',
+		'col_list' => '*',
+		'base_query' => '',
+		'param' => [
+			'query' => [
+				'param' => ' WHERE `user_name` = :login ',
+				'joins' => '',
+				'bindList' => array(
+					'login' => $login
+				)
+			],
+			'sort_by' => ' LIMIT 1'
+		]
+	]);
 
-if(!isset($_SESSION['user'])){
-	include $_SERVER['DOCUMENT_ROOT'].'/core/action/user_auth.php';
-	exit();
+	if(!empty($u_data)) {
+		$this_user = $u_data[0];
+	
+		if($this_user['user_password'] == $pass) {
+			$_SESSION['user'] = $this_user['user_id'];
+			$_SESSION['time_start_login'] = time();
+			echo json_encode([
+				'success' => 'ok'
+			]);
+			return true;
+		} 	
+	} 
+	echo json_encode([
+		'error' => 'Логин или пароль не правильный'
+	]);
 }
 
 
 //получить данные пользователя сесии
 function getUser($get_info = null) {
 	global $dbpdo;
-	$user_id = $_SESSION['user'];
+	if(isset($_SESSION['user'])) {
+		$user_id = $_SESSION['user'];
 
-	$ustmp = $dbpdo->prepare('SELECT * FROM user_control WHERE user_id = :id');
-	$ustmp->bindParam(':id', $user_id, PDO::PARAM_INT);
-	$ustmp->execute();
-	$row = $ustmp->fetch();
-
-	switch ($get_info) {
-		case 'get_id':
-			return $user_id = $row['user_id'];
-			break;
-		case 'get_name':
-			return $user_name = $row['user_name'];
-			break;
-		case 'get_role':
-			return $user_role = $row['user_role'];
-			break;
+		$ustmp = $dbpdo->prepare('SELECT * FROM user_control WHERE user_id = :id');
+		$ustmp->bindParam(':id', $user_id, PDO::PARAM_INT);
+		$ustmp->execute();
+		$row = $ustmp->fetch();
+	
+		switch ($get_info) {
+			case 'get_id':
+				return $user_id = $row['user_id'];
+				break;
+			case 'get_name':
+				return $user_name = $row['user_name'];
+				break;
+			case 'get_role':
+				return $user_role = $row['user_role'];
+				break;
+		}
+	} else {
+		return null;
 	}
+
 }
 
 

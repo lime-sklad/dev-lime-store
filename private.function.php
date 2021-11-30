@@ -81,11 +81,12 @@ function access_request_uri($uri) {
 
 //проверка достпа запросов
 function access_request_action($uri) {
-
 	//получаем роль юзера сессии
 	$user_role = getUser('get_role');
 	//получаем файл к которому был сделан запрос
 	$uri = basename($uri);
+	$access_list = [];
+
 	//зпарещенные страница для seller 
 	if($user_role === 'seller') {
 		$access_list = array(

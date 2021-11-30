@@ -332,21 +332,21 @@ $(document).ready(function(){
   $(document).pos();
 
   $(document).on('scan.pos.barcode', function(event){
-    var barcode = event.code;
-    console.log(event);
-    $.ajax({
-      url: '/core/action/barcode/get_product_data.php',
-      type: 'POST',
-      dataType: 'json',
-      data: {
-      id: barcode
-      },
-      success: (data) => {
-      cart.request_data(data.res_id);
-      cart.display_total();
-      }
-    });         
+    if($('.cart').length > 0) {
+      var barcode = event.code;
+      $.ajax({
+        url: '/core/action/barcode/get_product_data.php',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+        id: barcode
+        },
+        success: (data) => {
+        cart.request_data(data.res_id);
+        cart.display_total();
+        }
+      }); 
+    }
   });
-
 });
 /** END EXPERIMENTAL */
