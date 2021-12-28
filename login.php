@@ -1,7 +1,7 @@
 <?php 
 require $_SERVER['DOCUMENT_ROOT'].'/db/config.php';
 require $_SERVER['DOCUMENT_ROOT'].'/core/function/db.wrapper.php';
-require $_SERVER['DOCUMENT_ROOT'].'/core/action/admin/user.function.php';
+require $_SERVER['DOCUMENT_ROOT'].'/core/function/user.function.php';
 require $_SERVER['DOCUMENT_ROOT'].'/include/lib_include.php';
 
 if(isset($_SESSION['user'])) {
@@ -41,10 +41,15 @@ if(isset($_SESSION['user'])) {
 		]
 	]); 
 
+	$user_name_list = get_all_user_list();
+	$user_name_list = array_column($user_name_list, 'user_name');
+
 	echo $twig->render('/component/container.twig', [
-		'renderComponent' => [
-			'/component/login/login_form.twig' => [
-				'login' => 'admin',
+		'includs' => [
+			'renderLogin' => [
+				'/component/login/login_form.twig' => [
+					'login' => $user_name_list,
+				]
 			]
 		]
 	]);

@@ -13,8 +13,8 @@
             <div class="input-container">
                 <div class="input-icon input-icon-i">
                     <i class="las la-user"></i>
-                </div>
-                <input type="text" required name="login" class="input user-login input-validate input-validate-length" value="{{data.login}}">
+                </div>                                                                      {# тут потом ипсравмить, передать списко с пользователями #}
+                <input type="text" required name="login" class="input user-login input-validate input-validate-length" value="{{data.login[0]}}">
             </div>
         </div>
         <div class="fields login-fields">

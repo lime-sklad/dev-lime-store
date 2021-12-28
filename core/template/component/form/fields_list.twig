@@ -34,6 +34,11 @@
     {% include fields_path ~ 'stock/add_stock_second_price_fields.twig' %}
 {% endif %}
 
+{% if row.block_name == 'add_stock_filter_list' %}
+    {# filter  #}
+    {% include fields_path ~ 'stock/add_stock_filter.twig' %}
+{% endif %}
+
 {% if row.block_name == 'add_save_form' %}
     {% include fields_path ~ 'stock/add_Stock_save_btn.twig' %}
 {% endif %}

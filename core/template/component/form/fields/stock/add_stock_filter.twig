@@ -1,0 +1,123 @@
+{% set filter_list = row.custom_data %}
+
+
+{% for row, val in filter_list %}
+        {% set custom_arr = [{
+            'custom_value': '',
+            'custom_data_id': ''
+        }] %}
+
+        {% for list_row, list_val in val.list %}
+            {% set custom_arr = custom_arr|merge({(loop.index0) : {
+                'custom_value': list_val.filter_value, 
+                'custom_data_id': list_val.filter_id,
+                }}) %}
+        {% endfor %}
+
+    {% set dropdownparam = {
+            label: val.filter_prefix_title,
+            wrapper_class_list: 'fields form-fields',
+            container_class_list: 'width-100',
+            dropdown_btn: {
+                icon: {
+                    class_list: 'las la-search'
+                },
+                btn: {
+                    class_list: 'form-input',
+                    attr: {
+                        'data-fields-name': 'prefix_filter_' ~ val.filter_prefix
+                    }
+                }
+            },
+            dropdown_list: {
+                auto_list: {
+                    auto_class_list: 'width-100 unset-max-width input-dropdown-auto-ul',
+                    auto_list_item: {
+                        icon: {
+                            icon: 'las la-search'
+                        },
+                        mark: {
+                            mark_text: val.filter_short_name
+                        }
+                    },
+
+                    list: custom_arr
+                }
+            },
+            hidden_input: {
+                class_list: 'form-input add-stock',
+                data_fields_name: val.filter_prefix,
+                value: ''
+            }    
+    } %}
+
+
+    {% include '/component/dropdown/dropdown.twig'  with { 'data': {
+        'dropdown_param': dropdownparam
+    } }  %}
+
+{% endfor %}
+
+
+
+
+
+
+
+
+
+
+{# {% set filter_list = row.custom_data %} 
+
+
+{% for row, val in filter_list %}
+    <div class="fields form-fields">
+        <span class="fields-label">{{val.filter_prefix_title}}</span>
+            {% set custom_arr = [{
+                'custom_value': '',
+                'custom_data_id': ''
+            }] %}
+
+            {% for list_row, list_val in val.list %}
+                {% set custom_arr = custom_arr|merge({(loop.index0) : {
+                    'custom_value': list_val.filter_value, 
+                    'custom_data_id': list_val.filter_id,
+                    'custom_mark': val.filter_short_name
+                    }}) %}
+            {% endfor %}
+
+       
+        {% set searh_param = {
+                input_class: 'scroll-auto form-input area-button input-dropdown', 
+                parent_class: 'width-100 input-dropdown-parent', 		
+                input_placeholder: 'Выберите ', 
+                input_type: 'button',
+                input_value: val.filter_prefix_title,
+                fields_name: '',
+                input_icon: {
+                    icon: 'la-tags',
+                },
+                reset: false, 
+                widget_class_list: 'widget-fields',
+                widget_container_class_list: 'widget-fields-container',
+                autocomplete:  {
+                    type: '',
+                    parent_modify_class: "form-fields-autocomplete input-dropdown-auto-list-parent",
+                    autocomlete_ul_modify_class: 'width-100 unset-max-width input-dropdown-auto-ul',            
+                    autocomplete_list: custom_arr,
+                    autocomlete_class_list: "selectable-search-item area-closeable  select-hidden-fields-input input-dropdown-auto-list-li",
+                },
+        } 
+        %} 
+        
+
+        {% include '/component/search/search.twig'  with { 'data': searh_param }  %}
+            
+        <input type="hidden" class="form-input add-stock hidden_input hidden-fields-input" data-fields-name="filter_{{val.filter_prefix}}">
+    </div>
+{% endfor %}
+
+
+
+
+#}

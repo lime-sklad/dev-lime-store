@@ -280,8 +280,6 @@ function search_item_stock(search_item_value,sort_data) {
 				update_tfoot_reuslt(data.total);
 			}
 			get_preloader('hide');
-			console.log('hello world');
-
 		}			
 	});
 }
@@ -402,9 +400,7 @@ $(document).ready(function(){
 						$get_stock_list.fadeOut();
 					}	
 				}
-				
-				console.log(order_success);
-
+			
 			}			
 
 		});
@@ -502,7 +498,6 @@ $('body').on('click', '.add_stock_submit', function(){
 					$table_stock_list.prepend(product);
 					if(data['total']) {
 						update_tfoot_reuslt(data['total']);
-						console.log(data['total']);
 					}
 					//вызывем модалку success 
 					show_success_modal(success);
@@ -572,8 +567,6 @@ $('body').on('click', '.edit_stock_action', function(){
 		id = $(this).attr('id');
 		filter_list.push(id);
 	});
-
-	console.log(filter_list);
 
 	$.ajax({
 		type: 'POST',

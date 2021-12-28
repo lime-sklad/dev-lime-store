@@ -1,0 +1,108 @@
+{# 
+{% set dropdown_param = {
+    parent_class_list: '',
+    container_class_list: '',
+    dropdown_btn: {
+        icon: {
+            container_class_list: '',
+            icon_class: ''
+        },
+        btn: {
+            class_list: '',
+            attr: {
+                placeholder: 'Bla-bla'
+            }
+        }
+    },
+    dropdown_list: {
+        container_class_list: '',
+        auto_list: {
+            auto_class_list: '',
+            auto_list_item: {
+                icon: {
+                    parent_class_list: '',
+                    icon: ''
+                },
+                parent_class_list: '',
+                item_class_list: '',
+                mark: {
+                    mark_class_list: '',
+                    mark_text: ''
+                }
+            },
+            'list': {
+                value: '',
+                data_id: ''
+            }
+        }
+    },
+    hidden_input: {
+        class_list: '',
+        data_fields_name: '',
+        value: ''
+    }
+} %}  #}
+
+<div class="{{data.dropdown_param.wrapper_class_list}}">
+    {% if data.dropdown_param.label %}
+        <span class="fields-label">{{data.dropdown_param.label}}</span>
+    {% endif %}
+    
+    <div class="widget__search widget-fields">
+        <div class="widget__search-container widget-fields-container {{data.dropdown_param.parent_class_list}}">
+
+            <div class="area-container search-container input-dropdown-parent {{data.dropdown_param.container_class_list}}">
+
+                <div class="search-input-wrp">
+                    {% if data.dropdown_param.dropdown_btn.icon %}
+                        <div class="widget__search-icon button-icon-i search-icon {{ data.dropdown_param.dropdown_btn.icon.container_class_list }}">
+                            <i class="{{data.dropdown_param.dropdown_btn.icon.class_list}}"></i>
+                        </div>
+                    {% endif %}
+                    
+                    <input type="button" autocomplete="off" class="input scroll-auto area-button input-dropdown {{data.dropdown_param.dropdown_btn.btn.class_list}}" 
+                    {% if data.dropdown_param.dropdown_btn.btn.attr  %}
+                        {% for attr_name, attr_value in data.dropdown_param.dropdown_btn.btn.attr %}
+                            {{attr_name}} = "{{attr_value}}"
+                        {% endfor %}
+                    {% endif %}
+                    >
+                </div>   
+
+
+                <div class="area-content widget__content search-content input-dropdown-auto-list-parent {{data.dropdown_param.dropdown_list.container_class_list}}">
+                    <ul class="ls-custom-scrollbar select-list select-saerch-list search-list-content input-dropdown-auto-ul {{data.dropdown_param.dropdown_list.auto_list.auto_class_list}}">
+                        {% for auto_key, auto_value in data.dropdown_param.dropdown_list.auto_list.list  %}
+                        
+                        <li class="select-items {{data.dropdown_param.dropdown_list.auto_list.auto_list_item.parent_class_list}}">
+                            <a href="javascript:void(0)" class="select-item select-search-item selectable-search-item area-closeable  select-hidden-fields-input input-dropdown-auto-list-li {{data.dropdown_param.dropdown_list.auto_list.auto_list_item.item_class_list}}" value="{{auto_value.custom_value}} {{data.dropdown_param.dropdown_list.auto_list.auto_list_item.mark.mark_text}}" data-id="{{auto_value.custom_data_id}}">
+                               
+                                {% if data.dropdown_param.dropdown_list.auto_list.auto_list_item.icon %}
+                                    <span class="mark button-icon-i button-icon-left search-item-icon {{ data.dropdown_param.dropdown_list.auto_list.auto_list_item.icon.parent_class_list }}">
+                                        <i class="{{data.dropdown_param.dropdown_list.auto_list.auto_list_item.icon.icon}}"></i>
+                                    </span>
+                                {% endif %}
+
+                                <span class="widget__button-text">
+                                    {{auto_value.custom_value}} {{data.dropdown_param.dropdown_list.auto_list.auto_list_item.mark.mark_text}}
+                                </span>
+                            </a>									
+                        </li>
+
+                        {% endfor %}
+
+                    </ul>
+
+                    <div class="preloader content_preloader hide">
+                        <img src="/img/icon/load.gif">
+                    </div>            
+                </div>            
+
+            </div>
+
+        </div>
+    </div>
+    
+    <input type="hidden" class="hidden_input hidden-fields-input {{data.dropdown_param.hidden_input.class_list}}" value="{{data.dropdown_param.hidden_input.value}}" data-fields-name="filter_{{data.dropdown_param.hidden_input.data_fields_name}}">
+</div>
+

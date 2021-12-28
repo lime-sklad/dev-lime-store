@@ -1,0 +1,40 @@
+<div class="top-nav-list">
+    {% include '/component/include_once_component.twig' %}  
+
+
+   <div class="top-nav-items filter-container area-container">
+       <a href="javascript:void(0)" class="top-nav-buttons ls-dropdown-buttons notify-button widget__button-action flex-cntr area-button" role="button">
+           <div class="sidebar-list-icon">
+               <span class="button-icon-i button-icon-left ls-top-nav-dropdown-icon pos-relative">
+                   <i class="lar la-user-circle"></i> 
+               </span>
+           </div>
+           <span class="ls-dropdown-text">{{data.username}}</span>
+
+           <span class="widget__button-icon button-icon-i button-icon-right ls-dropdown-arrow">
+				<i class="las la-angle-down"></i>
+		   </span>           
+       </a> 
+       <div class="widget__content area-content ls-dropdown-content">
+            <ul class="select-list ls-dropdown-list">
+                <li class="select-items ls-dropdown-items">
+                    <a href="javascript:void(0)" class="select-item btn-square btn-light btn-blue get_page_action" data-page-route="admin" data-tab="tab_admin">
+                        <span class="widget__button-icon button-icon-i button-icon-left">
+                            <i class="las la-cog"></i>
+                        </span>
+                        <span class="widget__button-text">Настройки</span>
+                    </a>                 
+                </li>
+                <li class="select-items ls-dropdown-items">
+                    <a href="core/action/logout?logout" class="select-item btn-square btn-light btn-blue">
+                        <span class="widget__button-icon button-icon-i button-icon-left">
+                            <i class="las la-sign-out-alt"></i>
+                        </span>
+                        <span class="widget__button-text">Выйти</span>
+                    </a>                 
+                </li>                                                
+            </ul>
+       </div>
+   </div>           
+</div>
+

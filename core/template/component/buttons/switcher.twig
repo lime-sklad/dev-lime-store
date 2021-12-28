@@ -1,0 +1,9 @@
+ <button class="btn ls-custom-radio"
+{% if data.btn_attr_list  %}
+    {% for attr_name, attr_value in data.btn_attr_list %}
+        {{attr_name}} = "{{attr_value}}"
+    {% endfor %}
+{% endif %}
+>
+    {{data.btn_text}}
+</button>

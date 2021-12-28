@@ -12,8 +12,8 @@ function lib_include_list() {
         ],
         'script' => [
             'lib/js_lib/jquery-3.3.1.min.js',
-            'lib/js_lib/jquery.pos.js',
-            // .'js/function.js',
+            // 'lib/js_lib/jquery.pos.js',
+            // 'js/function.js',
             'js/hotkey.js',
             'js/upd.function.js',
             'js/upd.ajax.js',

@@ -1,6 +1,25 @@
-<div class="fields">
+{# <div class="fields">
     <span class="fields-label">Минимальное количество для отображения</span>
     <div class="fileds-input-container th_w140">
         <input type="text" class="input edit input-validate-length "  value="{{row.value}}" data-fields-name="change_min_quantity">
     </div>
+</div>
+ #}
+
+
+ 
+<div class="form-fields fields">
+    <span class="fields-label">Əgər miqdarın sayi sıfıra bərabərdirsə, anbar siyahıda göstərməmək</span>
+    {# <button class="btn ls-custom-radio edit" data-radio-state="{{row.value ? row.value : 0}}" value="{{row.value ? row.value : 0}}" data-fields-name="change_min_quantity"></button> #}
+
+    {% include '/component/buttons/button.twig' with {
+        'data': {
+            'btn_attr_list': {
+                'class': 'btn ls-switcher edit',
+                'data-radio-state': row.value ? row.value : 0,
+                'value': row.value ? row.value : 0,
+                'data-fields-name': 'change_min_quantity'
+            }
+        }
+    } %}
 </div>

@@ -1,25 +1,38 @@
 <?php 
-function ls_db_request($query) {
+
+/**
+ * получить строки из базы данных 
+ * @param array $query
+ * @param CONSTANT PDO::FETCH_ASSOC / FETCH_BOTH ...
+ * $query = array(
+ * 	'table_name' => //название таблицы !! обьязательный параметр
+ *  'col_list' => //название столбцов !! обьязательный параметр
+ *  'base_query' => //начальный
+ * ); 
+ */
+function ls_db_request($query, $pdo_fetch_type = PDO::FETCH_ASSOC) {
 	global $dbpdo;
+
 
 	$param_row = $query['param'];
 
 	$result 			= [];
 	$conditions 		= [];
-	$table_name 		= $query['table_name'];
-	$col_list 			= $query['col_list'];
-	$base_query 		= $query['base_query'];
-	$param				= $param_row['query']['param'];
-	$joins				= $param_row['query']['joins'];
-	$bind_list			= $param_row['query']['bindList'];
-	$sort_by			= $param_row['sort_by'];
-
+	$table_name 		= $query['table_name'] 				?? '';
+	$col_list 			= $query['col_list'] 				?? '';
+	$base_query 		= $query['base_query'] 				?? '';
+	$param				= $param_row['query']['param'] 		?? '';
+	$joins				= $param_row['query']['joins'] 		?? '';
+	$bind_list			= $param_row['query']['bindList'] 	?? array();
+	$sort_by			= $param_row['sort_by'] 			?? '';
+ 
 
 	$query  = "SELECT $col_list FROM $table_name ";
 	$query .= $base_query;
 	$query .= $param;
 	$query .= $joins;
 	$query .= $sort_by;
+
 
 
 	$conditions = array_merge($conditions, $bind_list);
@@ -33,7 +46,8 @@ function ls_db_request($query) {
 	}
 	$stock_view->execute();
 
-	while ($row = $stock_view->fetch(PDO::FETCH_ASSOC)) {	
+
+	while ($row = $stock_view->fetch($pdo_fetch_type)) {	
 		$result[] = $row;
 	}
 	
@@ -43,7 +57,7 @@ function ls_db_request($query) {
 function ls_db_upadte($option, $data) {
 	/**
 	 * Первым аргументом передаём массив с настройками запрса: 
-	 * 		$option = [
+	 * 	@param option = [
 	 *         'before' => " UPDATE stock_list SET ",
 	 *         'after' => " WHERE stock_id = :stock_id",
 	 *         'post_list' => [
@@ -67,7 +81,7 @@ function ls_db_upadte($option, $data) {
 	 * 		
 	 * 		$data это массив с данными которые будут добавлены в таблицу
 	 * 		массив должен иметь такую структуру
-	 * 			$data = [
+	 * 		@param data = [
 	 * 				array(
 	 * 					'stock_id' => 777,
 	 * 					'order_stock_count' => 'some count'
@@ -79,7 +93,7 @@ function ls_db_upadte($option, $data) {
 	 * 			]; 
 	 *  
 	 * */	 
-		
+	
 	global $dbpdo;
 	$before 	= $option['before'];
 	$after 		= $option['after'];
@@ -99,6 +113,7 @@ function ls_db_upadte($option, $data) {
 				$conditions[] = $post_value['query'];
 			}
 			
+			// ужас, я не знаю что делает эта штука и зачем я ее написал
 			if($post_value['bind']) {
 				$bind_list[$post_value['bind']] = $data[$post_key];
 			}
@@ -136,7 +151,7 @@ function ls_db_insert($table_name, $data) {
 	 * 	Певрвый аргуемнт название таблицы
 	 * 	Второй аргумент массив с данными которые будем добавлять в базу
 	 * 	Структура массива с данными:
-	 * 		 $data = [
+	 * @param data = [
 	 * 			array(
 	 * 				'Название столбца' => 'Значение',
 	 * 				'Название столбца 2' => 'Значение 2'
@@ -146,7 +161,7 @@ function ls_db_insert($table_name, $data) {
 	 *	Добавлять в базу можно сразу несколько записей, нужно просто в массив $data
 	 *	добавить несколько массивов как в примере выше:
 	 * 
-	 * 		$data = [
+	 * @param data = [
 	 * 			array(
 	 * 				'Название столбца первая запись' => ' Первое Значение',
 	 * 				'Название столбца #2 первая запись ' => 'Первое Значение #2'
@@ -160,8 +175,9 @@ function ls_db_insert($table_name, $data) {
 	 *  
 	 * 
 	 */
-	
+
 	global $dbpdo;
+
 	$col_names_list = array_keys($data[array_key_first($data)]);
 	$col_names_list = implode(",", $col_names_list);
 	$toBind = array();
@@ -185,3 +201,36 @@ function ls_db_insert($table_name, $data) {
 	$stmt = $dbpdo->prepare($query);
 	$stmt->execute($toBind);
 }
+
+
+
+/**
+ * удаление
+ * @param array $data_list массив с данными
+ * @param var $dbpdo db connetion
+ */
+ function ls_db_delete($data_list, $dbpdo) {
+	/**
+	*  @param array $data_list = 
+	*	array(
+	*		'table_name' => 'cart',
+	*		'joins'	=> '',
+	*		'where' => ' (c_sotck_id)  IN (:id2) ',
+	*		'bindList' => [
+	*			':id2' => 2,
+	*		],
+	*		'order' => null,
+	*	)
+	*/
+	
+	foreach($data_list as $data) {
+		$table_name 		= array_key_exists('table_name', $data) 	? $data['table_name'] 	: null;
+		$joins 				= array_key_exists('joins', $data)			? $data['joins'] 		: null;
+		$where 				= array_key_exists('where', $data)			? $data['where'] 		: null;
+		$bind_list 			= array_key_exists('bindList', $data)		? $data['bindList'] 	: null;
+		$order 				= array_key_exists('order', $data)			? $data['order'] 		: null;
+
+		$delete = $dbpdo->prepare("DELETE FROM $table_name $joins WHERE $where $order");
+		$delete->execute($bind_list);		
+	}
+ }

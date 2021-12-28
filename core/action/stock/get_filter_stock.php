@@ -51,7 +51,7 @@ if(isset($_POST['id'])) {
 	}	
 	$query = implode("\n", $query);
 } else {
-	// дики треш - изменить
+	// дикий треш - изменить
 	if($page == 'report') {
 		$query = ' AND stock_order_report.order_my_date = :mydateyear ';
 		$search_bind_list['mydateyear'] = date("m.Y");

@@ -1,4 +1,7 @@
 <?php 
+/** 
+ * открываем сессию и авторизуем пользователя
+*/
 function user_login($login, $pass) {
 	$u_data = ls_db_request([
 		'table_name' => 'user_control',
@@ -34,7 +37,9 @@ function user_login($login, $pass) {
 }
 
 
-//получить данные пользователя сесии
+/**
+ * получить данные пользователя сесии
+ */
 function getUser($get_info = null) {
 	global $dbpdo;
 	if(isset($_SESSION['user'])) {
@@ -62,8 +67,9 @@ function getUser($get_info = null) {
 
 }
 
-
-//получить данные пользователя по id
+/**
+ * получить данные пользователя по id
+ */
 function get_user_by_id($param) {
 	global $dbpdo;
 	/**
@@ -103,7 +109,9 @@ function get_user_by_id($param) {
 }
 
 
-//обновить данне пользователя
+/**
+ * обновить данне пользователя
+ */ 
 function update_user_info($arr) {
 	/**
 	* example
@@ -143,8 +151,10 @@ function update_user_info($arr) {
 }
 
 
-//добавляем пользователя в базу
-function reg_new_user($dbpdo, $u_name, $u_pass, $u_role, $ordertoday) {
+/**
+ * добавляем пользователя в базу
+ */
+ function reg_new_user($dbpdo, $u_name, $u_pass, $u_role, $ordertoday) {
 	global $dbpdo;
 	$reg_user = $dbpdo->prepare('INSERT INTO user_control (user_id, user_name, user_password, user_role, alert_date) 
 		VALUES (NULL, :uname, :upass, :u_role, :cur_date)
@@ -156,7 +166,9 @@ function reg_new_user($dbpdo, $u_name, $u_pass, $u_role, $ordertoday) {
 	$reg_user->execute();
 }
 
-//выводим после регистрации
+/**
+ * выводим после регистрации
+ */
 function render_after_register() {
 	$user_id 		= get_last_user('id');
 	$user_name 		= get_last_user('name');
@@ -179,7 +191,9 @@ function render_after_register() {
 	echo json_encode($res);
 }
 
-//выводим данные пользователя после регистрации
+/**
+ * выводим данные пользователя после регистрации
+ */
 function get_last_user($action) {
 	global $dbpdo;
 	$get_user = $dbpdo->prepare('SELECT * FROM user_control ORDER BY user_id DESC');
@@ -207,7 +221,9 @@ function get_last_user($action) {
 	}
 }
 
-//валидация данных пользователя
+/**
+ * валидация данных пользователя
+ */
 function valid_user_info($arr) {
 	/** example
 	 * $valid_arr = array(
@@ -269,7 +285,9 @@ function valid_user_info($arr) {
 	}
 
 }
-//меняем статус пользовталея на активный и не активный
+/**
+ * меняем статус пользовталея на активный и не активный
+ */
 function update_user_status($args) {
   /**   example
 	*	0 - active 
@@ -290,4 +308,25 @@ function update_user_status($args) {
 	$upd_usr_status->bindParam('status', $status); 
 	$upd_usr_status->bindParam('user_id', $user_id);
 	$upd_usr_status->execute();	
+}
+
+/**
+ * получить список пользователей
+ */
+function get_all_user_list() {
+	$res = ls_db_request([
+		'table_name' => 'user_control',
+		'col_list' => '*',
+		'base_query' => ' WHERE user_visible = 0',
+		'param' => [
+			'query' => [
+				'param' => '',
+				'joins' => '',
+				'bindList' => [],
+			],
+			'sort_by' => ' ORDER BY user_id'
+		]
+	]);
+
+	return $res;
 }

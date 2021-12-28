@@ -23,6 +23,7 @@ foreach($cart_list as $row) {
     $id = (int) $row['id'];
     $order_price = (float) $row['price'];
     $order_count = (int) $row['count'];  
+    $description = $row['description'];
     // ls_var_dump($order_price);
     if($order_count <= 0) {
         return alert_error('Заполните поля правильно!');
@@ -77,6 +78,7 @@ foreach($cart_list as $row) {
         'stock_id' => $id,
         'order_stock_name' => $stock_row['stock_name'],
         'order_stock_imei' => $stock_row['stock_phone_imei'],
+        'order_who_buy' => $description,
         'order_stock_count' => $order_count,
         'order_stock_sprice' => $order_price,
         'order_stock_total_price' => $order_sum,

@@ -31,8 +31,6 @@ $(document).ready(function(){
           },
           success: function(data) {
             cart.render(data);
-
-            console.log(data);
           }
         });    
       }
@@ -57,9 +55,11 @@ $(document).ready(function(){
         id: stock_id,
         name: stock_name,
         price: '',
+        description: '',
         count: 1,
         maxCount: stock_count
       }
+
       return myData;
     },
     push_cart: function(data) {
@@ -86,7 +86,6 @@ $(document).ready(function(){
           id: id
         },
         success: (data) => {
-          console.log(data);
           cart.push_cart(data);
         }
       });
@@ -148,11 +147,19 @@ $(document).ready(function(){
         }
       }
 
+      // las btn add-basket-btn-icon add-basket-button width-100 table-ui-btn la-cart-plus btn-secondary add-to-cart
+      // las btn add-basket-btn-icon add-basket-button width-100 table-ui-btn la-cart-plus btn-secondary add-to-cart
+      // las btn add-basket-btn-icon add-basket-button width-100 table-ui-btn la-cart-plus btn-secondary add-to-cart
+      // las btn add-basket-btn-icon add-basket-button width-100 table-ui-btn la-cart-plus btn-secondary add-to-cart
+      // las btn add-basket-btn-icon add-basket-button width-100 table-ui-btn la-check btn-success added-to-cart
       cart.cart_list.forEach(el => {
-        var $stock = $(`.stock-list#${el.id}`);
+        // var $stock = $(`.stock-list#${el.id}`);
+
+        var $stock = $(`#${el.id}.stock-list`);
 
         if($stock) {
           var $button = $stock.find('.add-to-cart');
+
           if(!$button.hasClass('.added-to-cart')) {
             cart.active_basket_btn($button);
           }
@@ -185,7 +192,6 @@ $(document).ready(function(){
               cart.order_success();
             }
             pageData.alert_notice(data.notice.type, data.notice.text);
-            console.log(data);
           }
         });
       }
@@ -202,7 +208,6 @@ $(document).ready(function(){
       });
 
       if(inner_val != res) {
-        console.log({inner_val, res});
         $el.text(res);
         return true;
       } 
@@ -283,6 +288,14 @@ $(document).ready(function(){
     cart.update_carts(id, 'count', val);
     cart.display_total();
   });
+
+  $('body').on('keyup input', '.cart-order-description', function(){
+    var id = cart.get_cart_item_id($(this));
+    var val = $(this).val().trim();
+  
+    cart.update_carts(id, 'description', val);
+    cart.display_total();
+  });
   
   $('body').on('click', '.add-to-cart', function(){
     var id = $(this).closest('.stock-list').attr('id');
@@ -290,7 +303,6 @@ $(document).ready(function(){
   });
   
   function init_obs() {
-    console.log('obs was init');
     var target = document.getElementById('app');
   
     const config = {
@@ -312,9 +324,6 @@ $(document).ready(function(){
           }
         } 
 
-        console.log(cart.is_draw_possible);
-
-        // console.log('new mut' + mutationList);
         if(el.type == 'attributes') {
           if($('.table-list').length) {
             cart.active_all_btn();
@@ -329,24 +338,24 @@ $(document).ready(function(){
 
   init_obs();
 
-  $(document).pos();
+  // $(document).pos();
 
-  $(document).on('scan.pos.barcode', function(event){
-    if($('.cart').length > 0) {
-      var barcode = event.code;
-      $.ajax({
-        url: '/core/action/barcode/get_product_data.php',
-        type: 'POST',
-        dataType: 'json',
-        data: {
-        id: barcode
-        },
-        success: (data) => {
-        cart.request_data(data.res_id);
-        cart.display_total();
-        }
-      }); 
-    }
-  });
+  // $(document).on('scan.pos.barcode', function(event){
+  //   if($('.cart').length > 0) {
+  //     var barcode = event.code;
+  //     $.ajax({
+  //       url: '/core/action/barcode/get_product_data.php',
+  //       type: 'POST',
+  //       dataType: 'json',
+  //       data: {
+  //       id: barcode
+  //       },
+  //       success: (data) => {
+  //       cart.request_data(data.res_id);
+  //       cart.display_total();
+  //       }
+  //     }); 
+  //   }
+  // });
 });
 /** END EXPERIMENTAL */

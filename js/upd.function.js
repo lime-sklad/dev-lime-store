@@ -44,7 +44,7 @@ $(document).ready(function(){
       $('.table-list').append(data);
     },    
     update_table_row: function(key, value, id) {
-      const $this = $(`.stock-list#${id}`);
+      const $this = $(`#${id}.stock-list`);
       const amimate_delay = 1500;
       switch (key) {
         case 'product_name':
@@ -465,7 +465,6 @@ $(document).on('click', '.selectable-search-item.selected', function(){
 
 
   if($parent.find('.search-auto').length) {
-    console.log('dsds');
     $input = $parent.find('.search-auto');
     send_autocomplete($input);
     reset_area();
@@ -570,8 +569,7 @@ $(document).mouseup(function(e) {
   var container = $('.area-content');
     // if the target of the click isn't the container nor a descendant of the container
   if ( !button.is(e.target) && button.has(e.target).length == 0 && 
-       !container.is(e.target) && container.has(e.target).length == 0) {   
-         console.log('sd');
+       !container.is(e.target) && container.has(e.target).length == 0) {  
     reset_area();
     // $(button).blur();
   }
@@ -675,7 +673,7 @@ $(document).on('click', '.remove_checked_filter', function(){
   $this = $(this);
   id = $this.data('filter-chip-id');
 
-  $(`.filter-check.filter-active#${id}`).trigger('click');
+  $(`#${id}.filter-check.filter-active`).trigger('click');
 });
 
 function reset_all_filter() {
@@ -742,7 +740,7 @@ $(document).on('keyup', '.dom-live-search', function(){
   var get_value = $(this).val().toLowerCase();
 
   $(this).closest('.search-container').find('.search-list-content li').filter(function(){
-    $(this).toggle($(this).find('.widget__button-text').text().toLowerCase().indexOf(get_value) > -1);
+    $(this).toggle($(this).find('.widget__button-text').text().trim().toLowerCase().indexOf(get_value) > -1);
   });
 });
 
@@ -760,3 +758,17 @@ function prepare_form_fields($this) {
 
   return prepare_data;
 }
+
+
+/**
+ * custom radio switcher
+ */
+ $(document).on('click', '.ls-switcher', function() {
+  var get_radio_state = $(this).attr('data-radio-state');
+  let set_radio_state;
+
+  set_radio_state = get_radio_state == 0 ? 1 : 0;
+
+  console.log(set_radio_state);
+  $(this).attr('data-radio-state', set_radio_state).val(set_radio_state);
+});

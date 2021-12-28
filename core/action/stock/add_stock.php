@@ -53,17 +53,26 @@ if(!empty($_POST) && count($_POST) > 0) {
 	$data = array_merge($data, $default_data);
 
 
-	// ls_var_dump($data);
-
 	try {
 		ls_db_insert('stock_list', [$data]);
 
+		
+		// получаем последний добавленный товар, тоесть тот который мы только что добавили
+		$last_stock = get_last_added_stock();
+
+		//получаем из списка только id товара
+		$last_stock_id = $last_stock['stock_id'];
+
+		//добавляем фильтры для товара
+		ls_insert_stock_filter($_POST, $last_stock_id);
+
+		//выводим сообщение о добавленом товаре
 		echo json_encode([
 			'success' => 'bla-bla'
 		]);
 	} catch (Exception $e) {
 		echo json_encode([
-			'error' => "Ошибка"
+			'error' => "Ошибка " . $e
 		]);
 	}
 

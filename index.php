@@ -7,6 +7,8 @@ header("Pragma: no-cache");
 
 require_once 'function.php';
 require_once 'vendor/autoload.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/core/function/update.function.php';
+
 
 	echo $twig->render('/component/include_component.twig', [
 		'renderComponent' => [
@@ -27,26 +29,54 @@ require_once 'vendor/autoload.php';
 	]); 
 	
 	echo $twig->render('/component/related_component/main_page.twig', [
-        'renderComponent' => [
-			'/component/index/top_nav.twig' => [
-				//code
+		'renderComponent' => [
+
+			// sidebar
+			'/component/index/sidebar.twig' => [
+				'menu_list' => [
+					'data' => page_tab_list()
+				]
 			],
-            '/component/main/menu_list.twig' => [
-                'menu' => page_tab_list()
-			],
-			'/component/main/main.twig' => [
-				//data
-			],
-			'/component/modal/modal_wrapper.twig' => [
-				//data
-			]				
-		],
-		'sidebar' => [
-			'user_id' => getUser('get_id'),
-			'user_name' => getUser('get_name'),
-			'user_role' => getUser('get_role'),
-			'menu_list' => [
-				'data' => page_tab_list()
+
+			// main content
+			'/component/container.twig' => [
+				'includs' => [
+					'renderMain' => [
+						// header
+						'/component/index/top_nav_content/top_nav.twig' => [
+							'includs' => [
+								'renderTopNavComponent' => [
+									'/component/index/top_nav_content/nav_list_options.twig' => [
+										'username' => getUser('get_name'),
+										// вложеность в шаблоне, рендерим друигие шаблоны
+										'includs' => [
+											'renderUpdateNotify' => [
+												'/component/notify/update/update_notify_item.twig' => [
+													'update_notify' => is_check_update()
+												]
+											],	
+										],							
+									]
+								],
+							]
+						],
+
+						// menu
+						'/component/main/menu_list.twig' => [
+							'menu' => page_tab_list()
+						],	
+						
+						// main
+						'/component/main/main.twig' => [
+							//data
+						],
+						
+						// modal
+						'/component/modal/modal_wrapper.twig' => [
+							//data
+						]							 
+					]
+				]
 			]
-		]
+		],
 	]);

@@ -4,7 +4,8 @@ require $_SERVER['DOCUMENT_ROOT'].'/core/function/db.wrapper.php';
 //upd  
 require $_SERVER['DOCUMENT_ROOT'].'/private.function.php';
 require $_SERVER['DOCUMENT_ROOT'].'/core/function/stock.function.php';
-require $_SERVER['DOCUMENT_ROOT'].'/core/action/admin/user.function.php';
+require $_SERVER['DOCUMENT_ROOT'].'/core/function/filter.function.php';
+require $_SERVER['DOCUMENT_ROOT'].'/core/function/user.function.php';
 require $_SERVER['DOCUMENT_ROOT'].'/include/lib_include.php';
 
 if(!isset($_SESSION['user'])){
@@ -109,126 +110,6 @@ function ls_trim($var) {
 	return $var;	
 }	
 
-//получаем название фильтра
-function get_filter_prefix_title($prefix) {
-	global $dbpdo;
-	$result = [];
-	$filter_prefix = $dbpdo->prepare("SELECT * FROM filter_list WHERE filter_list_prefix = :prefix");
-	$filter_prefix->bindParam('prefix', $prefix);
-	$filter_prefix->execute();
-	if($filter_prefix->rowCount() > 0) {
-		$row = $filter_prefix->fetch();
-
-		$title = $row['filter_list_title'];
-		$short_name = $row['filter_short_name'];
-		
-		$result = array('title' => $title, 'short_name' => $short_name);
-	}
-	return $result;
-}
-
-
-/**
- * @param fileter_list = array(
- *		'color',
- *		'storage',
- *		'ram'
- *	  );
- * собриаем фильтр и выводим массив в шаблон
- */
-function filter_category($filter_list, $id) {
-	$total = [];
-	foreach ($filter_list as $prefix) {
-		//получем название фильтра и описание
-		$title_row = get_filter_prefix_title($prefix);
-		//список значений филтров 
-		$list = get_filter_list_by_prefix($prefix);		
-		// ативный фильтр
-		$active = get_active_filters($prefix, $id);
-		if($list && $title_row) {
-			$title = $title_row['title'];
-			$title_short_name = $title_row['short_name'];
-			$total[] = [
-				'title' => $title, 
-				'short_name' => $title_short_name, 
-				'prefix' => $prefix, 'active' => $active, 
-				'compelte' => $list
-			];
-		}
-		// array_push($total, array('title'=> $title, 'active' => $active, 'compelte' =>  $res));
-	}
-	return $total;
-}
-
-
-//получаем список значения фильтра
-function get_filter_list_by_prefix($prefix) {
-	global $dbpdo;
-
-	$filter_btn_arr = [];
-	$sort_name = [];
-	$result = array();
-	$total = array();
-
-	$filter_button = $dbpdo->prepare("SELECT * FROM user_control
-		INNER JOIN filter_list  ON filter_list.filter_list_prefix = :prefix
-		LEFT JOIN filter ON filter.filter_type = filter_list.filter_list_id
-		GROUP BY filter.filter_value DESC  ORDER BY ABS(`filter`.`filter_value`)  ASC");
-	$filter_button->bindParam('prefix', $prefix);
-	$filter_button->execute();
-	if($filter_button->rowCount() > 0) {
-		while ($row = $filter_button->fetch())
-		$filter_btn_arr[] = $row;
-		foreach ($filter_btn_arr as $row) { 
-			$filter_id = $row['filter_id'];
-			$filter_value = $row['filter_value'];
-			$filter_type = $row['filter_type'];
-
-			array_push($total, array(
-				'filter_type' => $filter_type,
-				'id'	=> $filter_id,
-				'value' => $filter_value 
-			));
-	
-		}	    	                 
-
-		return $total;	
-	}
-}
-
-//получем активный фильтр 
-function get_active_filters($prefix, $id) {
-	global $dbpdo;
-
-	$active_filter_id = false;
-	$active_filter_val = false;
-	$active = false;
-	$array = [];
-	$get_order_filter = $dbpdo->prepare(" SELECT * FROM user_control
-
-		INNER JOIN stock_filter ON stock_filter.stock_id = :id 
-
-		INNER JOIN filter_list ON filter_list.filter_list_prefix = :prefix
-
-		INNER JOIN filter ON filter.filter_type = filter_list.filter_list_id
-
-		AND stock_filter.active_filter_id = filter.filter_id
-
-		");			
-	$get_order_filter->bindParam('id', $id);
-	$get_order_filter->bindParam('prefix', $prefix);
-	$get_order_filter->execute();
-	$get_filter_row = $get_order_filter->fetch();
-
-	if($get_order_filter->rowCount()>0) {
-		$active_filter_id = $get_filter_row['filter_id']; 
-		$active_filter_val = $get_filter_row['filter_value']; 
-		$active = 'actived';
-		$array[] = ['res' => $active, 'filter_id' => $active_filter_id, 'filter_val' => $active_filter_val];
-	} 
-	return $array;
-}
-
 
 /**
  * @param arr =  array(
@@ -296,43 +177,6 @@ function ls_var_dump($var) {
 	echo "</pre>";
 }
 
-
-
-/**  обновляем фильтры продукта или добавляем
-*	 example
-*
-*	@param = array(
-*		'stock_id' => $id,
-*		'filter_id' => array(id, id, id)
-*	);
-**/
-function ls_update_filter($param) {
-	global $dbpdo;
-
-	foreach ($param as $stock => $row) {
-		$stock_id = $row['stock_id'];
-
-		ls_reset_filter($stock_id);
-		
-		foreach ($row['filter'] as $key => $filter_id) {
-			ls_insert_filter($stock_id, $filter_id);
-		}		
-	}
-}
-
-//добавляем фильтры пользователя
-function ls_insert_filter($stock_id, $filter_id) {
-	global $dbpdo;
-	$insert_filter = $dbpdo->prepare("INSERT INTO stock_filter (stock_id, active_filter_id) VALUES (?, ?) ");
-	$insert_filter->execute([$stock_id, $filter_id]);	
-}
-//сбрасываем фильры пользователя
-function ls_reset_filter($stock_id) {
-	global $dbpdo;
-	$reset_filter = $dbpdo->prepare('DELETE FROM stock_filter WHERE stock_id = :stock_id');
-	$reset_filter->bindParam('stock_id', $stock_id);
-	$reset_filter->execute();	
-}
 
 //получаем массив для меню на главной странице и сайдбаре
 function page_tab_list() {
@@ -734,7 +578,7 @@ function get_th_list() {
 				'is_title' 			=> ' ',
 				'modify_class' 		=> 'th_w60',
 				'td_class' 			=> 'table-ui-reset',
-				'link_class' 		=> 'las la-cart-plus btn btn-secondary add-basket-btn-icon add-basket-button width-100 add-to-cart table-ui-btn',
+				'link_class' 		=> 'las btn add-basket-btn-icon add-basket-button width-100 table-ui-btn la-cart-plus btn-secondary add-to-cart',
 				'data_sort' 		=> '',
 				'mark'				=> false
 			),
@@ -1142,6 +986,10 @@ function page_data($page) {
 						'block_name' => 'add_stock_second_price'
 					],
 					[
+						'block_name' => 'add_stock_filter_list',
+						'custom_data' => ls_collect_filter()
+					],
+					[
 						'block_name' => 'add_save_form',
 					],
 				)
@@ -1528,6 +1376,7 @@ function page_data($page) {
 					'edit'					=> null
 				],
 				'table_total_list' => [
+					'sum_total_rasxod'
 				],
 				'modal' => [
 					'template_block' => 'info_product',
@@ -1676,6 +1525,7 @@ function table_footer_result($type_list, $data) {
 	$sum_stock_first_price = [];
 	$sum_profit = 0;
 	$sum_order_count = 0;
+	$sum_rasxod = 0;
 
 	foreach($data as $stock) {
 		if(array_key_exists('stock_count', $stock)) {
@@ -1692,6 +1542,10 @@ function table_footer_result($type_list, $data) {
 
 		if(array_key_exists('order_stock_count', $stock)) {
 			$sum_order_count += $stock['order_stock_count'];
+		}
+
+		if(array_key_exists('rasxod_money', $stock)) {
+			$sum_rasxod += $stock['rasxod_money'];
 		}
 	}
 
@@ -1746,7 +1600,15 @@ function table_footer_result($type_list, $data) {
 						   'mark_modify_class' => ''
 					   ]
 				   ]);
-				   break;							
+				   break;
+			case 'sum_total_rasxod': 
+				array_push($res, [
+					'title' => 'ümumi',
+					'value' => $sum_rasxod,
+					'mark' => [
+						'mark_modify_class' => 'mark-icon-manat button-icon-right manat-icon--black'
+					]
+				]);   					
 		}
 	}
 

@@ -14,7 +14,13 @@
 
  #}
 
-{% for include_key in includs %}
+{% if includs %}
+    {% set includs_list = includs %}
+{% else %}
+    {% set includs_list = data.includs %}
+{% endif %}
+
+{% for include_key in includs_list %}
     {% for include_pcomponent_path, data in include_key %}
         {% include include_pcomponent_path %}
     {% endfor %}

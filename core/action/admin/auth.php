@@ -1,7 +1,7 @@
 <?php 
 	require $_SERVER['DOCUMENT_ROOT'].'/db/config.php';
 	require $_SERVER['DOCUMENT_ROOT'].'/core/function/db.wrapper.php';
-	require $_SERVER['DOCUMENT_ROOT'].'/core/action/admin/user.function.php';
+	require $_SERVER['DOCUMENT_ROOT'].'/core/function/user.function.php';
 	header('Content-type: Application/json');
 
 	if(!empty($_POST['login']) && !empty($_POST['password'])) {

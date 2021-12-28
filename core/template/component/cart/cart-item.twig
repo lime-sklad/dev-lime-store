@@ -24,7 +24,12 @@
         </div>                                  
     </td>
     <td>
+        <div class="cart-input-container flex flex-ai-cntr">
+            <input type="text" class="cart-order-description input cart-input" value="{{row.description}}">
+        </div>
+    </td>      
+    <td>
         <button class="btn btn-danger add-basket-btn-icon las la-trash remove-at-cart" tabindex="-1"></button>                                
-    </td>
+    </td> 
 </tr>  
 {% endfor %}

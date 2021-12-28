@@ -1,6 +1,25 @@
-<div class="form-fields fields">
+{# <div class="form-fields fields">
     <span class="fields-label">Минимальное количество для отображения</span>
     <div class="input-container th_w140">
         <input type="text" class="input add-stock form-input input-validate-length "  data-fields-name="add_stock_min_quantity">
     </div>
+</div> 
+#}
+
+
+<div class="form-fields fields">
+    <span class="fields-label">Əgər miqdarın sayi sıfıra bərabərdirsə, anbar siyahıda göstərməmək</span>
+    {# <button class="btn ls-custom-radio add-stock" data-radio-state="0" value="0" data-fields-name="add_stock_min_quantity"></button> #}
+
+    {% include '/component/buttons/button.twig' with {
+        'data': {
+            'btn_attr_list': {
+                'class': 'btn ls-switcher add-stock',
+                'data-radio-state': 0,
+                'value': 0,
+                'data-fields-name': 'add_stock_min_quantity'
+            }
+        }
+    } %}
+
 </div>

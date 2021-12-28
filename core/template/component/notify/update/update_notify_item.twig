@@ -1,0 +1,36 @@
+<div class="top-nav-items filter-container area-container">
+    <a href="javascript:void(0)" class="top-nav-buttons ls-dropdown-buttons notify-button widget__button-action flex-cntr area-button" role="button">
+        <div class="sidebar-list-icon">
+            <span class="button-icon-i  ls-top-nav-dropdown-icon pos-relative">
+                <i class="las la-bell"></i>
+                {% if data.update_notify %} <span class="widget__mark widget__mark-right-notify"></span> {% endif %} 
+            </span>
+        </div>
+    </a> 
+    <div class="widget__content area-content ls-dropdown-content">
+     <ul class="select-list width-100 ls-custom-scrollbar ls-dropdown-list">
+        {% if data.update_notify %}
+         <li class="select-items ls-dropdown-items">
+             <span class="fields-label">Yeniləmə mövcuddur</span>
+             {% set btnsParam = {
+                 includs: {
+                     renderButtons: {
+                         '/component/buttons/button.twig': {
+                             btn_text: 'Yükləyin',
+                             btn_attr_list: {
+                                 class: 'btn btn-light--blue width-100 download-update'
+                             }
+                         }
+                     }                                           
+                 }
+             } %}
+             
+             {% include '/component/include_once_component.twig' with btnsParam %}            
+         </li>           
+        {% else %}
+            <span class="flex-cntr mark-text mark-default">Увидомлений нет</span>
+        {% endif %}
+
+     </ul>
+    </div>
+</div>
