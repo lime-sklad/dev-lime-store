@@ -60,7 +60,7 @@
                         </div>
                     {% endif %}
                     
-                    <input type="button" autocomplete="off" class="input scroll-auto area-button input-dropdown {{data.dropdown_param.dropdown_btn.btn.class_list}}" 
+                    <input type="button" autocomplete="off" value=" {{ data.dropdown_param.dropdown_list.auto_list.active ? data.dropdown_param.dropdown_list.auto_list.active.filter_val ~ ' ' ~ data.dropdown_param.dropdown_list.auto_list.auto_list_item.mark.mark_text : ''}}  "  class="input scroll-auto area-button input-dropdown {{data.dropdown_param.dropdown_btn.btn.class_list}}" 
                     {% if data.dropdown_param.dropdown_btn.btn.attr  %}
                         {% for attr_name, attr_value in data.dropdown_param.dropdown_btn.btn.attr %}
                             {{attr_name}} = "{{attr_value}}"
@@ -103,6 +103,6 @@
         </div>
     </div>
     
-    <input type="hidden" class="hidden_input hidden-fields-input {{data.dropdown_param.hidden_input.class_list}}" value="{{data.dropdown_param.hidden_input.value}}" data-fields-name="filter_{{data.dropdown_param.hidden_input.data_fields_name}}">
+    <input type="hidden" class="hidden_input hidden-fields-input {{data.dropdown_param.hidden_input.class_list}}" value="{{ data.dropdown_param.dropdown_list.auto_list.active ? data.dropdown_param.dropdown_list.auto_list.active.filter_id : data.dropdown_param.hidden_input.value}}" data-fields-name="filter_{{data.dropdown_param.hidden_input.data_fields_name}}">
 </div>
 

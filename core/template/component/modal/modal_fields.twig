@@ -49,6 +49,9 @@
     {% include fields_path ~ 'edit/delete_stock_fields.twig' %}
 {% endif %}
 
+{% if row.block_name == 'edit_stock_filter' %}
+    {% include fields_path ~ 'edit/edit_stock_filter.twig' %}
+{% endif %}
 
 
 {# info / terminal #}
@@ -88,6 +91,9 @@
     {% include fields_path ~ 'info/product_add_date_info_fields.twig' %}
 {% endif %}
 
+{% if row.block_name == 'info_product_filter_list' %}
+    {% include fields_path ~ 'info/product_filter_fields.twig' %}
+{% endif %}
 
 
 {# report #}

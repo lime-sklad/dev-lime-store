@@ -39,8 +39,6 @@ function ls_db_request($query, $pdo_fetch_type = PDO::FETCH_ASSOC) {
 
 	$stock_view = $dbpdo->prepare($query);
 
-
-
 	foreach($conditions as $bind_key => $bindValue) {
 		$stock_view->bindValue($bind_key, $bindValue);
 	}
@@ -209,7 +207,7 @@ function ls_db_insert($table_name, $data) {
  * @param array $data_list массив с данными
  * @param var $dbpdo db connetion
  */
- function ls_db_delete($data_list, $dbpdo) {
+ function ls_db_delete($data_list) {
 	/**
 	*  @param array $data_list = 
 	*	array(
@@ -223,6 +221,8 @@ function ls_db_insert($table_name, $data) {
 	*	)
 	*/
 	
+	global $dbpdo;
+
 	foreach($data_list as $data) {
 		$table_name 		= array_key_exists('table_name', $data) 	? $data['table_name'] 	: null;
 		$joins 				= array_key_exists('joins', $data)			? $data['joins'] 		: null;
@@ -230,7 +230,9 @@ function ls_db_insert($table_name, $data) {
 		$bind_list 			= array_key_exists('bindList', $data)		? $data['bindList'] 	: null;
 		$order 				= array_key_exists('order', $data)			? $data['order'] 		: null;
 
-		$delete = $dbpdo->prepare("DELETE FROM $table_name $joins WHERE $where $order");
-		$delete->execute($bind_list);		
+		$delete = $dbpdo->prepare("DELETE $table_name FROM $table_name $joins WHERE $where $order");
+		// ls_var_dump($delete);
+		$delete->execute($bind_list);	
+
 	}
  }

@@ -48,9 +48,18 @@ if(isset($_POST['product_id'], $_POST['type'], $_POST['page'])) {
 			'sort_by' 	 =>  $sort_by . ' LIMIT 1 ',
 		]
 	];	
+
+
 	
 	//делаем запрос в базу с id  и знаносим результат в переменную
 	$stock = render_data_template($search_array, $page_config);	
+
+
+	$filter_modal_list = [
+		'edit_stock_filter',
+		'info_product_filter_list'
+	];
+
 
 	if($stock && !empty($stock)) {
 
@@ -62,6 +71,13 @@ if(isset($_POST['product_id'], $_POST['type'], $_POST['page'])) {
 			$data_custom = '';
 
 			if($value['premission']) {
+
+				// исправить это недоразумение 
+				if(in_array($key, $filter_modal_list)) {
+					$value['custom_data'] = ls_collect_filter($id, $page_config['filter_fields']);
+				}
+
+
 				if($value['db']) {
 					$data_value = !empty($stock_base[$value['db']]) && $stock_base[$value['db']] ? $stock_base[$value['db']] : '';
 				}
@@ -88,6 +104,11 @@ if(isset($_POST['product_id'], $_POST['type'], $_POST['page'])) {
 		$input_fileds_list['get'] = [
 			'id' => $stock_base[$sort_key]
 		];
+
+
+		
+		// ls_var_dump($input_fileds_list);
+
         echo $template->renderBlock($page_config['modal']['template_block'], ['res' => $input_fileds_list]);
 	}
 

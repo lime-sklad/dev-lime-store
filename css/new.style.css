@@ -162,7 +162,6 @@ i {
 }
 
 .sidebar_hovered {
-    width: 190px;
 }
 
 .sidebar-header {
@@ -273,7 +272,7 @@ i {
 }
 
 .sidebar-icon {
-    font-size: 30px;
+    font-size: 35px;
     transition: inherit;
 }
 
@@ -292,9 +291,6 @@ i {
     margin-left: 9px;
 }
 
-.sidebar_hovered .sidebar-icon {
-    font-size: 22px;
-}
 
 .sidebar-list:not(.sidebar-active):hover {
     color: var(--black_700);
@@ -305,9 +301,25 @@ i {
     opacity: .3;
 }
 
+.svg-icon svg {
+    width: 29px;
+    height: 29px;
+}
+
 .sidebar-active {
-    background: var(--blue_100);
-    color: var(--primary_text-color);
+    position: relative;
+    background: var(--blue_20);
+    color: var(--blue_450);
+}
+
+.sidebar-active:after {
+    content: '';
+    position: absolute;
+    width: 3px;
+    height: 34px;
+    background: var(--primary_color);
+    right: 0;
+    border-radius: 16px;
 }
 
 .sidebar-page-list {
@@ -1409,7 +1421,7 @@ i {
 
 .overlay {
     z-index: 711;
-    background: rgb(0, 0, 0, .4);
+    background: rgb(0, 0, 0, .5);
     position: fixed;
     left: 0;
     top: 0;
@@ -1586,7 +1598,7 @@ i {
 
 .stock-from-container {
     /* height: 100vh; */
-    margin-bottom: 50px;
+    margin-bottom: 313px;
 }
 
 .stock-form-content .fields.form-fields, .stock-form-content .form-fields {
@@ -1723,6 +1735,70 @@ i {
 .update-text-list {
     margin-bottom: 15px;
 }
+
+
+
+
+.sidebar-item-list {
+    position: relative;
+    width: 100%;
+}
+
+.sidebar-item {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.sidebar-item-tooltip {
+    position: absolute;
+    left: 100%;
+    font-weight: 600;
+    font-family: 'Montserrat';
+    text-transform: uppercase;
+    color: var(--primary_text-color);
+    font-size: 15px;
+    visibility: hidden;
+    opacity: 0;
+    user-select: none;
+    width: 0;
+    transition: width .3s, transform 1s, all .2s;
+    background: #f7f7f7;
+    border-radius: 35px;
+    box-shadow: var(--shadow_medium) var(--gray_400);
+    transform: scale(.5);
+    margin-left: 0;
+}
+
+.sidebar_hovered .sidebar-item:hover .sidebar-item-tooltip {
+    transform: scale(1);
+    width: auto;
+    opacity: 1;
+    visibility: visible;
+    margin-left: 5px;
+    padding: 6px 11px;
+}
+
+.sidebar-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.sidebar-item-icon {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
 
 @keyframes preloaderUpdate {
     0% {

@@ -51,6 +51,7 @@ function filter_category($filter_list, $id) {
 		}
 		// array_push($total, array('title'=> $title, 'active' => $active, 'compelte' =>  $res));
 	}
+
 	return $total;
 }
 
@@ -94,76 +95,37 @@ function get_filter_list_by_prefix($prefix) {
 function get_active_filters($prefix, $id) {
 	global $dbpdo;
 
-	$active_filter_id = false;
-	$active_filter_val = false;
-	$active = false;
 	$array = [];
-	$get_order_filter = $dbpdo->prepare(" SELECT * FROM user_control
 
-		INNER JOIN stock_filter ON stock_filter.stock_id = :id 
+	$data = ls_db_request([
+		'table_name' => 'filter',
+		'col_list' => '*',
+		'param' => [
+			'query' => [
+				'param' => "INNER JOIN stock_filter ON stock_filter.stock_id = :id
+							INNER JOIN filter_list ON filter_list.filter_list_prefix = :prefix
 
-		INNER JOIN filter_list ON filter_list.filter_list_prefix = :prefix
+							WHERE filter.filter_type = filter_list.filter_list_id AND filter.filter_id = stock_filter.active_filter_id
+							",
+				'bindList' => [
+					':id' => $id,
+					':prefix' => $prefix
+				],
+			]
+		]
+	], PDO::FETCH_ASSOC);
 
-		INNER JOIN filter ON filter.filter_type = filter_list.filter_list_id
+	if(count($data) > 0) {
+		$row = $data[0];
 
-		AND stock_filter.active_filter_id = filter.filter_id
-
-		");			
-	$get_order_filter->bindParam('id', $id);
-	$get_order_filter->bindParam('prefix', $prefix);
-	$get_order_filter->execute();
-	$get_filter_row = $get_order_filter->fetch();
-
-	if($get_order_filter->rowCount()>0) {
-		$active_filter_id = $get_filter_row['filter_id']; 
-		$active_filter_val = $get_filter_row['filter_value']; 
+		$active_filter_id = $row['filter_id']; 
+		$active_filter_val = $row['filter_value']; 
 		$active = 'actived';
-		$array[] = ['res' => $active, 'filter_id' => $active_filter_id, 'filter_val' => $active_filter_val];
-	} 
+		$array = ['res' => $active, 'filter_id' => $active_filter_id, 'filter_val' => $active_filter_val];		
+	}
 
 	return $array;
 }
-
-
-
-
-/**  обновляем фильтры продукта или добавляем
-*	 example
-*
-*	@param array (
-*		'stock_id' => $id,
-*		'filter_id' => array(id, id, id)
-*	);
-**/
-function ls_update_filter($param) {
-	global $dbpdo;
-
-	foreach ($param as $stock => $row) {
-		$stock_id = $row['stock_id'];
-
-		ls_reset_filter($stock_id);
-		
-		foreach ($row['filter'] as $key => $filter_id) {
-			ls_insert_filter($stock_id, $filter_id);
-		}		
-	}
-}
-
-//добавляем фильтры пользователя
-function ls_insert_filter($stock_id, $filter_id) {
-	global $dbpdo;
-	$insert_filter = $dbpdo->prepare("INSERT INTO stock_filter (stock_id, active_filter_id) VALUES (?, ?) ");
-	$insert_filter->execute([$stock_id, $filter_id]);	
-}
-//сбрасываем фильры пользователя
-function ls_reset_filter($stock_id) {
-	global $dbpdo;
-	$reset_filter = $dbpdo->prepare('DELETE FROM stock_filter WHERE stock_id = :stock_id');
-	$reset_filter->bindParam('stock_id', $stock_id);
-	$reset_filter->execute();	
-}
-
-
 
 
 // ----------------------------------------- upd ------------------------------------------------ //
@@ -227,6 +189,7 @@ function get_all_filter_value_list() {
 		$result[$value['filter_type']][] = [
 			'filter_id' => $value['filter_id'],
 			'filter_value' => $value['filter_value'],
+			'filter_type' => $value['filter_type']
 		];
 	}
 
@@ -237,23 +200,39 @@ function get_all_filter_value_list() {
  * собираем фильтры в единий массив
  * @return array
  */
-function ls_collect_filter() {
+function ls_collect_filter(int $id  = null, array $type_list = array()) {
 	$filter_prefix_list = get_all_filter_prefix_list();
 	$filter_value_list = get_all_filter_value_list();
-
+	
+	// ну хз что тут, главное работает как мне нужно. Не помню когда и зачем, но работает. 
 	foreach ($filter_prefix_list as $key => $prefix_value) {
 		$filter_prefix_list[$key] = array_merge(['list' => $filter_value_list[$prefix_value['filter_prefix_id']]], $filter_prefix_list[$key]);
+
+		$filter_prefix_list[$key]['active'] = get_active_filters($key, $id);
 	}
 
-	return $filter_prefix_list;
+	$res = [];
+
+	if($type_list) {
+		foreach($type_list as $key => $val) {
+			if(array_key_exists($val, $filter_prefix_list)) {
+				$res[$val] = array_merge($filter_prefix_list[$val]);
+			}
+		}
+	}
+
+	return $res;
 }
 
 
 /**
  * добавляем фильтры в базу для товара
+ * @param array $post_data - массив $_POST
+ * @param int $stock_id - id товара
  */
-function ls_insert_stock_filter(array $datas, int $stock_id) {
-	$dd = [];
+function ls_insert_stock_filter(array $post_data, int $stock_id) {
+	$result = [];
+
 	$col_post_list = [
 		'filter_color' => [
 			'col_name' => 'active_filter_id',
@@ -272,20 +251,87 @@ function ls_insert_stock_filter(array $datas, int $stock_id) {
 		],	
 	];
 	
+	// хотел написать коментарий для данного куска кода, но понял, что запутаю еще сильней...
 	foreach ($col_post_list as $key => $value) {
-		if(array_key_exists($key, $datas) && !empty($datas[$key])) {
-			$dd[] = [
-				$value['col_name'] => $datas[$key],
+		if(array_key_exists($key, $post_data) && !empty($post_data[$key])) {
+			$result[] = [
+				$value['col_name'] => $post_data[$key],
 				'stock_id' => $stock_id
 			];
 		}
 	}
 
-	if($dd) {
-		ls_db_insert('stock_filter', $dd);
+	if($result) {
+		ls_db_insert('stock_filter', $result);
 	} else {
 		return false;
 	}
 	
 	return true;
+}
+
+
+function ls_reset_stock_filter($stock_id, $filter_id) {
+	ls_db_delete(array(
+		[
+			'table_name' => 'stock_filter',
+			'joins' => ' INNER JOIN filter as tb ON tb.filter_id = :filter_id 
+					     INNER JOIN filter ON filter.filter_type = tb.filter_type
+			',
+			'where' => ' stock_filter.active_filter_id = `filter`.filter_id AND stock_filter.stock_id = :id ',
+			'bindList' => [
+				':id' => $stock_id,
+				':filter_id' => $filter_id
+			]			
+		]
+	));
+}
+
+
+
+
+/**
+ * изменить фильтр товара
+ * @param array $post_data - массив с данными POST
+ * @param int $id - id товара
+ */
+function ls_edit_stock_filter($post_data, $stock_id) {
+	$result = [];
+
+	$post_list = [
+		'filter_color' 		=> true,
+		'filter_storage' 	=> true,
+		'filter_ram'		=> true,
+		'filter_used' 		=> true,
+		'filter_brand' 		=> true	
+	];
+
+	$result = array_intersect_key($post_data, $post_list);
+
+	foreach($result as $filter_id) {
+		// сбрасываем фиьтры товара с данной категорией
+		ls_reset_stock_filter($stock_id, $filter_id);
+	}
+
+	// добавляем фильтер для товара
+	ls_insert_stock_filter($post_data, $stock_id);
+}
+
+
+
+function get_page_stock_filter_fileds($page) {
+	$page = page_data($page);
+
+	return $page['page_data_list']['filter_fileds'];
+}
+
+
+function ls_get_filter_list_by_page_type($page) {
+	$page_config = page_data($page);
+
+	ls_var_dump($page_config);
+
+	// $filter_fields = $page['page_data_list']['filter_fields'];
+
+	// return ls_collect_filter(null, $filter_fields);
 }

@@ -1,5 +1,31 @@
 
-<div class="sidebar display-flex flex-column height-100">
+<div class="sidebar flex flex-column height-100">
+    <div class="sidebar-wrapper">
+
+        <div class="sidebar-header flex-cntr">
+            <span class="logo-text-cap-letter">L</span>
+        </div>
+
+        <div class="sidebar-item-list">
+            {% for route_index, row in data.menu_list.data %}
+                <div class="sidebar-item get_page_action scroll_top" data-page-route="{{route_index}}" data-tab="{{row.tab.active}}">
+                    <div class="sidebar-item-icon">
+                        <span class="button-icon-i button-icon-left sidebar-icon">
+                            <i class="{{row.icon.modify_class}}"></i>
+                        </span>                  
+                    </div>
+
+                    <div class="sidebar-item-tooltip">{{row.title}}</div>
+                </div>
+
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+
+{# <div class="sidebar display-flex flex-column height-100">
     <div class="sidebar-header flex-cntr">
         <span class="logo-text-cap-letter">L</span>
     </div>
@@ -39,7 +65,7 @@
                 </span>
             </div>
         </a>    
-</div>
+</div> #}
 
 
 

@@ -74,6 +74,9 @@ $option = [
 
 if(!empty($_POST) && count($_POST) > 1) {
 	echo ls_db_upadte($option, $_POST);
+
+	ls_edit_stock_filter($_POST, $_POST['upd_product_id']);
+
 } else {
 	echo json_encode([
 		'error' => 'Вы ничего не изменили'

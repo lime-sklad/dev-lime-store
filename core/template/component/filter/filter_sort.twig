@@ -75,7 +75,7 @@
 						<span class="widget__mark selected-items-count">
 						</span>				
 						<span class="widget__button-text">
-							{{parent.title}}
+							{{parent.filter_prefix_title}}
 						</span>
 						<span class="widget__button-icon widget__icon-arrow button-icon-i button-icon-right">
 							<i class="las la-angle-down"></i>
@@ -85,14 +85,14 @@
 					<div class="sub--select-list area-content" style="display: none;">
 						<ul class="select-sub-items select-list ls-custom-scrollbar width-100">
 
-							{% for key, row in parent.compelte  %}
+							{% for key, row in parent.list  %}
 							<li class="select-items">
-								<a href="javascript:void(0)" class="select-item select-sub-item filter-check" id="{{row.id}}" filter-type="{{row.filter_type}}" filter-val="{{row.value}}">
+								<a href="javascript:void(0)" class="select-item select-sub-item filter-check" id="{{row.filter_id}}" filter-type="{{row.filter_type}}" filter-val="{{row.filter_value}}">
 									<span class="widget__check-icon">
 										<i class="las la-check"></i>
 									</span>
-									<span class="widget__button-text">{{row.value}}</span>
-									<span class="widget__mark">{{parent.short_name}}</span>
+									<span class="widget__button-text">{{row.filter_value}}</span>
+									<span class="widget__mark">{{parent.filter_short_name}}</span>
 								</a>
 							</li>	
 							{% endfor %}

@@ -284,7 +284,7 @@ $(function () {
       function () {
         timeoutId = setTimeout(() => {
           $(this).addClass("sidebar_hovered");
-        }, 780);
+        }, 500);
       },
       function () {
         // change to any color that was previously used.
@@ -319,8 +319,8 @@ function visible_menu(param) {
 
 //левое бокове меню
 function ui_selected_sidebar(tab) {
-  $('.sidebar-list').removeClass('sidebar-active');
-  $(`.sidebar-list[data-tab="${tab}"]`).addClass('sidebar-active');
+  $('.sidebar-item').removeClass('sidebar-active');
+  $(`.sidebar-item[data-tab="${tab}"]`).addClass('sidebar-active');
 }
 
 //активируем вкладку

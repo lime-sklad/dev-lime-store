@@ -320,8 +320,6 @@ function insert_update_notify() {
 
 
 function reset_update_notify() {
-    global $dbpdo;
-    
     ls_db_delete([
         array(
             'table_name' => 'ls_notify',
@@ -330,7 +328,7 @@ function reset_update_notify() {
                 ':not_type' => 'update'
             ]
         )
-    ], $dbpdo);
+    ]);
 }
 
 

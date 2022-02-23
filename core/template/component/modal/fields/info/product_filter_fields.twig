@@ -1,0 +1,53 @@
+{% set filter_list = row.custom_data %}
+
+
+{% for row, val in filter_list %}
+        {% set custom_arr = [{
+            'custom_value': '',
+            'custom_data_id': ''
+        }] %}
+
+        {% for list_row, list_val in val.list %}
+            {% set custom_arr = custom_arr|merge({(loop.index0) : {
+                'custom_value': list_val.filter_value, 
+                'custom_data_id': list_val.filter_id,
+                }}) %}
+        {% endfor %}
+
+    {% set dropdownparam = {
+            label: val.filter_prefix_title,
+            wrapper_class_list: 'fields info-fields',
+            container_class_list: 'width-100',
+            dropdown_btn: {
+                icon: {
+                    class_list: 'las la-tags'
+                },
+                btn: {
+                    class_list: 'fields-info-value input',
+                    attr: {
+                        disabled: 'disabled'
+                    }
+                }
+            },
+            dropdown_list: {
+                auto_list: {
+                    auto_class_list: 'width-100 input-dropdown-auto-ul',
+                    auto_list_item: {
+                        icon: {
+                            icon: 'las la-tags'
+                        },
+                        mark: {
+                            mark_text: val.filter_short_name
+                        }
+                    },
+                    active: val.active
+                }
+            },  
+    } %}
+
+
+    {% include '/component/dropdown/dropdown.twig'  with { 'data': {
+        'dropdown_param': dropdownparam
+    } }  %}
+
+{% endfor %}

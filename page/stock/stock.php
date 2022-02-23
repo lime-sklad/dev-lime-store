@@ -33,7 +33,7 @@
 		'renderComponent' => [
 			'/component/related_component/include_widget.twig' => [
 				'/component/filter/filter_sort.twig' => [
-					'filter_list' => filter_category($page_config['filter_fields'], NULL)
+					'filter_list' => ls_collect_filter(NULL, $page_config['filter_fields'])
 				],
 				'/component/search/search.twig' => $search_arr
 			],
