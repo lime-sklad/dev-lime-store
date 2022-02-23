@@ -717,8 +717,8 @@ function page_data($page) {
 				'is_main' => true,
 				'title' 			=> 'Əməliyyatlar',
 				'icon'				=> [
-					'img_big'		 	=> 'img/svg/046-shopping.svg',
-					'img_small'			=> '',
+					'img_big'		 	=> 'img/svg/sidebar/1.svg',
+					'img_small'			=> 'img/svg-icon/sidebar/1.svg',
 					'modify_class' 		=> 'las la-store-alt'
 				],
 				'link'  			=> '/page/base.php',
@@ -813,6 +813,11 @@ function page_data($page) {
 						],
 						'info_product_min_quantity' => [
 							'db' => 'min_quantity_stock',
+							'custom_data' => false,
+							'premission' => true
+						],
+						'info_product_filter_list' => [
+							'db' => 'stock_id',
 							'custom_data' => false,
 							'premission' => true
 						],
@@ -939,7 +944,12 @@ function page_data($page) {
 							'db' 			=> 'stock_second_price',
 							'custom_data' 	=> false,
 							'premission' 	=> true
-						],		
+						],
+						'edit_stock_filter' => [
+							'db' 			=> 'stock_id',
+							'custom_data' 	=> false,
+							'premission' 	=> true
+						],
 						'edit_save_btn' => [
 							'db' 			=> false,
 							'custom_data' 	=> true,
@@ -987,7 +997,6 @@ function page_data($page) {
 					],
 					[
 						'block_name' => 'add_stock_filter_list',
-						'custom_data' => ls_collect_filter()
 					],
 					[
 						'block_name' => 'add_save_form',
