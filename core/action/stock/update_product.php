@@ -7,7 +7,7 @@ header('Content-type: Application/json');
 
 $option = [
 	'before' => " UPDATE stock_list, user_control SET ",
-	'after' => " WHERE stock_id = :stock_id",
+	'after' => " WHERE stock_id =:stock_id ",
 	'post_list' => [
 		//id
 		'upd_product_id' => [ 
@@ -60,10 +60,24 @@ $option = [
 		'change_product_count' => [
 			'query' => "stock_list.stock_count = :change_count",
 			'bind' => 'change_count',
-		],			
+		],		
+		
+		//последнее изминение товара
+		'last_edited_date' => [
+			'query' => "stock_list.last_edited_date = :last_date",
+			'bind' => 'last_date'
+		]
 
 	]
 ];
+
+$data = $_POST;
+
+$default_data = [
+	'last_edited_date' => date('Y-m-d h:i:s')
+];
+
+$data = array_merge($data, $default_data);
 
 
 /**
@@ -72,10 +86,10 @@ $option = [
  * добавить в function.php id к каждой строке в табице для обновления резальутатата
  */
 
-if(!empty($_POST) && count($_POST) > 1) {
-	echo ls_db_upadte($option, $_POST);
+if(!empty($data) && count($data) > 1) {
+	echo ls_db_upadte($option, $data);
 
-	ls_edit_stock_filter($_POST, $_POST['upd_product_id']);
+	ls_edit_stock_filter($data, $data['upd_product_id']);
 
 } else {
 	echo json_encode([

@@ -141,7 +141,8 @@ $stock_list_barcode_colum_arr = array(
 	array("product_added", " INT NOT NULL DEFAULT 1"),
 	array("product_provider", "INT NOT NULL"),
 	array("product_category", "INT NOT NULL"),
-	array("min_quantity_stock", "INT NOT NULL DEFAULT '1' ")
+	array("min_quantity_stock", "INT NOT NULL DEFAULT '1' "),
+	array("last_edited_date", " DATETIME NULL ")
 );
 check_table_column_exists($stock_list_barcode_db_name, $stock_list_barcode_colum_arr);
 

@@ -93,10 +93,12 @@ function ls_db_upadte($option, $data) {
 	 * */	 
 	
 	global $dbpdo;
+
 	$before 	= $option['before'];
 	$after 		= $option['after'];
 	$post_list  = $option['post_list'];
 	$conditions = [];
+
 	foreach($post_list as $post_key => $post_value) {
 		if(array_key_exists($post_key, $data)) {
 			if(array_key_exists('require', $post_value)) {
@@ -125,7 +127,7 @@ function ls_db_upadte($option, $data) {
 		$query .= $conditions;
 	}
 	$query .= $after;
-
+	
 	try {
 		$update = $dbpdo->prepare($query);
 	

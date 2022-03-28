@@ -72,7 +72,7 @@ if(isset($_POST['product_id'], $_POST['type'], $_POST['page'])) {
 
 			if($value['premission']) {
 
-				// исправить это недоразумение 
+				// исправить это недоразумение - если данные это фильтры
 				if(in_array($key, $filter_modal_list)) {
 					$value['custom_data'] = ls_collect_filter($id, $page_config['filter_fields']);
 				}

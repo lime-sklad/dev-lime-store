@@ -27,7 +27,8 @@ $col_post_list = [
 		'col_name' => 'min_quantity_stock'
 	],
 	'add_stock_first_price' => [
-		'col_name' => 'stock_first_price' 
+		'col_name' => 'stock_first_price',
+		'required' => true 
 	],
 	'add_stock_second_price' => [
 		'col_name' => 'stock_second_price' 
